@@ -1,15 +1,12 @@
 define(function(require, exports, module) {
 
+  var a               = require('js/lib/three.min.js');
   var OrbitControls   = require('lib/OrbitControls');
   
-  function CameraController( toolbelt , params ){
+  function CameraController( world , params ){
 
-    this.toolbelt = toolbelt;
-    this.controls = new THREE.OrbitControls( this.toolbelt.world.camera );
-
-
-
-
+    this.world = world;
+    this.controls = new THREE.OrbitControls( this.world.camera );
 
   }
 

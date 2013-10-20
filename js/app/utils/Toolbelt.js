@@ -39,7 +39,6 @@ define(function(require, exports, module) {
 
     this.update();
 
-    this.cameraController._update();
     this.audioController._update();
     this.world._update();
 
