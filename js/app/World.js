@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
     
+  var CameraController  = require( 'app/CameraController' );
+  var Raycaster         = require( 'app/Raycaster'        );
 
     function World( toolbelt , params ){
 
@@ -16,8 +18,7 @@ define(function(require, exports, module) {
       this.toolbelt = toolbelt;
 
       this.scene    = new THREE.Scene();
-      
-
+     
       // Aspect Ratio
       var aR    = this.params.width / this.params.height;
       var near  = this.params.size / 100;
@@ -58,13 +59,26 @@ define(function(require, exports, module) {
       this.renderer.setSize( window.innerWidth, window.innerHeight );
       this.container.appendChild( this.renderer.domElement );
 
+
+      this.cameraController = new CameraController( this );
+      this.raycaster        = new Raycaster( this );
+
+      window.addEventListener( 'resize', this.onWindowResize.bind( this ), false );
+
+
+
+
+
     }
  
     World.prototype._update = function(){
-      //if( this.testMesh ) this.testMesh.rotation.y += .005; 
+      
+      this.cameraController._update();
       this.update();
 
     }
+
+
     World.prototype.update = function(){
       if( this.testMesh ) this.testMesh.rotation.y += .005; 
     }
@@ -75,6 +89,15 @@ define(function(require, exports, module) {
 
     }
 
+
+    World.prototype.onWindowResize = function(){
+
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+
+      this.renderer.setSize( window.innerWidth, window.innerHeight );
+
+    }
 
     World.prototype.console = function(){ console.log( this ); }
 
