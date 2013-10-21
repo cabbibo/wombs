@@ -1,17 +1,22 @@
 define(function(require, exports, module) {
   var a = require( 'js/lib/stats.min.js'  );
+  var b = require( 'js/lib/three.min.js'  );
   
   function Animator( toolbelt ){
 
     this.toolbelt = toolbelt;
 
+    this.clock = new THREE.Clock();
+
     this.stats = new Stats();
     this.stats.domElement.style.position  = 'absolute';
     this.stats.domElement.style.bottom    = '0px';
     this.stats.domElement.style.right     = '0px';
-    this.stats.domElement.style.zIndex   = '999';
+    this.stats.domElement.style.zIndex    = '999';
 
     this.requestAnimationFrame = requestAnimationFrame;
+
+    this.delta = 0;
 
     document.body.appendChild( this.stats.domElement );
 
@@ -30,6 +35,7 @@ define(function(require, exports, module) {
 
   Animator.prototype.animate = function( ){
 
+    this.delta = this.clock.getDelta();
     this.stats.update();
     this.toolbelt._update();
     this.update();

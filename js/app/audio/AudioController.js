@@ -113,6 +113,8 @@ define(function(require, exports, module) {
 
     var loop  = new Audio( this , file , p );
     this.loops.array.push( loop );
+
+    return loop;
     
   }
 
@@ -120,6 +122,8 @@ define(function(require, exports, module) {
 
     var note  = new Audio( this , file , params);
     this.notes.array.push( note );
+
+    return note;
 
   }
 

@@ -2,21 +2,21 @@ define(function(require, exports, module) {
 
   function Raycaster( world , params ){
   
-    this.world        = world;
+    this.world            = world;
+    this.camera           = this.world.camera;
 
-    console.log( this.world );
-    this.camera       = this.world.camera;
+    this.rayPosition      = new THREE.Vector3();
 
-    this.rayPosition  = new THREE.Vector3();
+    this.projector        = new THREE.Projector();
+	this.raycaster        = new THREE.Raycaster();
 
-    this.projector    = new THREE.Projector();
-	this.raycaster    = new THREE.Raycaster();
+    this.intersections    = [];
+    this.oIntersections   = [];
 
     this.intersectedMesh;
 
     var c = this.world.container;
 
-    console.log( c );
     c.addEventListener( 'mousemove', this.onMouseMove.bind( this ), false );
     
   }
@@ -26,8 +26,6 @@ define(function(require, exports, module) {
     this.rayPosition.x =  ( e.clientX / window.innerWidth  ) * 2 - 1;
     this.rayPosition.y = -( e.clientY / window.innerHeight ) * 2 + 1;
     this.rayPosition.z = this.camera.near;
-
-    this.getIntersections();
 
   }
 
@@ -53,30 +51,22 @@ define(function(require, exports, module) {
 
         if( this.primary ){
 
-          if( this.primary != this.intersects[0].object ){
-            
-            // Moving from one mesh to another
-            console.log( 'New mesh intersected' );
-            this.oPrimary = this.primary 
-            this.primary  = this.intersects[0].object;
+          if( this.primary != this.intersections[0].object ){
+           
+            this._onMeshSwitched( this.intersections[0].object , this.primary );
           
           }
 
         }else{
 
-          // Hovering over a mesh
-          console.log( 'Mesh Hovered Over' );
-          this.oPrimary = this.primary;
-          this.primary  = undefined;
+          this._onMeshHoveredOver( this.intersections[0].object );
 
+       
         }
        
       }else{
 
-        // Hovering off of all meshes
-        console.log( 'Mesh Hovered Out' );
-        this.oPrimary = this.primary;
-        this.primary  = undefined;
+        this._onMeshHoveredOut();
 
       }
 
@@ -91,7 +81,52 @@ define(function(require, exports, module) {
 
   }
 
+  Raycaster.prototype._onMeshHoveredOver = function( object ){
+
+    // Hovering over a mesh
+    this.onMeshHoveredOver( object );
+    this.oPrimary = this.primary;
+    this.primary  = object;
+
+  }
+
+  Raycaster.prototype.onMeshHoveredOver = function( whichObject ){
+
+  }
+
+  Raycaster.prototype._onMeshHoveredOut = function(){
+
+    this.onMeshHoveredOut( this.primary );
+    this.oPrimary = this.primary;
+    this.primary  = undefined;
+
+  }
+
+  Raycaster.prototype.onMeshHoveredOut = function( whichObject ){
+
+  }
+
+  Raycaster.prototype._onMeshSwitched = function( newMesh , oldMesh ){
+
+    // Moving from one mesh to another
+    console.log( 'New mesh intersected' );
+    this.onMeshSwitched( newMesh , oldMesh );
+    this.oPrimary = this.primary;
+    this.primary  = newMesh;
+
+  }
+
+  Raycaster.prototype.onMeshSwitched = function( newMesh , oldMesh ){
+
+
+  }
+
+
+
+  // TODO: This will be useful for the leap, but is unnessesary right now.
   Raycaster.prototype._update = function(){
+
+     this.getIntersections();
 
   }
 

@@ -17,12 +17,13 @@ define(function(require, exports, module) {
 
       this.toolbelt = toolbelt;
 
+      this.size     = this.params.size;
       this.scene    = new THREE.Scene();
      
       // Aspect Ratio
-      var aR    = this.params.width / this.params.height;
-      var near  = this.params.size / 100;
-      var far   = this.params.size * 4;
+      var aR        = this.params.width / this.params.height;
+      var near      = this.params.size / 100;
+      var far       = this.params.size * 4;
 
       this.camera = new THREE.PerspectiveCamera( this.params.FOV , aR , near , far );
       this.camera.position.z = this.params.size;
@@ -40,6 +41,22 @@ define(function(require, exports, module) {
         this.scene.add( testMesh );
 
         this.testMesh = testMesh;
+
+
+        for( var i = 0; i < 20; i++ ){
+    
+          var mesh = new THREE.Mesh( testGeo , testMat );
+
+          mesh.position.x = (Math.random() - .5) * this.params.size;
+          mesh.position.y = (Math.random() - .5) * this.params.size;
+          mesh.position.z = (Math.random() - .5) * this.params.size;
+
+          mesh.scale.multiplyScalar( .1 );
+
+          this.testMesh.add( mesh );
+
+
+        }
 
       }
 
@@ -72,7 +89,8 @@ define(function(require, exports, module) {
     }
  
     World.prototype._update = function(){
-      
+     
+      this.raycaster._update();
       this.cameraController._update();
       this.update();
 
@@ -80,7 +98,7 @@ define(function(require, exports, module) {
 
 
     World.prototype.update = function(){
-      if( this.testMesh ) this.testMesh.rotation.y += .005; 
+      if( this.testMesh ) this.testMesh.rotation.y += .005 * (1-this.toolbelt.animator.delta); 
     }
 
     World.prototype.render = function(){

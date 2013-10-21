@@ -18,7 +18,7 @@ define(function(require, exports, module) {
     this.loader           = new loader( this );
     this.animator         = new animator( this );
     this.audioController  = new AudioController( this );
-    this.world            = new World( this , { test:true } );
+    this.world            = new World( this );
     this.cameraController = new CameraController( this );
 
 
