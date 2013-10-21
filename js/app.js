@@ -91,6 +91,25 @@ define(function(require, exports, module) {
 
     }
 
+    toolbelt.world.raycaster.onMeshSwitched = function( object , oObject ){
+
+      for( var i =0; i < filterMeshes.length; i ++ ){
+
+        if( object === filterMeshes[i] ){
+          filterMeshes[i].loop.turnOffFilter();
+        }
+
+        if( oObject === filterMeshes[i] ){
+          filterMeshes[i].loop.turnOnFilter();
+        }
+
+      }
+
+
+    }
+
+
+
 
 
 
