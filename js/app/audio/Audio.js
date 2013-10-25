@@ -10,6 +10,7 @@ define(function(require, exports, module) {
         
       looping:      false,
       fbc:            128,
+      fadeTime:         1,  
 
     });
 
@@ -59,7 +60,7 @@ define(function(require, exports, module) {
 
     this.createSource();
 
-    this.controller.toolbelt.loader.loadBarAdd();
+    this.controller.womb.loader.loadBarAdd();
 
   }
 
@@ -74,9 +75,6 @@ define(function(require, exports, module) {
     this.filter         = this.controller.ctx.createBiquadFilter();
     this.analyser       = this.controller.ctx.createAnalyser();
     this.gain           = this.controller.ctx.createGain();
-
-
-
 
     this.source.connect( this.gain  );
     this.gain.connect( this.analyser );
@@ -99,7 +97,25 @@ define(function(require, exports, module) {
     this.analyser = undefined;
 
   };
-	
+
+  Audio.prototype.fadeOut = function( time ){
+ 
+    var t = this.controller.ctx.currentTime;
+    if( !time ) time = this.params.fadeTime;
+    this.gain.gain.linearRampToValueAtTime( this.gain.gain.value , t );
+    this.gain.gain.linearRampToValueAtTime( 0.0 , t + time );
+
+  }
+  
+  Audio.prototype.fadeIn = function( time , value ){
+  
+    if( !time  ) time  = this.params.fadeTime;
+    if( !value ) value = 1;
+
+    console.log( this.gain.gain );
+    this.gain.gain.linearRampToValueAtTime( 1 , this.controller.ctx.currentTime + time );
+
+  }
 
   Audio.prototype.turnOffFilter = function(){
     this.filterOn = false;

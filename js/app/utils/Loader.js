@@ -3,14 +3,14 @@ define(function(require, exports, module) {
   var a  = require('js/lib/jquery.js');
   //var controls    = require( 'app/controls.js'      );
 
-  function Loader( toolbelt , params ){
+  function Loader( womb , params ){
 
     this.params = _.defaults( params || {}, {
       numberToLoad:   1,
       loadGif:        "img/gifs/loadGif.gif"
     });
 
-    this.toolbelt     = toolbelt;
+    this.womb     = womb;
 
     this.numberLoaded = 0;
     this.numberToLoad = this.params.numberToLoad;
@@ -93,7 +93,7 @@ define(function(require, exports, module) {
 
     onStart: function(){
      
-      this.toolbelt._start();
+      this.womb._start();
 
     }
 

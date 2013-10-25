@@ -3,9 +3,10 @@ define(function(require, exports, module) {
 
   var Audio     = require( 'app/audio/Audio'      );
   var UserAudio = require( 'app/audio/UserAudio'  );
+  var Stream    = require( 'app/audio/Stream'     );
   var Looper    = require( 'app/audio/Looper'     );
   
-  function AudioController( toolbelt , params ){
+  function AudioController( womb , params ){
   
     this.params = _.defaults( params || {}, {
         
@@ -21,7 +22,7 @@ define(function(require, exports, module) {
 
     this.ctx      = new webkitAudioContext();
 
-    this.toolbelt = toolbelt;
+    this.womb = womb;
 
     // Start with the filter off
     this.filterOn   = false;
@@ -105,6 +106,11 @@ define(function(require, exports, module) {
     this.userAudio = new UserAudio( this , params );
   }
 
+  AudioController.prototype.createStream = function( file , params ){
+    this.stream = new Stream( this , file , params );
+    console.log( this.stream );
+  }
+
   AudioController.prototype.createLoop = function( file, params ){
     
     var p = params;
@@ -116,6 +122,42 @@ define(function(require, exports, module) {
 
     return loop;
     
+  }
+
+  AudioController.prototype.fadeOut = function( time ){
+ 
+    var t = this.controller.ctx.currentTime;
+    if( !time ) time = this.params.fadeTime;
+    this.gain.gain.linearRampToValueAtTime( this.gain.gain.value , t );
+    this.gain.gain.linearRampToValueAtTime( 0.0 , t + time );
+
+  }
+  
+  AudioController.prototype.fadeIn = function( time , value ){
+  
+    if( !time  ) time  = this.params.fadeTime;
+    if( !value ) value = 1;
+
+    console.log( this.gain.gain );
+    this.gain.gain.linearRampToValueAtTime( 1 , this.controller.ctx.currentTime + time );
+
+  }
+
+
+  AudioController.prototype.fadeOutLoops = function( time ){
+
+    for( var i = 0 ; i < this.loops.array.length; i++ ){
+      this.loops.array[i].fadeOut( time );
+    }
+  
+  }
+
+  AudioController.prototype.fadeInLoops = function( time , value ){
+
+    for( var i = 0 ; i < this.loops.array.length; i++ ){
+      this.loops.array[i].fadeIn( time , value );
+    }
+  
   }
 
   AudioController.prototype.createNote = function( file, params ){
@@ -134,6 +176,7 @@ define(function(require, exports, module) {
     }
 
   }
+
 
 
   AudioController.prototype._update = function(){

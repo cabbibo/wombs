@@ -16,114 +16,115 @@
 
 */
 define(function(require, exports, module) {
-    /*var a = require('a'),
-        b = require('b');*/
-
-    //var three = require('js/lib/three.min.js');
-    var World           = require('app/World');
-    var Toolbelt        = require('app/utils/Toolbelt');
-
-    toolbelt = new Toolbelt();
     
-    var loopsArray = [
-
-      "audio/loops/1.mp3",
-      "audio/loops/2.mp3",
-      "audio/loops/3.mp3",
-      "audio/loops/4.mp3",
-      "audio/loops/5.mp3",
-      "audio/loops/6.mp3",
-      "audio/loops/7.mp3"
-
-    ]
-
-    toolbelt.loader.numberToLoad = loopsArray.length;
+  var Womb    = require('app/Womb');
+  womb        = new Womb();
     
-   
-    console.log( toolbelt.world.size );
-    var geo = new THREE.IcosahedronGeometry( toolbelt.world.size/20 , 2);
-    var mat = new THREE.MeshNormalMaterial();
+  var loopsArray  = [
 
-    var filterMeshes = [];
+    "audio/loops/1.mp3",
+    "audio/loops/2.mp3",
+    "audio/loops/3.mp3",
+    "audio/loops/4.mp3",
+    "audio/loops/5.mp3",
+    "audio/loops/6.mp3",
+    "audio/loops/7.mp3"
+
+  ]
+
+  womb.loader.numberToLoad = loopsArray.length;
+  
+  womb.audioController.createStream( 'audio/dontReallyCare.mp3' );
+  womb.audioController.stream.play();
+
+  var geo = new THREE.IcosahedronGeometry( womb.world.size/20 , 2);
+  var data = geo.clone();
+  var mat = new THREE.MeshNormalMaterial();
+
+  var filterMeshes = [];
 
 
-    //TODO:
-    //
-    // Create 'Loop object' 
-    // Need to make sure that we search through all of the children objects
-    // too see if this object is hovered over!
-    for( var i = 0; i < loopsArray.length; i ++ ){
+  //TODO:
+  //
+  // Create 'Loop object' 
+  // Need to make sure that we search through all of the children objects
+  // too see if this object is hovered over!
+  for( var i = 0; i < loopsArray.length; i ++ ){
 
-      var mesh = new THREE.Mesh( geo , mat );
-      mesh.position.x = (i / loopsArray.length ) * toolbelt.world.size;
-      toolbelt.world.scene.add( mesh );
+    var mesh = new THREE.Mesh( geo , mat );
+    mesh.position.x = (i / loopsArray.length ) * womb.world.size;
+    womb.world.scene.add( mesh );
 
-      console.log( mesh );
+    mesh.loop = womb.audioController.createLoop( loopsArray[i] );
 
-      mesh.loop = toolbelt.audioController.createLoop( loopsArray[i] );
+    filterMeshes.push( mesh );
 
-      filterMeshes.push( mesh );
+  }
 
+
+
+  womb.world.raycaster.onMeshHoveredOver = function( object ){
+
+    for( var i =0; i < filterMeshes.length; i ++ ){
+
+      if( object === filterMeshes[i] ){
+        filterMeshes[i].loop.turnOffFilter();
+      }
+    }
+
+  }
+
+  womb.world.raycaster.onMeshHoveredOut = function( object ){
+
+    for( var i =0; i < filterMeshes.length; i ++ ){
+
+      if( object === filterMeshes[i] ){
+        filterMeshes[i].loop.turnOnFilter();
+      }
     }
 
 
+  }
 
-    toolbelt.world.raycaster.onMeshHoveredOver = function( object ){
+  womb.world.raycaster.onMeshSwitched = function( object , oObject ){
 
-      for( var i =0; i < filterMeshes.length; i ++ ){
+    for( var i =0; i < filterMeshes.length; i ++ ){
 
-        if( object === filterMeshes[i] ){
-          filterMeshes[i].loop.turnOffFilter();
-        }
+      if( object === filterMeshes[i] ){
+        filterMeshes[i].loop.turnOffFilter();
+      }
+
+      if( oObject === filterMeshes[i] ){
+        filterMeshes[i].loop.turnOnFilter();
       }
 
     }
 
-    toolbelt.world.raycaster.onMeshHoveredOut = function( object ){
 
-      for( var i =0; i < filterMeshes.length; i ++ ){
-
-        if( object === filterMeshes[i] ){
-          filterMeshes[i].loop.turnOnFilter();
-        }
-      }
-
-
-    }
-
-    toolbelt.world.raycaster.onMeshSwitched = function( object , oObject ){
-
-      for( var i =0; i < filterMeshes.length; i ++ ){
-
-        if( object === filterMeshes[i] ){
-          filterMeshes[i].loop.turnOffFilter();
-        }
-
-        if( oObject === filterMeshes[i] ){
-          filterMeshes[i].loop.turnOnFilter();
-        }
-
-      }
-
-
-    }
+  }
 
 
 
 
+  womb.update = function(){
+
+    //console.log( 'whoaaaa');
+
+  }
 
 
-    toolbelt.start = function(){
+  womb.start = function(){
 
-      toolbelt.audioController.playAllLoops();
+    womb.audioController.playAllLoops();
+    womb.audioController.fadeOutLoops();
+    //womb.audioController.stream.play();
+  }
 
-    }
+  womb.loader.loadBarAdd();
 
-    toolbelt.loader.loadBarAdd();
-
-    /*toolbelt.loader.onStart = function(){
-      toolbelt.animator.start();
-    }*/
+  /*womb.loader.onStart = function(){
+    womb.animator.start();
+  }*/
   
 });
 

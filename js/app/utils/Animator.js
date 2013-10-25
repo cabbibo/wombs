@@ -2,9 +2,9 @@ define(function(require, exports, module) {
   var a = require( 'js/lib/stats.min.js'  );
   var b = require( 'js/lib/three.min.js'  );
   
-  function Animator( toolbelt ){
+  function Animator( womb ){
 
-    this.toolbelt = toolbelt;
+    this.womb = womb;
 
     this.clock = new THREE.Clock();
 
@@ -37,7 +37,7 @@ define(function(require, exports, module) {
 
     this.delta = this.clock.getDelta();
     this.stats.update();
-    this.toolbelt._update();
+    this.womb._update();
     this.update();
 
     if( this.running == true ){ 
