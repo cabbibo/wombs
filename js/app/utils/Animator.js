@@ -1,4 +1,5 @@
 define(function(require, exports, module) {
+  
   var a = require( 'js/lib/stats.min.js'  );
   var b = require( 'js/lib/three.min.js'  );
   
@@ -7,6 +8,7 @@ define(function(require, exports, module) {
     this.womb = womb;
 
     this.clock = new THREE.Clock();
+    this.clock.autostart = false;
 
     this.stats = new Stats();
     this.stats.domElement.style.position  = 'absolute';
@@ -24,8 +26,11 @@ define(function(require, exports, module) {
   }
 
   Animator.prototype.start = function(){
+    
     this.running = true;
+    this.clock.start();
     this.animate();
+  
   }
 
   Animator.prototype.stop = function(){

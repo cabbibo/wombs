@@ -130,6 +130,6 @@ define(function(require, exports, module) {
 
   }
 
-  return Raycaster
+  module.exports = Raycaster;
 
 });

@@ -1,5 +1,3 @@
-
-
 /*
  
    TODO:
@@ -13,8 +11,9 @@
     - Build in a loop object which has score, fade in and fade out properties
     - Add in fade out and fade in functions to the Audio.js
 
-
 */
+
+
 define(function(require, exports, module) {
     
   var Womb    = require('app/Womb');
@@ -34,14 +33,21 @@ define(function(require, exports, module) {
 
   womb.loader.numberToLoad = loopsArray.length;
   
-  womb.audioController.createStream( 'audio/dontReallyCare.mp3' );
-  womb.audioController.stream.play();
+  //womb.audioController.createStream( 'audio/dontReallyCare.mp3' );
+  //womb.audioController.stream.play();
 
   var geo = new THREE.IcosahedronGeometry( womb.world.size/20 , 2);
   var data = geo.clone();
   var mat = new THREE.MeshNormalMaterial();
 
   var filterMeshes = [];
+
+
+  womb.scene = womb.world.sceneCreator.createScene();
+
+  var text = womb.world.textCreator.createMesh( 'TESSST' );
+  text.position.y = womb.world.size / 4;
+  womb.scene.scene.add( text );
 
 
   //TODO:
@@ -53,7 +59,7 @@ define(function(require, exports, module) {
 
     var mesh = new THREE.Mesh( geo , mat );
     mesh.position.x = (i / loopsArray.length ) * womb.world.size;
-    womb.world.scene.add( mesh );
+    womb.scene.scene.add( mesh );
 
     mesh.loop = womb.audioController.createLoop( loopsArray[i] );
 
@@ -116,7 +122,7 @@ define(function(require, exports, module) {
   womb.start = function(){
 
     womb.audioController.playAllLoops();
-    womb.audioController.fadeOutLoops();
+    //womb.audioController.fadeOutLoops();
     //womb.audioController.stream.play();
   }
 

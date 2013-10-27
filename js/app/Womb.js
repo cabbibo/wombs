@@ -6,15 +6,18 @@ define(function(require, exports, module) {
 
 
   //var math      = require( 'app/utils/math.js'      );
-  var loader            = require( 'app/utils/loader'          );
-  var animator          = require( 'app/utils/animator'        );
+  var Loader            = require( 'app/utils/loader'          );
+  var Animator          = require( 'app/utils/animator'        );
   var AudioController   = require( 'app/audio/AudioController' );
   var World             = require( 'app/three/World'           );
+  var Tweener           = require( 'app/utils/Tweener'         );
+  var Scene             = require( 'app/three/Scene'           );
   
   function Womb(){
 
-    this.loader           = new loader(           this );
-    this.animator         = new animator(         this );
+    this.loader           = new Loader(           this );
+    this.tweener          = new Tweener(          this );
+    this.animator         = new Animator(         this );
     this.audioController  = new AudioController(  this );
     this.world            = new World(            this );
 
@@ -35,6 +38,8 @@ define(function(require, exports, module) {
 
     this.update();
 
+    TWEEN.update();
+
     this.audioController._update();
     this.world._update();
 
@@ -46,6 +51,6 @@ define(function(require, exports, module) {
 
   }
 
-  return Womb
+  module.exports = Womb;
 
 });

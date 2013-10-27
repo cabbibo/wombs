@@ -2,6 +2,8 @@ define(function(require, exports, module) {
     
   var CameraController  = require( 'app/three/CameraController' );
   var Raycaster         = require( 'app/three/Raycaster'        );
+  var TextCreator       = require( 'app/three/TextCreator'      );
+  var SceneCreator      = require( 'app/three/SceneCreator'     );
 
     function World( womb , params ){
 
@@ -74,8 +76,10 @@ define(function(require, exports, module) {
       this.container.appendChild( this.renderer.domElement );
 
 
-      this.cameraController = new CameraController( this );
-      this.raycaster        = new Raycaster( this );
+      this.cameraController = new CameraController(   this );
+      this.raycaster        = new Raycaster(          this );
+      this.textCreator      = new TextCreator(        this );
+      this.sceneCreator     = new SceneCreator(       this );
 
       window.addEventListener( 'resize', this.onWindowResize.bind( this ), false );
 
