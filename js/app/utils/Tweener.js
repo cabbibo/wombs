@@ -65,7 +65,6 @@ define(function(require, exports, module) {
         z: params.target.z,
       }
 
-
     }
 
     var tween = new TWEEN.Tween( initial ).to( target , params.time * 1000 );
@@ -73,6 +72,7 @@ define(function(require, exports, module) {
 
 
     // Need to assign these for the update loop
+    tween.params    = params;
     tween.object    = params.object;
     tween.type      = params.type;
     tween.tweener   = this;
@@ -94,6 +94,7 @@ define(function(require, exports, module) {
      
       if( this.initial.x == this.target.x ){
 
+        console.log( this.initial.x + " , " + this.target.x );
         var i = this.tweener.tweens.indexOf( this );
         this.tweener.tweens.splice( i , 1 );
 

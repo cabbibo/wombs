@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     this.womb  = world.womb;
 
     var s = this.world.size * 10;
+    console.log( s );
 
     this.params = _.defaults( params || {} , {
 
@@ -53,12 +54,14 @@ define(function(require, exports, module) {
     // Makes sure that when a scene is finished,
     // it will ALWAYS be removed from the womb
     this.onExit = function(){
-      this.params.onExit();
-      this.world.scene.remove( this.scene );
+      var s = this.params.scene;
+      s.params.onExit();
+      s.world.scene.remove( s.scene );
     }
 
     this.transitionOut = this.womb.tweener.createTween({
 
+      scene:                          this,
       object:                   this.scene,
       target:        this.params.outTarget,
       type:         this.params.transition,
@@ -73,15 +76,23 @@ define(function(require, exports, module) {
 
   Scene.prototype.enter = function(){
 
+    
     this.world.scene.add( this.scene );
 
+    this.transitionIn.initial.x = this.params.outTarget.x;
+    this.transitionIn.initial.y = this.params.outTarget.y;
+    this.transitionIn.initial.z = this.params.outTarget.z;
+    
     console.log( this.transitionIn );
     this.transitionIn.start();
 
   }
 
   Scene.prototype.exit = function(){
-
+    this.transitionOut.initial.x = this.scene.position.x;
+    this.transitionOut.initial.y = this.scene.position.y;
+    this.transitionOut.initial.z = this.scene.position.z;
+    console.log( this.transitionOut );
     this.transitionOut.start();
 
   }
