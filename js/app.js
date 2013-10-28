@@ -19,6 +19,9 @@ define(function(require, exports, module) {
   var Womb    = require('app/Womb');
   womb        = new Womb();
     
+
+  var AudioGeometry = require('app/three/AudioGeometry');
+
   var loopsArray  = [
 
     "audio/loops/1.mp3",
@@ -40,14 +43,14 @@ define(function(require, exports, module) {
   var data = geo.clone();
   var mat = new THREE.MeshNormalMaterial();
 
-  var filterMeshes = [];
-
-
-  womb.scene = womb.world.sceneCreator.createScene();
+  womb.scene = womb.world.sceneController.createScene();
+  womb.scene.filterMeshes = [];
 
   var text = womb.world.textCreator.createMesh( 'TESSST' );
   text.position.y = womb.world.size / 4;
   womb.scene.scene.add( text );
+
+
 
 
   //TODO:
@@ -57,13 +60,17 @@ define(function(require, exports, module) {
   // too see if this object is hovered over!
   for( var i = 0; i < loopsArray.length; i ++ ){
 
-    var mesh = new THREE.Mesh( geo , mat );
+    var loop      = womb.audioController.createLoop( loopsArray[i] );
+    var geometry  = new AudioGeometry( geo , loop );
+    var mesh      = new THREE.Mesh( geometry.geometry , mat );
+
+    mesh.audioGeometry = geometry;
+    mesh.loop     = loop;
+
     mesh.position.x = (i / loopsArray.length ) * womb.world.size;
     womb.scene.scene.add( mesh );
 
-    mesh.loop = womb.audioController.createLoop( loopsArray[i] );
-
-    filterMeshes.push( mesh );
+    womb.scene.filterMeshes.push( mesh );
 
   }
 
@@ -71,10 +78,10 @@ define(function(require, exports, module) {
 
   womb.world.raycaster.onMeshHoveredOver = function( object ){
 
-    for( var i =0; i < filterMeshes.length; i ++ ){
+    for( var i =0; i < womb.scene.filterMeshes.length; i ++ ){
 
-      if( object === filterMeshes[i] ){
-        filterMeshes[i].loop.turnOffFilter();
+      if( object === womb.scene.filterMeshes[i] ){
+        womb.scene.filterMeshes[i].loop.turnOffFilter();
       }
     }
 
@@ -82,10 +89,10 @@ define(function(require, exports, module) {
 
   womb.world.raycaster.onMeshHoveredOut = function( object ){
 
-    for( var i =0; i < filterMeshes.length; i ++ ){
+    for( var i =0; i < womb.scene.filterMeshes.length; i ++ ){
 
-      if( object === filterMeshes[i] ){
-        filterMeshes[i].loop.turnOnFilter();
+      if( object === womb.scene.filterMeshes[i] ){
+        womb.scene.filterMeshes[i].loop.turnOnFilter();
       }
     }
 
@@ -94,14 +101,14 @@ define(function(require, exports, module) {
 
   womb.world.raycaster.onMeshSwitched = function( object , oObject ){
 
-    for( var i =0; i < filterMeshes.length; i ++ ){
+    for( var i =0; i < womb.scene.filterMeshes.length; i ++ ){
 
-      if( object === filterMeshes[i] ){
-        filterMeshes[i].loop.turnOffFilter();
+      if( object === womb.scene.filterMeshes[i] ){
+        womb.scene.filterMeshes[i].loop.turnOffFilter();
       }
 
-      if( oObject === filterMeshes[i] ){
-        filterMeshes[i].loop.turnOnFilter();
+      if( oObject === womb.scene.filterMeshes[i] ){
+        womb.scene.filterMeshes[i].loop.turnOnFilter();
       }
 
     }
@@ -112,8 +119,20 @@ define(function(require, exports, module) {
 
 
 
-  womb.update = function(){
+  womb.scene.update = function(){
 
+    //console.log('aas');
+    var fM = womb.scene.filterMeshes;
+    for( var i =0; i < womb.scene.filterMeshes.length; i++ ){
+
+      fM[i].audioGeometry.update();
+      fM[i].geometry = fM[i].audioGeometry.geometry;
+      fM[i].geometry.verticesNeedUpdate = true;
+
+    }
+
+    //console.log( womb.scene.filterMeshes[0].geometry.vertices[0] );
+    //console.log( womb.scene.filterMeshes[0].audioGeometry.geometry.vertices[0] );
     //console.log( 'whoaaaa');
 
   }

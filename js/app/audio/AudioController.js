@@ -181,13 +181,13 @@ define(function(require, exports, module) {
 
   AudioController.prototype._update = function(){
 
-
     this.analyser.getByteFrequencyData( this.analyser.array );
+    //console.log( this.analyser.array );
 
     //AudioController.looper._update();
     this.update();
 
-    if( this.userAudio ){
+    /*if( this.userAudio ){
       this.userAudio._update();
     }
 
@@ -197,7 +197,7 @@ define(function(require, exports, module) {
 
     for( var i = 0; i < this.notes.length; i++ ){
       this.notes[i]._update();
-    }
+    }*/
 
   }
 

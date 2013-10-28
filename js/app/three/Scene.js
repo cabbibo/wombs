@@ -6,7 +6,7 @@ define(function(require, exports, module) {
   function Scene( world , params ){
   
     this.world = world;
-    this.womb  = world.womb;
+    this.womb = this.world.womb;
 
     var s = this.world.size * 10;
     console.log( s );
@@ -21,9 +21,6 @@ define(function(require, exports, module) {
       onExit:  function(){ console.log('Transition Out Finished'); },
 
     });
-
-    this.world = world;
-    this.womb  = world.womb;
 
     // Only updates if active
     this.active = false;
@@ -48,15 +45,17 @@ define(function(require, exports, module) {
       type:         this.params.transition,
       time:     this.params.transitionTime,
       callback:         this.params.onEnter
-
     });
 
     // Makes sure that when a scene is finished,
     // it will ALWAYS be removed from the womb
+    // Notice that this is calling 'this' from the tween 
+    // it is part of.
     this.onExit = function(){
-      var s = this.params.scene;
-      s.params.onExit();
-      s.world.scene.remove( s.scene );
+      var s = this.params.scene;       // Getting 'this' of scene
+      s.active = false;                // No longer update after it has left
+      s.params.onExit();               // Call the exit functino passed through
+      s.world.scene.remove( s.scene ); // Remove it from our world
     }
 
     this.transitionOut = this.womb.tweener.createTween({
@@ -73,26 +72,37 @@ define(function(require, exports, module) {
 
   }
 
-
   Scene.prototype.enter = function(){
 
-    
     this.world.scene.add( this.scene );
+    this.active = true;
 
+    // makes sure that we set the initial every time
+    // because if we tween in and out, our initials
+    // will remain the same, and make the tween not move
     this.transitionIn.initial.x = this.params.outTarget.x;
     this.transitionIn.initial.y = this.params.outTarget.y;
     this.transitionIn.initial.z = this.params.outTarget.z;
     
-    console.log( this.transitionIn );
     this.transitionIn.start();
 
   }
 
   Scene.prototype.exit = function(){
-    this.transitionOut.initial.x = this.scene.position.x;
-    this.transitionOut.initial.y = this.scene.position.y;
-    this.transitionOut.initial.z = this.scene.position.z;
-    console.log( this.transitionOut );
+    
+    // makes sure that we set the initial every time
+    // because if we tween in and out, our initials
+    // will remain the same, and make the tween not move
+    if( this.params.transition == 'position' ){
+      this.transitionOut.initial.x = this.scene.position.x;
+      this.transitionOut.initial.y = this.scene.position.y;
+      this.transitionOut.initial.z = this.scene.position.z;
+    }else if( this.params.transition == 'scale' ){
+      this.transitionOut.initial.x = this.scene.scale.x;
+      this.transitionOut.initial.y = this.scene.scale.y;
+      this.transitionOut.initial.z = this.scene.scale.z;
+    }
+    
     this.transitionOut.start();
 
   }
