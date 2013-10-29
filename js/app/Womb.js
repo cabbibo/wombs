@@ -15,9 +15,10 @@ define(function(require, exports, module) {
   function Womb(params){
 
     this.params = _.defaults( params || {} , {
-      raycaster: false,
-      cameraController: false,
+      raycaster:        false,
+      cameraController: false
     });
+
     this.loader           = new Loader(           this );
     this.tweener          = new Tweener(          this );
     this.animator         = new Animator(         this );

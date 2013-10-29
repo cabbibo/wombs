@@ -27,9 +27,10 @@ define(function(require, exports, module) {
     var al = this.audio.analyser.array.length;
     var gl = this.geometry.vertices.length;
 
-    for( var i = 0; i < al; i++ ){
+
+    for( var i = 0; i < gl; i++ ){
     
-      var fbd = this.audio.analyser.array[i];
+      var fbd = this.audio.analyser.array[i % (al/2)];
 
       if( this.geometry.vertices[i] ){
 

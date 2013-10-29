@@ -9,7 +9,7 @@ define(function(require, exports, module) {
     this.params = _.defaults( params || {}, {
         
       looping:      false,
-      fbc:            128,
+      fbc:           1024,
       fadeTime:         1,  
 
     });
