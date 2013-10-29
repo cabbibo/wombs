@@ -80,12 +80,11 @@ define(function(require, exports, module) {
     this.filterOn       = false;
     this.filter         = this.controller.ctx.createBiquadFilter();
     this.analyser       = this.controller.ctx.createAnalyser();
+    this.analyser.array = new Uint8Array( this.params.fbc );
     this.gain           = this.controller.ctx.createGain();
 
     this.source.connect( this.gain  );
     this.gain.connect( this.analyser );
-
-    this.gain.gain.value = 1;
 
     if( this.looping ){
       this.analyser.connect( this.controller.loops.gain );

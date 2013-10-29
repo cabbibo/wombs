@@ -27,7 +27,10 @@ define(function(require, exports, module) {
 
 
   Audio.prototype.loadFile = function(){
-    
+   
+
+    this.controller.womb.loader.numberToLoad ++;
+
     var request=new XMLHttpRequest();
 	request.open("GET",this.file,true);
 	request.responseType="arraybuffer";
@@ -143,9 +146,9 @@ define(function(require, exports, module) {
 		
   Audio.prototype.play = function(){
 		
-    this.playing = true
+    this.playing = true;
     this.source.noteOn(0);
-
+   
     // Creates a new source for the audio right away
     // so we can play the next one with no delay
     if(this.source.loop == false){

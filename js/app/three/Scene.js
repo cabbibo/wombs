@@ -8,19 +8,40 @@ define(function(require, exports, module) {
     this.world = world;
     this.womb = this.world.womb;
 
-    var s = this.world.size * 10;
-    console.log( s );
-
     this.params = _.defaults( params || {} , {
-
-      transition:                                         'position',
-      transitionTime:                                              1,
-      inTarget:                       new THREE.Vector3( 0 , 0 , 0 ),
-      outTarget:                      new THREE.Vector3( s , s , s ),
-      onEnter: function(){ console.log('Transition In  Finished'); },
-      onExit:  function(){ console.log('Transition Out Finished'); },
-
+      scene:                    this,
+      transition:         'position',
+      transitionTime:              1,
+      enterStart:       function(){},
+      enterFinish:      function(){},
+      exitStart:        function(){},
+      exitFinish:       function(){},
+      
     });
+
+
+    /* Assigning in and out target based on the transition type */
+    
+    var s = this.world.size;
+
+    if( !this.params.inTarget ){
+
+      if( this.params.transition == 'position' )
+        this.params.inTarget = new THREE.Vector3( 0 , 0 , 0 );
+      else if( this.params.transition == 'scale' )
+        this.params.inTarget = new THREE.Vector3( 1 , 1 , 1 );
+      
+    }
+
+    var vs = 0.000001;
+    if( !this.params.outTarget ){
+
+      if( this.params.transition == 'position' )
+        this.params.outTarget = new THREE.Vector3(  s ,  s ,  s );
+      else if( this.params.transition == 'scale' )
+        this.params.outTarget = new THREE.Vector3( vs , vs , vs );
+
+    }
 
     // Only updates if active
     this.active = false;
@@ -38,13 +59,23 @@ define(function(require, exports, module) {
   
     }
 
-    this.transitionIn = this.womb.tweener.createTween({
 
+    this.onEnter = function(){
+
+      var s = this.params.scene;
+      s.params.enterFinish();
+
+    }
+
+    this.transitionIn = this.womb.tweener.createTween({
+    
+      scene:                          this,
       object:                   this.scene,
       target:         this.params.inTarget,
       type:         this.params.transition,
       time:     this.params.transitionTime,
-      callback:         this.params.onEnter
+      callback:               this.onEnter
+    
     });
 
     // Makes sure that when a scene is finished,
@@ -52,10 +83,11 @@ define(function(require, exports, module) {
     // Notice that this is calling 'this' from the tween 
     // it is part of.
     this.onExit = function(){
-      var s = this.params.scene;       // Getting 'this' of scene
-      s.active = false;                // No longer update after it has left
-      s.params.onExit();               // Call the exit functino passed through
-      s.world.scene.remove( s.scene ); // Remove it from our world
+      var o = this.params.scene;       // Getting 'this' of scene
+      console.log( 'EXIT FINISHED' );
+      o.active = false;                // No longer update after it has left
+      o.params.exitFinish();           // Call the exit functino passed through
+      o.world.scene.remove( o.scene ); // Remove it from our world
     }
 
     this.transitionOut = this.womb.tweener.createTween({
@@ -74,8 +106,11 @@ define(function(require, exports, module) {
 
   Scene.prototype.enter = function(){
 
+   
     this.world.scene.add( this.scene );
     this.active = true;
+
+    this.params.enterStart();
 
     // makes sure that we set the initial every time
     // because if we tween in and out, our initials
@@ -83,12 +118,14 @@ define(function(require, exports, module) {
     this.transitionIn.initial.x = this.params.outTarget.x;
     this.transitionIn.initial.y = this.params.outTarget.y;
     this.transitionIn.initial.z = this.params.outTarget.z;
-    
+   
     this.transitionIn.start();
 
   }
 
   Scene.prototype.exit = function(){
+
+    this.params.exitStart();
     
     // makes sure that we set the initial every time
     // because if we tween in and out, our initials
@@ -102,7 +139,7 @@ define(function(require, exports, module) {
       this.transitionOut.initial.y = this.scene.scale.y;
       this.transitionOut.initial.z = this.scene.scale.z;
     }
-    
+   
     this.transitionOut.start();
 
   }

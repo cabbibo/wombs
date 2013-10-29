@@ -7,7 +7,7 @@ define(function(require, exports, module) {
     this.params = _.defaults( params || {} , {
 
       allVertices:        true,
-      analyzingFunction:  aF.straightScale( 128 )
+      analyzingFunction:  aF.vertexDependent( 3000 )
 
     });
 
@@ -36,7 +36,7 @@ define(function(require, exports, module) {
         var v = this.geometry.vertices[i];
         var d = this.data.vertices[i];
 
-        this.geometry.vertices[i] = this.params.analyzingFunction( d , gl , fbd , al );
+        this.geometry.vertices[i] = this.params.analyzingFunction( i , d , gl , fbd , al );
 
         
       }

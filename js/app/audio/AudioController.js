@@ -104,11 +104,12 @@ define(function(require, exports, module) {
 
   AudioController.prototype.createUserAudio = function(){
     this.userAudio = new UserAudio( this , params );
+    return this.userAudio;
   }
 
   AudioController.prototype.createStream = function( file , params ){
     this.stream = new Stream( this , file , params );
-    console.log( this.stream );
+    return this.stream;
   }
 
   AudioController.prototype.createLoop = function( file, params ){
@@ -126,7 +127,7 @@ define(function(require, exports, module) {
 
   AudioController.prototype.fadeOut = function( time ){
  
-    var t = this.controller.ctx.currentTime;
+    var t = this.ctx.currentTime;
     if( !time ) time = this.params.fadeTime;
     this.gain.gain.linearRampToValueAtTime( this.gain.gain.value , t );
     this.gain.gain.linearRampToValueAtTime( 0.0 , t + time );
@@ -139,7 +140,7 @@ define(function(require, exports, module) {
     if( !value ) value = 1;
 
     console.log( this.gain.gain );
-    this.gain.gain.linearRampToValueAtTime( 1 , this.controller.ctx.currentTime + time );
+    this.gain.gain.linearRampToValueAtTime( 1 , this.ctx.currentTime + time );
 
   }
 

@@ -11,10 +11,13 @@ define(function(require, exports, module) {
   var AudioController   = require( 'app/audio/AudioController' );
   var World             = require( 'app/three/World'           );
   var Tweener           = require( 'app/utils/Tweener'         );
-  var Scene             = require( 'app/three/Scene'           );
   
-  function Womb(){
+  function Womb(params){
 
+    this.params = _.defaults( params || {} , {
+      raycaster: false,
+      cameraController: false,
+    });
     this.loader           = new Loader(           this );
     this.tweener          = new Tweener(          this );
     this.animator         = new Animator(         this );

@@ -33,8 +33,6 @@ define(function(require, exports, module) {
       time:     1
     });
 
-    console.log( params );
-
     var initial , target;
 
     if( params.type == 'position' ){
@@ -53,7 +51,7 @@ define(function(require, exports, module) {
 
     }else if( params.type == 'scale' ){
 
-      intial = {
+      initial = {
         x: params.object.scale.x,    
         y: params.object.scale.y,
         z: params.object.scale.z
@@ -91,10 +89,12 @@ define(function(require, exports, module) {
         this.object.scale.y = this.initial.y;
         this.object.scale.z = this.initial.z;
       }
-     
-      if( this.initial.x == this.target.x ){
+    
+      // Need to look for a dif so that if it is off by a small
+      // amount, we still have a event called
+      var dif = Math.abs( this.initial.x - this.target.x ); 
+      if(  dif < .000001 ){
 
-        console.log( this.initial.x + " , " + this.target.x );
         var i = this.tweener.tweens.indexOf( this );
         this.tweener.tweens.splice( i , 1 );
 

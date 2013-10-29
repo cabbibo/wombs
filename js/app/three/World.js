@@ -4,8 +4,9 @@ define(function(require, exports, module) {
   var Raycaster         = require( 'app/three/Raycaster'        );
   var TextCreator       = require( 'app/three/TextCreator'      );
   var SceneController   = require( 'app/three/SceneController'  );
+  var ObjLoader         = require( 'app/three/ObjLoader'        );
 
-    function World( womb , params ){
+  function World( womb , params ){
 
       this.params = _.defaults( params || {}, {
         
@@ -13,7 +14,8 @@ define(function(require, exports, module) {
         FOV:        40,
         height:     window.innerHeight,
         width:      window.innerWidth,
-        background: 'rgb( 0 ,  0 ,  0 )'
+        background: 'rgb( 0 ,  0 ,  0 )',
+        hex:        0x000000
       
       });
 
@@ -21,14 +23,17 @@ define(function(require, exports, module) {
 
       this.size     = this.params.size;
       this.scene    = new THREE.Scene();
-     
+
+          
       // Aspect Ratio
       var aR        = this.params.width / this.params.height;
-      var near      = this.params.size / 100;
-      var far       = this.params.size * 4;
+      var near      = this.size / 100;
+      var far       = this.size * 4;
 
       this.camera = new THREE.PerspectiveCamera( this.params.FOV , aR , near , far );
       this.camera.position.z = this.params.size;
+
+      this.scene.fog = new THREE.Fog( this.params.hex , this.size , far );
 
       // Gives Us Something to start with 
       if( this.params.test ){
@@ -44,8 +49,7 @@ define(function(require, exports, module) {
 
         for( var i = 0; i < 20; i++ ){
     
-          var mesh = new THREE.Mesh( testGeo , testMat );
-
+          var mesh = new THREE.Mesh( testGeo , testMat )
           mesh.position.x = (Math.random() - .5) * this.params.size;
           mesh.position.y = (Math.random() - .5) * this.params.size;
           mesh.position.z = (Math.random() - .5) * this.params.size;
@@ -76,8 +80,16 @@ define(function(require, exports, module) {
       this.container.appendChild( this.renderer.domElement );
 
 
-      this.cameraController = new CameraController(   this );
-      this.raycaster        = new Raycaster(          this );
+
+      if( this.womb.params.cameraController )
+        this.cameraController = new CameraController(   this );
+      
+      if( this.womb.params.raycaster )
+        this.raycaster = new Raycaster( this );
+
+      if( this.womb.params.objLoader )
+        this.objLoader = new ObjLoader( this );
+
       this.textCreator      = new TextCreator(        this );
       this.sceneController  = new SceneController(    this );
 
@@ -92,8 +104,13 @@ define(function(require, exports, module) {
     World.prototype._update = function(){
      
       this.sceneController._update();
-      this.raycaster._update();
-      this.cameraController._update();
+      
+      if( this.raycaster )
+        this.raycaster._update();
+      
+      if( this.cameraController )
+        this.cameraController._update();
+
       this.update();
 
     }

@@ -1,0 +1,302 @@
+/*
+ 
+   TODO:
+
+    - Figure out how to connect shaders
+    - Figure out how to pass audio as attributes to shader
+    - Figure out how to tell if any of the children of a 'Loop Object' 
+       have been hovered over
+   
+    - Build in tween system
+    - Build in a loop object which has score, fade in and fade out properties
+    - Add in fade out and fade in functions to the Audio.js
+
+*/
+
+
+define(function(require, exports, module) {
+    
+  var Womb    = require('app/Womb');
+  womb        = new Womb();
+    
+
+  var AudioGeometry = require('app/three/AudioGeometry');
+
+  var loopsArray  = [
+
+    "audio/loops/1.mp3",
+    "audio/loops/2.mp3",
+    "audio/loops/3.mp3",
+    "audio/loops/4.mp3",
+    "audio/loops/5.mp3",
+    "audio/loops/6.mp3",
+    "audio/loops/7.mp3"
+
+  ]
+
+  //womb.loader.numberToLoad = loopsArray.length;
+  
+  womb.stream = womb.audioController.createStream( 'audio/dontReallyCare.mp3' );
+
+
+  /*
+  
+     Loop Scene
+
+
+
+  var geo = new THREE.IcosahedronGeometry( womb.world.size/20 , 2);
+  var data = geo.clone();
+  var mat = new THREE.MeshNormalMaterial();
+
+  womb.loopScene = womb.world.sceneController.createScene({
+   
+    enterStart: function(){
+
+      console.log( this );
+
+      // Need to make sure we are assigning this to the 
+      // scene and not to the tween it is part of
+      var s = this.scene;
+
+      for( var i =0; i< s.filterMeshes.length; i++ ){
+        s.filterMeshes[i].loop.play();
+      }
+
+      womb.audioController.fadeIn();
+
+    },
+
+
+
+    exitStart: function(){
+
+      womb.audioController.fadeOut();
+
+    },
+
+    // TODO: Test with audio
+    exitFinish: function(){
+
+      var s = this.scene;
+ 
+      for( var i =0; i< s.filterMeshes.length; i++ ){
+        s.filterMeshes[i].loop.stop();
+      }
+
+
+    }
+
+  });
+  womb.loopScene.filterMeshes = [];
+
+  var text = womb.world.textCreator.createMesh( 'Loop Scene' );
+  text.position.y = womb.world.size / 4;
+  womb.loopScene.scene.add( text );
+
+
+  //TODO:
+  // Create 'Loop object' 
+  // Need to make sure that we search through all of the children objects
+  // too see if this object is hovered over!
+  for( var i = 0; i < loopsArray.length; i ++ ){
+
+    var loop      = womb.audioController.createLoop( loopsArray[i] );
+    var geometry  = new AudioGeometry( geo , loop );
+    var mesh      = new THREE.Mesh( geometry.geometry , mat );
+
+    mesh.audioGeometry  = geometry;
+    mesh.loop           = loop;
+
+    mesh.position.x = (i / loopsArray.length ) * womb.world.size;
+    womb.loopScene.scene.add( mesh );
+
+    womb.loopScene.filterMeshes.push( mesh );
+
+  }
+
+
+  
+  // What will be called when the scene gets update womb.scene.filterMeshes.d
+  womb.loopScene.update = function(){
+
+    console.log('updating');
+    var fM = womb.loopScene.filterMeshes;
+    for( var i =0; i < fM.length; i++ ){
+      fM[i].audioGeometry.update();
+    }
+
+  }
+
+
+
+  womb.world.raycaster.onMeshHoveredOver = function( object ){
+
+    for( var i =0; i < womb.loopScene.filterMeshes.length; i ++ ){
+
+      if( object === womb.loopScene.filterMeshes[i] ){
+        womb.loopScene.filterMeshes[i].loop.turnOffFilter();
+      }
+    }
+
+  }
+
+  womb.world.raycaster.onMeshHoveredOut = function( object ){
+
+    for( var i =0; i < womb.loopScene.filterMeshes.length; i ++ ){
+
+      if( object === womb.loopScene.filterMeshes[i] ){
+        womb.loopScene.filterMeshes[i].loop.turnOnFilter();
+      }
+    }
+
+  }
+
+
+  womb.world.raycaster.onMeshSwitched = function( object , oObject ){
+
+    for( var i =0; i < womb.loopScene.filterMeshes.length; i ++ ){
+
+      if( object === womb.loopScene.filterMeshes[i] ){
+        womb.loopScene.filterMeshes[i].loop.turnOffFilter();
+      }
+
+      if( oObject === womb.loopScene.filterMeshes[i] ){
+        womb.loopScene.filterMeshes[i].loop.turnOnFilter();
+      }
+    
+    }
+
+  }
+
+
+  */
+
+
+
+  /*
+  
+     Mandala Scene 1
+
+  */
+
+  womb.mandalaScene1 = womb.world.sceneController.createScene({
+    //:w
+    //transition:'scale' 
+  });
+
+  var light = new THREE.DirectionalLight( 0xeeeeee , .5 );
+  light.position.set( 0 , 1 , 0 );
+  womb.mandalaScene1.scene.add( light );
+
+  var text = womb.world.textCreator.createMesh( 'Mandala Scene 1' );
+  text.position.y = womb.world.size / 4;
+  womb.mandalaScene1.scene.add( text );
+
+  var geo = new THREE.IcosahedronGeometry( womb.world.size/20 , 2 );
+  var material = new THREE.MeshPhongMaterial({
+
+   
+      color:        0x440077,
+      emissive:     0x004477,
+      specular:     0x440077,
+      shininess:    100000,
+      ambient:      0x110000,
+      shading:      THREE.FlatShading,
+      side:         THREE.DoubleSide,
+      opacity:      1,
+      transparent:  true
+        
+  });  
+  
+  womb.mandalaScene1.audioGeo = new AudioGeometry( geo , womb.stream );
+
+  for( var i = 0; i < 10; i ++ ){
+
+    var obj = new THREE.Mesh( womb.mandalaScene1.audioGeo.geometry , material );
+    obj.rotation.z = 2 * Math.PI * i / 10;
+
+    womb.mandalaScene1.scene.add( obj );
+
+  }
+
+  womb.mandalaScene1.update = function(){
+
+    this.audioGeo.update();
+
+  }
+
+
+   /*
+  
+     Mandala Scene 2
+
+  */
+
+  womb.mandalaScene2 = womb.world.sceneController.createScene();
+
+  var light = new THREE.DirectionalLight( 0xfffff , .5 );
+  light.position.set( 0 , -1 , 0 );
+  womb.mandalaScene2.scene.add( light );
+
+  var text = womb.world.textCreator.createMesh( 'Mandala Scene 2' );
+  text.position.y = -womb.world.size / 4;
+  womb.mandalaScene2.scene.add( text );
+
+  var geo = new THREE.IcosahedronGeometry( womb.world.size/10 , 2 );
+  var material = new THREE.MeshPhongMaterial({
+
+   
+      color:        0x44aa77,
+      emissive:     0xaa4477,
+      specular:     0x44aa77,
+      shininess:    100000,
+      ambient:      0x110000,
+      shading:      THREE.FlatShading,
+      side:         THREE.DoubleSide,
+      opacity:      1,
+      transparent:  true
+        
+  });  
+  
+  womb.mandalaScene2.audioGeo = new AudioGeometry( geo , womb.stream );
+
+  for( var i = 0; i < 10; i ++ ){
+
+    var obj = new THREE.Mesh( womb.mandalaScene2.audioGeo.geometry , material );
+    obj.rotation.z = 2 * Math.PI * i / 10;
+
+    obj.position.z = - womb.world.size / 10 ;
+
+    womb.mandalaScene2.scene.add( obj );
+
+  }
+
+  womb.mandalaScene2.update = function(){
+
+    this.audioGeo.update();
+
+  }
+
+
+
+  womb.audioController.gain.gain.value = 0;
+
+
+
+  womb.start = function(){
+
+    womb.mandalaScene1.enter();
+    womb.stream.play();
+
+
+  }
+
+  womb.loader.loadBarAdd();
+
+  /*womb.loader.onStart = function(){
+    womb.animator.start();
+  }*/
+  
+});
+
