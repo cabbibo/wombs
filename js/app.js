@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 
   //womb.loader.numberToLoad = loopsArray.length;
   
-  womb.stream = womb.audioController.createStream( 'audio/quoi.mp3' );
+  womb.stream = womb.audioController.createStream( 'audio/dontReallyCare.mp3' );
 
 
   /*
@@ -67,7 +67,10 @@ define(function(require, exports, module) {
 
     for( var i = 0; i < 10; i ++ ){
 
-      var obj = new THREE.Mesh( womb.mandalaScene1.audioGeo.geometry , material );
+      var obj = new THREE.Mesh( 
+        womb.mandalaScene1.audioGeo.geometry, 
+        womb.mandalaScene1.material
+      );
       obj.rotation.z = 2 * Math.PI * i / 10;
       
       womb.mandalaScene1.scene.add( obj );
@@ -183,14 +186,15 @@ define(function(require, exports, module) {
   var geo = new THREE.CubeGeometry( womb.world.size/10 , womb.world.size/10, womb.world.size/10, 5  , 5 ,5 );
   
   var material = new THREE.MeshPhongMaterial({
-      color:        0xaaaa77,
-      emissive:     0x775500,
-      specular:     0xaaaa77,
+      color:        0x3355aa,
+      emissive:     0x005588,
+      specular:     0x3355ff,
       shininess:    100000,
       ambient:      0x110000,
       shading:      THREE.FlatShading,
       side:         THREE.DoubleSide,
       opacity:      .5,
+      wireframe:    true,
       transparent:  true
   });  
   
@@ -237,16 +241,16 @@ define(function(require, exports, module) {
     transition:'position' 
   });
 
-  var light = new THREE.DirectionalLight( 0xff00ff , .5 );
+  var light = new THREE.DirectionalLight( 0xffffff , .5 );
   light.position.set( -1 , 0 , 0 );
   womb.mandalaScene4.scene.add( light );
   
   var geo = new THREE.SphereGeometry( womb.world.size/10 , 10 , 10 , 10 );
   
   var material = new THREE.MeshPhongMaterial({
-      color:        0x554433,
-      emissive:     0x330066,
-      specular:     0x554433,
+      color:        0xaaaa55,
+      emissive:     0xaa6666,
+      specular:     0xaaaa55,
       shininess:    100000,
       ambient:      0x110000,
       shading:      THREE.FlatShading,
@@ -284,9 +288,13 @@ define(function(require, exports, module) {
 
     var scale = Math.cos( this.timer / 100 );
 
-    this.scene.scale.x = scale;
-    this.scene.scale.y = scale;
-    this.scene.scale.z = scale;
+    this.scene.scale.x = (scale+2 )/ 2;
+    this.scene.scale.y = (scale+2 )/ 2;
+    this.scene.scale.z = (scale+2 )/ 2;
+
+    this.scene.rotation.y += .002;
+    this.scene.rotation.z += .005;
+
 
 
 
@@ -303,6 +311,9 @@ define(function(require, exports, module) {
     womb.mandalaScene1.enter();
     womb.stream.play();
 
+    var t1 = setTimeout( function(){ womb.mandalaScene2.enter() }, 5000 );
+    var t2 = setTimeout( function(){ womb.mandalaScene3.enter() }, 10000 );
+    var t3 = setTimeout( function(){ womb.mandalaScene4.enter() }, 15000 );
 
   }
 
