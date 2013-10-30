@@ -5,6 +5,7 @@ define(function(require, exports, module) {
   var TextCreator       = require( 'app/three/TextCreator'      );
   var SceneController   = require( 'app/three/SceneController'  );
   var ObjLoader         = require( 'app/three/ObjLoader'        );
+  var EffectComposer    = require( 'app/three/EffectComposer'   );
 
   function World( womb , params ){
 
@@ -90,6 +91,9 @@ define(function(require, exports, module) {
       if( this.womb.params.objLoader )
         this.objLoader = new ObjLoader( this );
 
+      if( this.womb.params.effectComposer )
+        this.effectComposer = new EffectComposer( this );
+
       this.textCreator      = new TextCreator(        this );
       this.sceneController  = new SceneController(    this );
 
@@ -122,7 +126,10 @@ define(function(require, exports, module) {
 
     World.prototype.render = function(){
 
-      this.renderer.render( this.scene , this.camera );
+      if( this.effectComposer )
+        this.effectComposer.render();
+      else
+        this.renderer.render( this.scene , this.camera );
 
     }
 

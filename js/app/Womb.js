@@ -6,17 +6,21 @@ define(function(require, exports, module) {
 
 
   //var math      = require( 'app/utils/math.js'      );
-  var Loader            = require( 'app/utils/loader'          );
-  var Animator          = require( 'app/utils/animator'        );
-  var AudioController   = require( 'app/audio/AudioController' );
-  var World             = require( 'app/three/World'           );
-  var Tweener           = require( 'app/utils/Tweener'         );
+  var Loader            = require( 'app/utils/loader'             );
+  var Animator          = require( 'app/utils/animator'           );
+  var AudioController   = require( 'app/audio/AudioController'    );
+  var World             = require( 'app/three/World'              );
+  var Tweener           = require( 'app/utils/Tweener'            );
+  var MassController    = require( 'app/physics/MassController'   );
+  var SpringController  = require( 'app/physics/SpringController' );
   
   function Womb(params){
 
     this.params = _.defaults( params || {} , {
       raycaster:        false,
-      cameraController: false
+      cameraController: false,
+      massController:   false,
+      springController: false,
     });
 
     this.loader           = new Loader(           this );
@@ -24,6 +28,16 @@ define(function(require, exports, module) {
     this.animator         = new Animator(         this );
     this.audioController  = new AudioController(  this );
     this.world            = new World(            this );
+
+
+
+    if( this.params.massController )
+      this.massController = new MassController( this );
+
+    if( this.params.springController )
+      this.springController = new SpringController( this , this.massController );
+
+
 
   }
 
@@ -44,10 +58,14 @@ define(function(require, exports, module) {
 
     TWEEN.update();
 
+    if( this.massController   ) this.massController._update();
+    if( this.springController ) this.springController._update();
+
     this.audioController._update();
     this.world._update();
 
     this.world.render();
+
 
   }
 
