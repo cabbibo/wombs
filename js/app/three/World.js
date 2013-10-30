@@ -6,6 +6,7 @@ define(function(require, exports, module) {
   var SceneController   = require( 'app/three/SceneController'  );
   var ObjLoader         = require( 'app/three/ObjLoader'        );
   var EffectComposer    = require( 'app/three/EffectComposer'   );
+  var UserMediaTexture  = require( 'app/three/UserMediaTexture' );
 
   function World( womb , params ){
 
@@ -83,7 +84,7 @@ define(function(require, exports, module) {
 
 
       if( this.womb.params.cameraController )
-        this.cameraController = new CameraController(   this );
+        this.cameraController = new CameraController( this );
       
       if( this.womb.params.raycaster )
         this.raycaster = new Raycaster( this );
@@ -94,13 +95,13 @@ define(function(require, exports, module) {
       if( this.womb.params.effectComposer )
         this.effectComposer = new EffectComposer( this );
 
+      if( this.womb.params.userMediaTexture )
+        this.userMediaTexture = new UserMediaTexture( this );
+
       this.textCreator      = new TextCreator(        this );
       this.sceneController  = new SceneController(    this );
 
       window.addEventListener( 'resize', this.onWindowResize.bind( this ), false );
-
-
-
 
 
     }
@@ -114,6 +115,9 @@ define(function(require, exports, module) {
       
       if( this.cameraController )
         this.cameraController._update();
+
+      if( this.userMediaTexture )
+        this.userMediaTexture._update();
 
       this.update();
 

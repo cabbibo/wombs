@@ -57,6 +57,24 @@ define(function(require, exports, module) {
   SpringController.prototype.update = function(){};
 
 
+  SpringController.prototype.createSpring = function( mass1 , mass2 , k , l ){
+
+    if( !k ) k = 2;
+    if( !l ) l = this.params.staticLength;
+
+    var spring = new Spring( this , {
+
+      m1:mass1,
+      m2:mass2,
+      k:k,
+      l:l
+
+    });
+
+    this.springs.push( spring );
+
+  }
+
   SpringController.prototype.createSpringsToMass = function( mass , masses , params ){
 
     var params = _.defaults( params || {}, {

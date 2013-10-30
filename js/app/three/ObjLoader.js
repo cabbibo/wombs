@@ -25,7 +25,6 @@ define(function(require, exports, module) {
       var geometries = [];
       object.traverse( function ( child ) {
 
-        console.log( this );
         if ( child instanceof THREE.Mesh ) {
           geometries.push( child.geometry);
         }

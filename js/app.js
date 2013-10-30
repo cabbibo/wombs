@@ -23,192 +23,118 @@ define(function(require, exports, module) {
     objLoader:        true,
     massController:   true,
     springController: true,
-    effectComposer:   true
+    //effectComposer:   true,
+   //<D-r> userMediaTexture: true
   });
     
-
-  var m                   = require('app/utils/Math'              );
-  var AudioGeometry       = require('app/three/AudioGeometry'     );
-  var AnalyzingFunctions  = require('app/utils/AnalyzingFunctions');
-  var LeapController      = require('app/utils/LeapController'    );
-
-  LeapController.size = womb.world.size / 4;
-
-  womb.audioController.gain.gain.value = 0;
-  womb.stream = womb.audioController.createStream( 'audio/dontReallyCare.mp3' );
-
-  /*
-  
-     Mandala Scene 1
-
-  */
-
-  womb.s1 = womb.world.sceneController.createScene({
-    transition:'scale' 
-  });
-
-  womb.s1.light = new THREE.DirectionalLight( 0xeeeeee , .5 );
-  womb.s1.light.position.set( 0 , 1 , 0 );
-  womb.s1.scene.add( womb.s1.light );
-
-
-
-  womb.s1.geo = new THREE.SphereGeometry( womb.world.size/20 , 10 , 10 );
-  womb.s1.material = new THREE.MeshPhongMaterial({
-      color:        0x440077,
-      emissive:     0x008877,
-      specular:     0x440077,
-      shininess:    100000,
-      ambient:      0x110000,
-      shading:      THREE.FlatShading,
-      side:         THREE.DoubleSide,
-      opacity:      1,
-      transparent:  true
-  });  
-
-  womb.s1.material1 = new THREE.MeshPhongMaterial({
-      color:        0x007744,
-      emissive:     0xaa8877,
-      specular:     0x44aa99,
-      shininess:    100000,
-      ambient:      0x1100ff,
-      shading:      THREE.FlatShading,
-      side:         THREE.DoubleSide,
-      opacity:      1,
-      transparent:  true
-  });  
 
  
+  var LeapController      = require('app/utils/LeapController'    );
 
-  // hand Mandala 1
-  womb.s1.hM1 = new THREE.Object3D();
-  womb.s1.hM2 = new THREE.Object3D();
-  womb.s1.audioGeometries = [];  
+  s1          = require( 'app/scenes/s1'        );
+  s2          = require( 'app/scenes/s2'        );
+  s3          = require( 'app/scenes/s3'        );
+  cP1         = require( 'app/scenes/cP1'       );
+  stars1      = require( 'app/scenes/stars1'    );
+  mandala1    = require( 'app/scenes/mandala1'  );
+  lurker1     = require( 'app/scenes/lurker1'   );
 
-  var geo = new AudioGeometry( womb.s1.geo , womb.stream , {
-    analyzingFunction: AnalyzingFunctions.vertexDependent( 5000 )
-  });
-  womb.s1.audioGeometries.push( geo );
+  womb.stream = womb.audioController.createUserAudio();
 
-  for( var i = 0; i < 10; i++ ){
+  LeapController.size   = womb.world.size;
+  LeapController.offset = new THREE.Vector3( 0 , 0 , - womb.world.size * 1.5 );
 
-
-    var mesh  = new THREE.Mesh( geo.geometry , womb.s1.material1 );
-    var mesh1 = new THREE.Mesh( geo.geometry , womb.s1.material1 );
-    
-    mesh.rotation.z = 2 * Math.PI * i / 10;
-    mesh1.rotation.z = 2 * Math.PI * i / 10;
-
-    womb.s1.hM1.add( mesh  );
-    womb.s1.hM2.add( mesh1 );
-
-
+  // Hack to keep from starting multiple time
+  // TODO: Clean
+  //womb.loader.numberToLoad ++;
+  womb.stream = womb.audioController.userAudio;
+  womb.audioController.userAudio.onStreamCreated = function(){
+    s1.init(womb);
+    s2.init(womb);
+    s3.init(womb);
+    cP1.init(womb);
+    stars1.init(womb);
+    mandala1.init(womb);
+    lurker1.init(womb);
+    womb.loader.loadBarAdd();
   }
 
-  womb.s1.M1 = womb.massController.createMass( womb.s1.scene , womb.s1.hM1 ,{
-    mass: 1000000000000000,  
-  });
+  womb.audioController.gain.gain.value = 0;
 
-  womb.s1.M2 = womb.massController.createMass( womb.s1.scene , womb.s1.hM2 ,{
-    mass: 100000000000000,  
-  });
+  womb.sceneArray = [];
 
-  womb.s1.M1.position.x  =   womb.world.size / 5;
-  womb.s1.M2.position.x  = - womb.world.size / 5;
+  womb.sceneCall = 0;
 
-  womb.s1.M1.updatePosition();
-  womb.s1.M2.updatePosition();
-
-  womb.s1.handMasses = [];
-  womb.s1.handMasses.push( womb.s1.M1 );
-  womb.s1.handMasses.push( womb.s1.M2 );
-
-
-  womb.s1.audioMasses = [];
-
-  womb.world.objLoader.loadFile( 'js/lib/tree.obj' , function(geo){
-
-    var geo = new AudioGeometry( geo[0] , womb.stream ,{
-      analyzingFunction: AnalyzingFunctions.straightScale( 256 ) 
-    });
-
-    womb.s1.audioGeometries.push( geo );
-    for( var i = 0; i < 10; i ++ ){
-
-      var obj = new THREE.Mesh( 
-        geo.geometry, 
-        womb.s1.material
-      );
-      obj.rotation.z = 2 * Math.PI * i / 10;
-
-      var mass = womb.massController.createMass( womb.s1.scene , obj );
-      mass.randomPosition( womb.world.size );
-
-      womb.s1.audioMasses.push( mass );
-      
-    }
-
-    womb.s1.createSprings();
-
-  
-  });
-
-
-  womb.s1.createSprings = function(){
-
-    womb.springController.createSpringsToMass(
-        womb.s1.handMasses[0],
-        womb.s1.audioMasses  
-    );
-
-    womb.springController.createSpringsToMass(
-        womb.s1.handMasses[1],
-        womb.s1.audioMasses  
-    ); 
-
-
-
-  }
-
-
-  womb.s1.update = function(){
+  womb.update = function(){
 
     this.f = LeapController.frame();
     if( !this.oF ) this.oF = this.f;
- 
 
-    for( var i =0 ; i < 2; i ++ ){
+    if( !this.oF.hands.length && this.f.hands.length ){
 
-      if( this.f.hands[i] ){
+    }else if( this.oF.hands.length && !this.f.hands.length ){
 
-        var h = this.f.hands[i];
-        var hM = this.handMasses[i];
-        hM.position = LeapController.leapToScene( this.f , h.palmPosition );
-        hM.updatePosition();
-
-      }else{
-
-      }
-    
+      womb.triggerEvent();
     }
-   
-    for( var i = 0; i < this.audioGeometries.length; i++ ){
-      this.audioGeometries[i].update();
-    }
+
+
+
 
     this.oF = this.f;
 
   }
 
+  womb.triggerEvent = function(){
 
-  womb.loader.loadBarAdd(); 
+    console.log( womb.sceneCall );
+    womb.sceneArray[womb.sceneCall]();
+    womb.sceneCall ++;
+    if( womb.sceneCall == womb.sceneArray.length )
+      womb.sceneCall = 0;
+
+  }
 
   womb.start = function(){
 
-    LeapController.start();
-    womb.s1.enter();
-    womb.stream.play();
+ 
+    console.log('START' );
+    var event1 = function(){
+      womb.s2.enter();
+      womb.cP1.enter();
+      womb.lurker1.enter();
+      womb.stars1.enter();
+      womb.mandala1.enter();
+    }
 
+    var event2 = function(){
+
+      womb.s2.exit();
+      womb.s3.enter();
+
+    }
+
+    var event3 = function(){
+      womb.s1.enter();
+      womb.s3.exit();
+    }
+
+    var event4 = function(){
+
+      womb.s1.exit();
+      womb.s2.enter();
+
+    }
+
+    womb.sceneArray.push( event1 );
+    womb.sceneArray.push( event2 );
+    womb.sceneArray.push( event3 );
+    womb.sceneArray.push( event4 );
+
+  
+    LeapController.start();
+    //womb.stream.play();
   }
+
+
 });
 

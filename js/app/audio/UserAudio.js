@@ -4,17 +4,23 @@ define(function(require, exports, module) {
   function UserAudio( controller , params ){
  
 
+
+    this.controller = controller;
+    this.womb       = this.controller.womb;
     this.params = _.defaults( params || {}, {
         
       fbc:            128,
 
     });
 
+    this.womb.loader.numberToLoad ++;
+
     this.analyser = this.controller.ctx.createAnalyser();
     this.filter   = this.controller.ctx.createBiquadFilter();
     this.gain     = this.controller.ctx.createGain();
 
     this.analyser.frequencyBinCount = this.params.fbc;
+    this.analyser.array = new Uint8Array( this.params.fbc );
 
 
     this.controller = controller;
@@ -32,7 +38,8 @@ define(function(require, exports, module) {
   }
   
   UserAudio.prototype.successCallback = function( stream ) {
-    
+   
+    this.womb.loader.loadBarAdd();
    
     window.stream = stream; // stream available to console
 
@@ -43,7 +50,13 @@ define(function(require, exports, module) {
     this.gain.connect(                  this.analyser );
     this.analyser.connect( this.controller.compressor );
 
+
+    this.onStreamCreated();
+
   }
+
+
+  UserAudio.prototype.onStreamCreated = function(){};
 
   UserAudio.prototype.errorCallback = function (error){
     console.log("navigator.getUserMedia error: ", error);

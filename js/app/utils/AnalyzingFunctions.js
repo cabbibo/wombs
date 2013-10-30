@@ -29,6 +29,25 @@ define(function(require, exports, module) {
 
   }
 
+  AnalyzingFunctions.zOnly = function( size , scaleFactor ){
+
+    if( !scaleFactor ) scaleFactor = 256
+    var f = function( i , d , gl , fbd , al ){
+
+      var x = d.x
+      var y = d.y 
+      var z = d.z + size * (1 +fbd/scaleFactor );
+
+      return new THREE.Vector3( x , y , z );
+
+    }
+
+    return f;
+
+  }
+
+
+
 
   AnalyzingFunctions.vertexDependent = function( scaleFactor ){
 

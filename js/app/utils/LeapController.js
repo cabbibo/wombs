@@ -36,6 +36,13 @@ define( function( require , exports , module ){
 
     }
 
+    if( this.offset ){
+
+      x += this.offset.x;
+      y += this.offset.y;
+      z += this.offset.z;
+
+    }
     return new THREE.Vector3( x , y , z );
 
   }

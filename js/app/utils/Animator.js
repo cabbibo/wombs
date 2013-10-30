@@ -26,10 +26,12 @@ define(function(require, exports, module) {
   }
 
   Animator.prototype.start = function(){
-    
-    this.running = true;
-    this.clock.start();
-    this.animate();
+   
+    if( !this.running ){
+      this.running = true;
+      this.clock.start();
+      this.animate();
+    }
   
   }
 

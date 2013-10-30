@@ -102,7 +102,7 @@ define(function(require, exports, module) {
 
 
 
-  AudioController.prototype.createUserAudio = function(){
+  AudioController.prototype.createUserAudio = function( params ){
     this.userAudio = new UserAudio( this , params );
     return this.userAudio;
   }
@@ -188,11 +188,11 @@ define(function(require, exports, module) {
     //AudioController.looper._update();
     this.update();
 
-    /*if( this.userAudio ){
+    if( this.userAudio ){
       this.userAudio._update();
     }
 
-    for( var i = 0; i < this.loops.length; i++ ){
+    /*for( var i = 0; i < this.loops.length; i++ ){
       this.loops[i]._update();
     }
 

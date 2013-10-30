@@ -66,6 +66,7 @@ define(function(require, exports, module) {
 
     loadBarAdd: function(){
 
+      
       var oldWidth = parseInt( this.loadBar.style.width );
       var newWidth = oldWidth + this.loadBarAddAmount
 
@@ -73,6 +74,7 @@ define(function(require, exports, module) {
 
       this.numberLoaded ++;
 
+      console.log( this.numberLoaded , this.numberToLoad );
       if( this.numberLoaded == this.numberToLoad ){
         this.onFinishedLoading();
       }
