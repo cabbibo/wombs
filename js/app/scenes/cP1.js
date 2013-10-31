@@ -36,6 +36,7 @@ define(function(require, exports, module) {
     
 
     womb.cP1.material = new THREE.ParticleBasicMaterial();
+    womb.cP1.material.size = 2;
     womb.cP1.material.opacity = .5;
     womb.cP1.material.transparent = true;
     womb.cP1.material.blending = THREE.AlphaBlending;
@@ -48,6 +49,8 @@ define(function(require, exports, module) {
 
       womb.cP1.scene.add( pS );
     }
+
+    womb.cP1.scene.position.z = - womb.world.size;
 
     womb.cP1.update = function(){
 

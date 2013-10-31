@@ -36,18 +36,18 @@ define(function(require, exports, module) {
 
 
     womb.mandala1.audioGeometry = new AudioGeometry( womb.mandala1.geo , womb.stream , {
-      analyzingFunction: AnalyzingFunctions.vertexDependent( 5000 )
+      analyzingFunction: AnalyzingFunctions.vertexDependent( 4000 )
     });
 
 
 
     womb.mandala1.meshes = [];
-    for( var i = 0; i < 20; i ++ ){
+    for( var i = 0; i < 10; i ++ ){
 
       
       var mesh = new THREE.Mesh( womb.mandala1.audioGeometry.geometry  , womb.mandala1.material );
 
-      mesh.rotation.z = Math.PI * i /20;
+      mesh.rotation.z = 2 * Math.PI * i / 10;
       //mesh.position.x = Math.randomRange( womb.world.size * 2 );
       //mesh.position.y = Math.randomRange( womb.world.size * 2);
       //mesh.position.z = Math.randomRange( womb.world.size * 2);
@@ -58,10 +58,11 @@ define(function(require, exports, module) {
 
     }
 
+    womb.mandala1.scene.position.z  = - womb.world.size;
     womb.mandala1.update = function(){
       womb.mandala1.audioGeometry.update();
-      womb.mandala1.scene.rotation.x += .005;
-      womb.mandala1.scene.rotation.y += .001;
+     // womb.mandala1.scene.rotation.x += .005;
+     // womb.mandala1.scene.rotation.y += .001;
       womb.mandala1.scene.rotation.z -= .002;
 
       /*for( var i =0; i< womb.mandala1.meshes.length; i ++ ){

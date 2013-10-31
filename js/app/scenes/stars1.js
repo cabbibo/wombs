@@ -45,9 +45,9 @@ define(function(require, exports, module) {
       
       var mesh = new THREE.Mesh( womb.stars1.audioGeometry.geometry  , womb.stars1.material );
  
-      mesh.position.x = Math.randomRange( womb.world.size * 2 );
-      mesh.position.y = Math.randomRange( womb.world.size * 2);
-      mesh.position.z = Math.randomRange( womb.world.size * 2);
+      mesh.position.x = Math.randomRange( womb.world.size * 3 );
+      mesh.position.y = Math.randomRange( womb.world.size * 3 );
+      mesh.position.z = Math.randomRange( womb.world.size * 3 );
 
       womb.stars1.scene.add( mesh );
       womb.stars1.meshes.push( mesh );
@@ -55,6 +55,7 @@ define(function(require, exports, module) {
 
     }
 
+    womb.stars1.scene.position.z = - womb.world.size;
     womb.stars1.update = function(){
       womb.stars1.audioGeometry.update();
       womb.stars1.scene.rotation.x += .005;

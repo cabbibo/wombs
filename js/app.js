@@ -34,6 +34,7 @@ define(function(require, exports, module) {
   s1          = require( 'app/scenes/s1'        );
   s2          = require( 'app/scenes/s2'        );
   s3          = require( 'app/scenes/s3'        );
+  s4          = require( 'app/scenes/s4'        );
   cP1         = require( 'app/scenes/cP1'       );
   stars1      = require( 'app/scenes/stars1'    );
   mandala1    = require( 'app/scenes/mandala1'  );
@@ -52,6 +53,7 @@ define(function(require, exports, module) {
     s1.init(womb);
     s2.init(womb);
     s3.init(womb);
+    s4.init(womb);
     cP1.init(womb);
     stars1.init(womb);
     mandala1.init(womb);
@@ -99,9 +101,9 @@ define(function(require, exports, module) {
  
     console.log('START' );
     var event1 = function(){
-      womb.s2.enter();
+      womb.s4.enter();
       womb.cP1.enter();
-      womb.lurker1.enter();
+      //womb.lurker1.enter();
       womb.stars1.enter();
       womb.mandala1.enter();
     }
