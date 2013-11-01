@@ -36,7 +36,7 @@ define(function(require, exports, module) {
 
 
     womb.lurker1.audioGeometry = new AudioGeometry( womb.lurker1.geo , womb.stream , {
-      analyzingFunction: AnalyzingFunctions.zOnly( womb.world.size , 64 )
+      analyzingFunction: AnalyzingFunctions.zOnly( womb.world.size  , 128 )
     });
 
 
@@ -57,7 +57,7 @@ define(function(require, exports, module) {
 
     }
 
-    womb.lurker1.scene.position.z = - womb.world.size * 7;
+    womb.lurker1.scene.position.z = - womb.world.size * 4;
 
     womb.lurker1.update = function(){
       womb.lurker1.audioGeometry.update();

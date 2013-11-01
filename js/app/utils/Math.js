@@ -33,7 +33,7 @@ define(function(require, exports, module) {
     return Math.random() * size
   }
 
-  M.getRandomFromArray = function(array){
+  M.randomFromArray = function(array){
     var i = Math.floor( Math.random() * array.length );
     return array[i];
   }

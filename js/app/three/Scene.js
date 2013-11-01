@@ -84,7 +84,6 @@ define(function(require, exports, module) {
     // it is part of.
     this.onExit = function(){
       var o = this.params.scene;       // Getting 'this' of scene
-      console.log( 'EXIT FINISHED' );
       o.active = false;                // No longer update after it has left
       o.params.exitFinish();           // Call the exit functino passed through
       o.world.scene.remove( o.scene ); // Remove it from our world

@@ -11,6 +11,36 @@ define( function( require , exports , module ){
 
   }
 
+  LeapController.leapToScreen = function( frame , position , clamp ){
+
+    var iBox = frame.interactionBox;
+
+    var left = iBox.center[0] - iBox.size[0]/2;
+    var top = iBox.center[1] + iBox.size[1]/2;
+
+    var x = position[0] - left;
+    var y = position[1] - top;
+
+    x /= iBox.size[0];
+    y /= iBox.size[1];
+
+    x *= window.innerWidth;
+    y *= window.innerHeight;
+
+    if( clamp ){
+
+      if( x > window.innerWidth )   x = window.innerWidth;
+      if( x < 0 )                   x = window.innerWidth;
+
+      if( y > window.innerHeight )  y = window.innerHeight;
+      if( y < 0 )                   y = window.innerHeight;
+
+    }
+
+    return [ x , -y ];
+
+  }
+
 
   LeapController.leapToScene = function( frame , position , size ){
 

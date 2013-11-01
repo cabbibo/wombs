@@ -29,6 +29,22 @@ define(function(require, exports, module) {
 
   }
 
+  AnalyzingFunctions.straightScaleIn = function( scaleFactor ){
+
+    var f = function( i , d , gl , fbd , al ){
+
+      var x = d.x * ( 1 - fbd / scaleFactor );
+      var y = d.y * ( 1 - fbd / scaleFactor );
+      var z = d.z * ( 1 - fbd / scaleFactor );
+
+      return new THREE.Vector3( x , y , z );
+
+    }
+
+    return f;
+
+  }
+
   AnalyzingFunctions.zOnly = function( size , scaleFactor ){
 
     if( !scaleFactor ) scaleFactor = 256
