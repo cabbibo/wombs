@@ -39,6 +39,7 @@ define(function(require, exports, module) {
   s6          = require( 'app/scenes/s6'        );
   s7          = require( 'app/scenes/s7'        );
   s8          = require( 'app/scenes/s8'        );
+  s9          = require( 'app/scenes/s9'        );
   cP1         = require( 'app/scenes/cP1'       );
   cP2         = require( 'app/scenes/cP2'       );
   cP3         = require( 'app/scenes/cP3'       );
@@ -47,7 +48,10 @@ define(function(require, exports, module) {
   stars3      = require( 'app/scenes/stars3'    );
   stars4      = require( 'app/scenes/stars4'    );
   stars5      = require( 'app/scenes/stars5'    );
+  stars6      = require( 'app/scenes/stars6'    );
   mandala1    = require( 'app/scenes/mandala1'  );
+  mandala2    = require( 'app/scenes/mandala2'  );
+  mandala3    = require( 'app/scenes/mandala3'  );
   lurker1     = require( 'app/scenes/lurker1'   );
 
   womb.stream = womb.audioController.createUserAudio();
@@ -71,6 +75,7 @@ define(function(require, exports, module) {
     s6.init(womb);
     s7.init(womb);
     s8.init(womb);
+    s9.init(womb);
     
     cP1.init(womb);
     cP2.init(womb);
@@ -80,7 +85,10 @@ define(function(require, exports, module) {
     stars3.init(womb);
     stars4.init(womb);
     stars5.init(womb);
+    stars6.init(womb);
     mandala1.init(womb);
+    mandala2.init(womb);
+    mandala3.init(womb);
     lurker1.init(womb);
 
     womb.leapScenes.push( womb.s1 );
@@ -91,6 +99,7 @@ define(function(require, exports, module) {
     womb.leapScenes.push( womb.s6 );
     womb.leapScenes.push( womb.s7 );
     womb.leapScenes.push( womb.s8 );
+    womb.leapScenes.push( womb.s9 );
    
     console.log('WOMB');
     console.log( womb.stars2 );
@@ -102,7 +111,10 @@ define(function(require, exports, module) {
     womb.prettyScenes.push( womb.stars3 );
     womb.prettyScenes.push( womb.stars4 );
     womb.prettyScenes.push( womb.stars5 );
+    womb.prettyScenes.push( womb.stars6 );
     womb.prettyScenes.push( womb.mandala1 );
+    womb.prettyScenes.push( womb.mandala2 );
+    womb.prettyScenes.push( womb.mandala3 );
     womb.prettyScenes.push( womb.lurker1 );
     
     
@@ -181,8 +193,8 @@ define(function(require, exports, module) {
     // this.getEnterEvent(   womb.leapScenes );
     // this.getEnterEvent( womb.prettyScenes );
     
-    womb.s8.enter();
-    womb.stars5.enter();
+    womb.s9.enter();
+    womb.stars6.enter();
 
 
     LeapController.start();
