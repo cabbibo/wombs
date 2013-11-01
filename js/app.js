@@ -35,8 +35,18 @@ define(function(require, exports, module) {
   s2          = require( 'app/scenes/s2'        );
   s3          = require( 'app/scenes/s3'        );
   s4          = require( 'app/scenes/s4'        );
+  s5          = require( 'app/scenes/s5'        );
+  s6          = require( 'app/scenes/s6'        );
+  s7          = require( 'app/scenes/s7'        );
+  s8          = require( 'app/scenes/s8'        );
   cP1         = require( 'app/scenes/cP1'       );
+  cP2         = require( 'app/scenes/cP2'       );
+  cP3         = require( 'app/scenes/cP3'       );
   stars1      = require( 'app/scenes/stars1'    );
+  stars2      = require( 'app/scenes/stars2'    );
+  stars3      = require( 'app/scenes/stars3'    );
+  stars4      = require( 'app/scenes/stars4'    );
+  stars5      = require( 'app/scenes/stars5'    );
   mandala1    = require( 'app/scenes/mandala1'  );
   lurker1     = require( 'app/scenes/lurker1'   );
 
@@ -50,14 +60,52 @@ define(function(require, exports, module) {
   //womb.loader.numberToLoad ++;
   womb.stream = womb.audioController.userAudio;
   womb.audioController.userAudio.onStreamCreated = function(){
+    womb.leapScenes = [];
+    womb.prettyScenes = [];
+    
     s1.init(womb);
     s2.init(womb);
     s3.init(womb);
     s4.init(womb);
+    s5.init(womb);
+    s6.init(womb);
+    s7.init(womb);
+    s8.init(womb);
+    
     cP1.init(womb);
+    cP2.init(womb);
+    cP3.init(womb);
     stars1.init(womb);
+    stars2.init(womb);
+    stars3.init(womb);
+    stars4.init(womb);
+    stars5.init(womb);
     mandala1.init(womb);
     lurker1.init(womb);
+
+    womb.leapScenes.push( womb.s1 );
+    womb.leapScenes.push( womb.s2 );
+    womb.leapScenes.push( womb.s3 );
+    womb.leapScenes.push( womb.s4 );
+    womb.leapScenes.push( womb.s5 );
+    womb.leapScenes.push( womb.s6 );
+    womb.leapScenes.push( womb.s7 );
+    womb.leapScenes.push( womb.s8 );
+   
+    console.log('WOMB');
+    console.log( womb.stars2 );
+    womb.prettyScenes.push( womb.cP1 );
+    womb.prettyScenes.push( womb.cP2 );
+    womb.prettyScenes.push( womb.cP3 );
+    womb.prettyScenes.push( womb.stars1 );
+    womb.prettyScenes.push( womb.stars2 );
+    womb.prettyScenes.push( womb.stars3 );
+    womb.prettyScenes.push( womb.stars4 );
+    womb.prettyScenes.push( womb.stars5 );
+    womb.prettyScenes.push( womb.mandala1 );
+    womb.prettyScenes.push( womb.lurker1 );
+    
+    
     womb.loader.loadBarAdd();
   }
 
@@ -86,53 +134,57 @@ define(function(require, exports, module) {
 
   }
 
+
+
+  womb.getEnterEvent = function( array ){
+
+    var s = Math.randomFromArray( array );
+
+    if( s.active == false ){
+      s.enter();
+    }else{
+      this.getEnterEvent( array );
+    }
+
+  }
+
+
+  womb.getExitEvent = function( array ){
+
+
+    for( var i =0; i< array.length; i++ ){
+
+      s = array[i];
+      if( s.active == true ){
+
+        console.log( 'exit' );
+        s.exit();
+
+      }
+
+    }
+  }
+
+
   womb.triggerEvent = function(){
 
-    console.log( womb.sceneCall );
-    womb.sceneArray[womb.sceneCall]();
-    womb.sceneCall ++;
-    if( womb.sceneCall == womb.sceneArray.length )
-      womb.sceneCall = 0;
-
+    this.getExitEvent(    womb.leapScenes );
+    this.getEnterEvent(   womb.leapScenes );
+    this.getExitEvent(  womb.prettyScenes );
+    this.getEnterEvent( womb.prettyScenes );
+  
+  
   }
 
   womb.start = function(){
 
- 
-    console.log('START' );
-    var event1 = function(){
-      womb.s4.enter();
-      womb.cP1.enter();
-      //womb.lurker1.enter();
-      womb.stars1.enter();
-      womb.mandala1.enter();
-    }
+    // this.getEnterEvent(   womb.leapScenes );
+    // this.getEnterEvent( womb.prettyScenes );
+    
+    womb.s8.enter();
+    womb.stars5.enter();
 
-    var event2 = function(){
 
-      womb.s2.exit();
-      womb.s3.enter();
-
-    }
-
-    var event3 = function(){
-      womb.s1.enter();
-      womb.s3.exit();
-    }
-
-    var event4 = function(){
-
-      womb.s1.exit();
-      womb.s2.enter();
-
-    }
-
-    womb.sceneArray.push( event1 );
-    womb.sceneArray.push( event2 );
-    womb.sceneArray.push( event3 );
-    womb.sceneArray.push( event4 );
-
-  
     LeapController.start();
     //womb.stream.play();
   }
