@@ -34,15 +34,32 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   this.springConstant   = 1;
   this.staticLength     = this.size ;
   this.mass             = 50;
+  
+  //this.lDivisionFactor     = 50;
+
 
   this.target = new THREE.Object3D();
+  this.targetIndicator = new THREE.Mesh( 
+    new THREE.IcosahedronGeometry( this.size / 50 , 1 ), 
+    new THREE.MeshBasicMaterial({ color: 0xff0000 }) 
+  );
+  this.target.add( this.targetIndicator );
+  this.scene.add( this.target );
+
   this.anchor = new THREE.Object3D();
-
-  // Just For Show:
-  this.anchorIndicator = new THREE.Mesh( new THREE.IcosahedronGeometry( this.size/10 , 1 ), new THREE.MeshNormalMaterial() );
+  this.anchorIndicator = new THREE.Mesh( 
+    new THREE.IcosahedronGeometry( this.size/50 , 1 ),
+    new THREE.MeshBasicMaterial({ color:0x00ff00 }) 
+  );
   this.anchor.add( this.anchorIndicator );
-
   this.scene.add( this.anchor );
+
+
+  this.fingerIndicator = new THREE.Mesh(
+    new THREE.IcosahedronGeometry( this.size/50 , 1 ),
+    new THREE.MeshBasicMaterial({ color:0x0000ff }) 
+  );
+  scene.add( this.fingerIndicator );
 
   this.getForce = function(){
 
@@ -75,7 +92,8 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
 
     var a = this.anchor.position;
     var t = this.target.position;
-    
+   
+    // Moves the anchor towards the target
     a.x   = a.x - ( a.x - t.x )/12;
     a.y   = a.y - ( a.y - t.y )/12;
     a.z   = a.z - ( a.z - t.z )/12;
@@ -92,22 +110,41 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   
     if( this.frame ){
 
-      if( this.frame.hands[0] && this.frame.pointables.length == 1 ){
+      if( this.frame.hands[0] && this.frame.pointables.length ){
 
-        if( this.frame.gestures[0] && !this.oFrame.gestures[0] ){
-          if( this.frame.gestures[0].type == 'circle' ){
+        var position    = this.controller.leapToScene( this.frame , this.frame.pointables[0].tipPosition );
+        position.z     -= this.size;
+        position.applyMatrix4( this.object.matrix ); 
 
-            var center = this.frame.gestures[0].center;
-            var position = this.controller.leapToScene( this.frame , center ); 
+        this.fingerIndicator.position = position;
 
-            this.target.position = position;
+        if( this.frame.pointables.length == 1 ){
 
-            console.log('helllso');
+          if( this.frame.gestures[0] && !this.oFrame.gestures[0] ){
+            if( this.frame.gestures[0].type == 'circle' ){
 
+              var g         = this.frame.gestures[0];
+
+              var center    = g.center;
+              var position  = this.controller.leapToScene( this.frame , center );
+              position.z   -= this.size;
+              position.applyMatrix4( this.object.matrix ); 
+
+              this.target.position = position;
+
+
+              // Uses the gesture radius to define the size of attraction
+              this.staticLength = (g.radius/50) * this.size;
+              console.log( g.radius );
+
+            }
 
           }
-
         }
+
+      }else{
+
+        this.fingerIndicator.position.x = this.size * 10000;
 
       }
 
