@@ -13,7 +13,8 @@ define(function(require, exports, module) {
   var Tweener           = require( 'app/utils/Tweener'            );
   var MassController    = require( 'app/physics/MassController'   );
   var SpringController  = require( 'app/physics/SpringController' );
-  
+  var LeapController    = require( 'app/utils/LeapController'     );
+
   function Womb(params){
 
     this.params = _.defaults( params || {} , {
@@ -21,6 +22,7 @@ define(function(require, exports, module) {
       cameraController: false,
       massController:   false,
       springController: false,
+      leapController:   false
     });
 
     this.loader           = new Loader(           this );
@@ -32,15 +34,18 @@ define(function(require, exports, module) {
 
 
     if( this.params.massController )
-      this.massController = new MassController( this );
+      this.massController   = new MassController( this );
 
     if( this.params.springController )
       this.springController = new SpringController( this , this.massController );
 
-
+    /*if( this.params.leapController ){
+      this.leapController       = new LeapController();
+      //this.leapController.size  = this.
+    }*/
+    
 
   }
-
 
   // This is what will be called in our loaded
   Womb.prototype._start = function(){
@@ -48,6 +53,8 @@ define(function(require, exports, module) {
     this.start();
   }
 
+
+  Womb.prototype.console = function(){ console.log( this ); }
   Womb.prototype.start = function(){
 
   }
@@ -60,7 +67,7 @@ define(function(require, exports, module) {
 
     if( this.massController   ) this.massController._update();
     if( this.springController ) this.springController._update();
-
+    
     this.audioController._update();
     this.world._update();
 

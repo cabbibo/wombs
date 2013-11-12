@@ -1,5 +1,26 @@
 
- /*
+define(function(require, exports, module) {
+
+  var m                   = require('app/utils/Math'              );
+  var AudioGeometry       = require('app/three/AudioGeometry'     );
+  var AnalyzingFunctions  = require('app/utils/AnalyzingFunctions');
+ 
+  var Womb    = require('app/Womb');
+  womb        = new Womb({
+    cameraController: true,
+    objLoader:        true,
+    massController:   true,
+    springController: true,
+    effectComposer:   true,
+  });
+    
+  var LeapController      = require('app/utils/LeapController'    );
+
+  womb.stream = womb.audioController.createUserAudio();
+
+  LeapController.size   = womb.world.size;
+  LeapController.offset = new THREE.Vector3( 0 , 0 , - womb.world.size * 1.5 );
+  /*
   
      Mandala Scene 1
 
@@ -264,7 +285,7 @@
   womb.start = function(){
 
     womb.mandalaScene1.enter();
-    womb.stream.play();
+    //womb.stream.play();
 
     var t1 = setTimeout( function(){ womb.mandalaScene2.enter() }, 5000 );
     var t2 = setTimeout( function(){ womb.mandalaScene3.enter() }, 10000 );
@@ -272,4 +293,4 @@
 
   }
 
-
+});

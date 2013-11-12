@@ -15,7 +15,7 @@ define(function(require, exports, module) {
     this.stats.domElement.style.bottom    = '0px';
     this.stats.domElement.style.right     = '0px';
     this.stats.domElement.style.zIndex    = '999';
-    this.stats.domElement.style.display   = 'none';
+    //this.stats.domElement.style.display   = 'none';
 
     this.requestAnimationFrame = requestAnimationFrame;
 

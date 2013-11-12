@@ -6,6 +6,7 @@ define(function(require, exports, module) {
   function Scene( world , params ){
   
     this.world = world;
+    console.log( this.world );
     this.womb = this.world.womb;
 
     this.params = _.defaults( params || {} , {
@@ -33,7 +34,7 @@ define(function(require, exports, module) {
       
     }
 
-    var vs = 0.000001;
+    var vs = 0.000001; // Very small number, so scale is non zero
     if( !this.params.outTarget ){
 
       if( this.params.transition == 'position' )

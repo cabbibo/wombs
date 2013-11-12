@@ -22,15 +22,15 @@ define(function(require, exports, module) {
   }
 
   M.randomRad = function (){
-    return Math.random() * Math.PI * 2
+    return Math.random() * Math.PI * 2;
   }
   // centers the random across 0
   M.randomRange = function(size){
-    return ( Math.random() - .5) * size
+    return ( Math.random() - .5) * size;
   }
 
   M.randomRangePos = function(size){
-    return Math.random() * size
+    return Math.random() * size;
   }
 
   M.randomFromArray = function(array){
@@ -49,6 +49,32 @@ define(function(require, exports, module) {
       if (a[i] !== b[i]) return false;
     }
     return true;
+  }
+
+  M.THREE = {
+
+    randomPosition: function( size ){
+
+      var x = M.randomRange( size );
+      var y = M.randomRange( size );
+      var z = M.randomRange( size );
+
+      return new THREE.Vector3( x , y , z );
+
+    },
+
+    setRandomRotation: function( rotation ){
+
+      rotation.x = M.randomRangePos( 2 * Math.PI );
+      rotation.y = M.randomRangePos( 2 * Math.PI );
+      rotation.z = M.randomRangePos( 2 * Math.PI );
+
+      return rotation;
+
+    }
+
+
+
   }
 
   module.exports = M;

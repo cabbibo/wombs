@@ -4,20 +4,18 @@ define(function(require, exports, module) {
 
 
   function SceneController( world , params ){
-
+    
     this.world = world;
     this.womb  = world.womb;
-
 
     this.scenes = [];
 
   }
 
   SceneController.prototype.createScene = function( params ){
-
+    
     var scene = new Scene( this.world , params );
     this.scenes.push( scene );
-
 
     return scene; 
 
@@ -29,6 +27,7 @@ define(function(require, exports, module) {
     for( var i = 0; i < this.scenes.length; i++ ){
 
       var scene = this.scenes[i];
+      
       if( scene.active ){
 
         scene.update();

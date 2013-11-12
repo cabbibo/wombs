@@ -49,7 +49,7 @@ define(function(require, exports, module) {
     womb.s5.h1.geometry = new THREE.SphereGeometry( womb.world.size / 10 );
     womb.s5.h1.mesh     = new THREE.Mesh( womb.s5.h1.geometry , womb.s5.h1.material ); 
     womb.s5.h1.mesh.position.z = -womb.world.size * 2;
-    womb.s5.h1.add( womb.s5.h1.mesh );
+   // womb.s5.h1.add( womb.s5.h1.mesh );
     womb.s5.scene.add( womb.s5.h1 );
 
     womb.s5.h2 = new THREE.Object3D();
@@ -67,7 +67,7 @@ define(function(require, exports, module) {
     womb.s5.h2.geometry = new THREE.SphereGeometry( womb.world.size / 10 );
     womb.s5.h2.mesh     = new THREE.Mesh( womb.s5.h2.geometry , womb.s5.h2.material ); 
     womb.s5.h2.mesh.position.z = -womb.world.size * 2;
-    womb.s5.h2.add( womb.s5.h2.mesh );
+   // womb.s5.h2.add( womb.s5.h2.mesh );
     womb.s5.scene.add( womb.s5.h2 );
 
 
