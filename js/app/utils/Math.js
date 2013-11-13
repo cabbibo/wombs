@@ -63,6 +63,22 @@ define(function(require, exports, module) {
 
     },
 
+    randomSpherePosition: function( size , theta , phi ){
+
+      var r = M.randomRangePos( size );
+      var t;
+      var p;
+
+      if( theta ) t = M.randomRangePos( theta );
+      else        t = M.randomRangePos( Math.PI * 2 );
+
+      if( phi )   p = M.randomRange( phi );
+      else        p = M.randomRange( Math.PI * 2 );
+     
+      return M.toCart( r , t , p );
+
+    },
+
     setRandomRotation: function( rotation ){
 
       rotation.x = M.randomRangePos( 2 * Math.PI );

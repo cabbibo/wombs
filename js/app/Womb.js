@@ -67,7 +67,7 @@ define(function(require, exports, module) {
 
     if( this.massController   ) this.massController._update();
     if( this.springController ) this.springController._update();
-    
+   
     this.audioController._update();
     this.world._update();
 

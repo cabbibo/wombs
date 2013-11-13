@@ -49,26 +49,111 @@ define(function(require, exports, module) {
     transition:'scale' 
   });
 
+  womb.testScene.lights = [];
+  for( var i = 0; i < 3; i++ ){
 
-  for( var i = 0; i < 100; i ++ ){
+    color = new THREE.Color();
+    color.setHSL( Math.random() , .8 , .8 );
 
-    var testMesh = new THREE.Mesh( 
-        new THREE.CubeGeometry( womb.world.size / 20 ,  womb.world.size / 20 , womb.world.size / 20 ) ,
-        new THREE.MeshNormalMaterial()
-    );
+    var hex = color.getHex();
+    var light = new THREE.DirectionalLight( hex , .5 );
+    var x = Math.randomRange( 2 );
+    var y = Math.randomRange( 2 );
+    var z = Math.randomRange( 2 );
 
-    testMesh.position = Math.THREE.randomPosition( 3*womb.world.size );
-    Math.THREE.setRandomRotation( testMesh.rotation );
-
-    womb.testScene.scene.add( testMesh );
+    light.position.set( x , y , z );
+ 
+    womb.testScene.scene.add( light );
+    womb.testScene.lights.push( light );
 
   }
 
+  var mainGeometry = new THREE.Geometry();
+  
+  var mat = new THREE.MeshNormalMaterial();
+  var geo = new THREE.CubeGeometry( 1 , 1 , 1 );
 
+  womb.clusters = [];
+
+  for( var i = 0; i < 30; i++ ){
+
+    var clusterGeo = new THREE.Geometry();
+
+
+    for( var j = 0; j < 500; j ++ ){
+      
+      var testMesh = new THREE.Mesh( geo , mat );
+   
+      testMesh.position = Math.THREE.randomSpherePosition( womb.world.size );
+      Math.THREE.setRandomRotation( testMesh.rotation );
+
+      THREE.GeometryUtils.merge( clusterGeo , testMesh ); 
+
+    }
+
+    var color     = new THREE.Color().setHSL( Math.random() , .5 , .5 );
+    var HSL       = color.getHSL();
+    var specular  = new THREE.Color().setHSL( HSL.h , .8 , .8 );
+
+
+    var mat = new THREE.MeshPhongMaterial({
+      color:        color,
+      specualar: specular,
+      //emmisive:  
+      shininess:      500
+      //shading:        
+    });
+
+
+    var cluster = new THREE.Mesh( clusterGeo , mat );
+
+    cluster.position = Math.THREE.randomPosition( 20 * womb.world.size );
+    Math.THREE.setRandomRotation( testMesh.rotation );
+
+
+    womb.clusters.push( cluster );
+    womb.testScene.scene.add( cluster );
+
+  } 
+
+  womb.controls = womb.world.cameraController.controls;
+
+  womb.anchorLight = new THREE.PointLight( 0xffffff , 2 ,  2 * womb.world.size);
+  womb.anchorLight.position = womb.controls.anchor.position;
+  womb.world.scene.add( womb.anchorLight );
+
+  womb.fingerLight = new THREE.PointLight( 0xffffff , 5 , womb.world.size);
+  womb.fingerLight.position = womb.controls.fingerIndicator.position;
+  womb.world.scene.add( womb.fingerLight );
+
+
+
+
+  womb.skybox = new THREE.Mesh( 
+      new THREE.SphereGeometry( womb.world.size * 999 , 60, 40 ), 
+      new THREE.MeshBasicMaterial({ 
+        map: THREE.ImageUtils.loadTexture( 'img/starMap.png',{},function(){
+          womb.loader.loadBarAdd();
+        }),
+        side:THREE.BackSide,
+        depthWrite:false,
+        fog:false
+      }) 
+  );     
+  womb.world.scene.add( womb.skybox );
+
+  womb.world.camera.far = womb.world.size * 999;
+
+  womb.world.scene.fog.far = womb.world.camera.far / 2;
+  console.log( womb.world );
+  womb.world.camera.updateProjectionMatrix();
   womb.loader.loadBarAdd();
   womb.update = function(){
 
-   
+    womb.skybox.position = womb.world.camera.position;
+ 
+    womb.fingerLight.position = womb.controls.fingerIndicator.position;
+    //console.log( womb.fingerLight.position );
     //console.log( this.leapController );
     /*this.f = LeapController.frame();
 

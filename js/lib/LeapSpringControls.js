@@ -34,13 +34,15 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   this.springConstant   = 1;
   this.staticLength     = this.size ;
   this.mass             = 50;
+
+  this.placesTraveled   = [];
   
   //this.lDivisionFactor     = 50;
 
 
   this.target = new THREE.Object3D();
   this.targetIndicator = new THREE.Mesh( 
-    new THREE.IcosahedronGeometry( this.size / 50 , 1 ), 
+    new THREE.IcosahedronGeometry( this.size / 250 , 1 ), 
     new THREE.MeshBasicMaterial({ color: 0xff0000 }) 
   );
   this.target.add( this.targetIndicator );
@@ -48,7 +50,7 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
 
   this.anchor = new THREE.Object3D();
   this.anchorIndicator = new THREE.Mesh( 
-    new THREE.IcosahedronGeometry( this.size/50 , 1 ),
+    new THREE.IcosahedronGeometry( this.size/200 , 1 ),
     new THREE.MeshBasicMaterial({ color:0x00ff00 }) 
   );
   this.anchor.add( this.anchorIndicator );
@@ -56,9 +58,10 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
 
 
   this.fingerIndicator = new THREE.Mesh(
-    new THREE.IcosahedronGeometry( this.size/50 , 1 ),
-    new THREE.MeshBasicMaterial({ color:0x0000ff }) 
+    new THREE.IcosahedronGeometry( this.size/200 , 1 ),
+    new THREE.MeshBasicMaterial({ color:0xffffff , opacity: .5 , transparent:true }) 
   );
+
   scene.add( this.fingerIndicator );
 
   this.getForce = function(){
@@ -66,10 +69,17 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
     var difference = new THREE.Vector3();
     difference.subVectors( this.object.position , this.anchor.position );
 
-    var x = difference.length() - this.staticLength;
+    var l = difference.length();
+    var x = l - this.staticLength;
+
 
     // Hooke's Law
     var f = difference.normalize().multiplyScalar(x).multiplyScalar( this.springConstant );
+
+    if( x < 0 ){
+      var addForce = difference.normalize().multiplyScalar( - x / l );
+      f.add( addForce );
+    }
 
     return f;
 
@@ -87,6 +97,8 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
 
   }
 
+
+  // Non - rigid, don't update if past x = 0 , only look at if x > 0
   this.update = function(){
 
 
@@ -123,6 +135,8 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
           if( this.frame.gestures[0] && !this.oFrame.gestures[0] ){
             if( this.frame.gestures[0].type == 'circle' ){
 
+              //if( this.frame.gestures[0].
+
               var g         = this.frame.gestures[0];
 
               var center    = g.center;
@@ -131,6 +145,8 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
               position.applyMatrix4( this.object.matrix ); 
 
               this.target.position = position;
+
+              this.placesTraveled.push( position );
 
 
               // Uses the gesture radius to define the size of attraction
