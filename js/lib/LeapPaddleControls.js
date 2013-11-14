@@ -5,7 +5,7 @@
  *
  */
 
-THREE.PaddleControls = function ( object , controller , params, domElement ) {
+THREE.LeapPaddleControls = function ( object , controller , params, domElement ) {
 
   this.object     = object;
   this.controller = controller;

@@ -10,7 +10,7 @@ define(function(require, exports, module) {
         
       looping:      false,
       fbc:            128,
-      fadeTime:         1,  
+      fadeTime:         1,
 
     });
 
@@ -21,14 +21,15 @@ define(function(require, exports, module) {
 
     this.looping    = this.params.looping;
 
+    this.buffer;
+
     this.loadFile();
 
   }
 
 
   Audio.prototype.loadFile = function(){
-   
-
+  
     this.controller.womb.loader.numberToLoad ++;
 
     var request=new XMLHttpRequest();
@@ -62,6 +63,9 @@ define(function(require, exports, module) {
     this.trackID= this.file.split('.')[this.file.split('.').length-2];
 
     this.createSource();
+
+    var self = this;
+    if( this.params.onLoad ) this.params.onLoad( self );
 
     this.controller.womb.loader.loadBarAdd();
 

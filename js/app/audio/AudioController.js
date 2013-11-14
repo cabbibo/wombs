@@ -87,20 +87,22 @@ define(function(require, exports, module) {
   }
 
   AudioController.prototype.turnOffFilter = function(){
+    
     this.filterOn = false;
     this.filter.disconnect(0);
     this.compressor.disconnect( 0 );
     this.compressor.connect( this.gain );
+  
   }
 
   AudioController.prototype.turnOnFilter = function(){
+  
     this.filterOn = true;
     this.compressor.disconnect( 0 );
     this.compressor.connect( this.filter );
     this.filter.connect( this.gain );
+  
   }
-
-
 
   AudioController.prototype.createUserAudio = function( params ){
     this.userAudio = new UserAudio( this , params );

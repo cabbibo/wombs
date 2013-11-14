@@ -6,7 +6,6 @@ define(function(require, exports, module) {
   function Scene( world , params ){
   
     this.world = world;
-    console.log( this.world );
     this.womb = this.world.womb;
 
     this.params = _.defaults( params || {} , {

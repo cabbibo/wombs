@@ -2,8 +2,10 @@ define(function(require, exports, module) {
 
   require('js/lib/three.min.js');
   require('lib/OrbitControls');
-  require('lib/PaddleControls');
+  require('lib/FlyControls');
+  require('lib/LeapPaddleControls');
   require('lib/LeapSpringControls');
+  require('lib/LeapFlyControls');
 
   var LeapController      = require('app/utils/LeapController'    );
 
@@ -13,16 +15,21 @@ define(function(require, exports, module) {
     this.womb  = this.world.womb;
 
     if( this.womb.params.cameraController == 'OrbitControls' ){
-      console.log('checks');
+      
       this.controls = new THREE.OrbitControls( this.world.camera , params );
-    }else if( this.womb.params.cameraController == 'PaddleControls' ){
+    
+    }else if( this.womb.params.cameraController == 'FlyControls' ){
+    
+      this.controls = new THREE.FlyControls( this.world.camera , params );
+    
+    }else if( this.womb.params.cameraController == 'LeapPaddleControls' ){
 
       if( !this.womb.leapController ){
         this.womb.leapController       = LeapController;
         this.womb.leapController.size  = this.world.size;
       }
 
-      this.controls = new THREE.PaddleControls( this.world.camera , this.womb.leapController , params );
+      this.controls = new THREE.LeapPaddleControls( this.world.camera , this.womb.leapController , params );
 
     }else if( this.womb.params.cameraController == 'LeapSpringControls' ){
 
@@ -39,13 +46,28 @@ define(function(require, exports, module) {
         params 
       );
 
+    }else if( this.womb.params.cameraController == 'LeapFlyControls' ){
+
+      if( !this.womb.leapController ){
+        this.womb.leapController       = LeapController;
+        this.womb.leapController.size  = this.world.size;
+      }
+
+
+      this.controls = new THREE.LeapFlyControls( 
+        this.world.camera, 
+        this.womb.leapController , 
+        params 
+      );
+
     }
+
 
   }
 
-  CameraController.prototype._update = function(){
+  CameraController.prototype._update = function( delta ){
 
-    this.controls.update();
+    this.controls.update( delta );
     this.update();
 
   }

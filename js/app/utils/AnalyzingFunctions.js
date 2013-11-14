@@ -4,6 +4,7 @@ define(function(require, exports, module) {
   // Gonna use some Weirrrdddd math here
   var M = require('app/utils/Math');
 
+  // i   -> index
   // d   -> Vertices for the data of the geometry
   // gl  -> geometry length ( total number of d's )
   // fbd -> Frequency Byte Data ( the actual audio value )

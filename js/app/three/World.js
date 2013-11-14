@@ -24,6 +24,7 @@ define(function(require, exports, module) {
       
       });
 
+
       this.size     = this.params.size;
       this.scene    = new THREE.Scene();
 
@@ -119,7 +120,7 @@ define(function(require, exports, module) {
         this.raycaster._update();
       
       if( this.cameraController )
-        this.cameraController._update();
+        this.cameraController._update( this.womb.delta );
 
       if( this.userMediaTexture )
         this.userMediaTexture._update();

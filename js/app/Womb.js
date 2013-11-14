@@ -1,11 +1,9 @@
 define(function(require, exports, module) {
 
-  var a = require( 'js/lib/three.min.js'  ),
-      b = require( 'js/lib/underscore.js' ),
-      c = require( 'js/lib/stats.min.js'  );
-
-
-  //var math      = require( 'app/utils/math.js'      );
+                          require( 'js/lib/three.min.js'          );
+                          require( 'js/lib/underscore.js'         );
+                          require( 'js/lib/stats.min.js'          );
+  
   var Loader            = require( 'app/utils/loader'             );
   var Animator          = require( 'app/utils/animator'           );
   var AudioController   = require( 'app/audio/AudioController'    );
@@ -31,6 +29,7 @@ define(function(require, exports, module) {
     this.audioController  = new AudioController(  this );
     this.world            = new World(            this );
 
+    this.clock            = new THREE.Clock();
 
 
     if( this.params.massController )
@@ -38,12 +37,6 @@ define(function(require, exports, module) {
 
     if( this.params.springController )
       this.springController = new SpringController( this , this.massController );
-
-    /*if( this.params.leapController ){
-      this.leapController       = new LeapController();
-      //this.leapController.size  = this.
-    }*/
-    
 
   }
 
@@ -54,13 +47,18 @@ define(function(require, exports, module) {
   }
 
 
-  Womb.prototype.console = function(){ console.log( this ); }
+  Womb.prototype.console = function(){ 
+    console.log( this ); 
+  }
+
   Womb.prototype.start = function(){
 
   }
 
   Womb.prototype._update = function(){
 
+    this.delta = this.clock.getDelta();
+    
     this.update();
 
     TWEEN.update();

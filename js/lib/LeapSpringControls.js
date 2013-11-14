@@ -26,14 +26,17 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   this.dampening = ( object.dampening !== undefined ) ? object.dampening : .95;
 
   this.weakDampening    = .99;
-  this.strongDampening  = .9;
+  this.strongDampening  = .8;
 
   this.dampening        = this.strongDampening;
 
   this.size             = 120;
-  this.springConstant   = 1;
+  this.springConstant   = 7;
   this.staticLength     = this.size ;
-  this.mass             = 50;
+  this.mass             = 1000;
+
+  this.anchorToTarget   = 24;
+
 
   this.placesTraveled   = [];
   
@@ -43,7 +46,7 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   this.target = new THREE.Object3D();
   this.targetIndicator = new THREE.Mesh( 
     new THREE.IcosahedronGeometry( this.size / 250 , 1 ), 
-    new THREE.MeshBasicMaterial({ color: 0xff0000 }) 
+    new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: .5 , transparent:true }) 
   );
   this.target.add( this.targetIndicator );
   this.scene.add( this.target );
@@ -51,9 +54,9 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   this.anchor = new THREE.Object3D();
   this.anchorIndicator = new THREE.Mesh( 
     new THREE.IcosahedronGeometry( this.size/200 , 1 ),
-    new THREE.MeshBasicMaterial({ color:0x00ff00 }) 
+    new THREE.MeshBasicMaterial({ color:0x00ff00  }) 
   );
-  this.anchor.add( this.anchorIndicator );
+  //this.anchor.add( this.anchorIndicator );
   this.scene.add( this.anchor );
 
 
@@ -76,10 +79,10 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
     // Hooke's Law
     var f = difference.normalize().multiplyScalar(x).multiplyScalar( this.springConstant );
 
-    if( x < 0 ){
+   /* if( x < 0 ){
       var addForce = difference.normalize().multiplyScalar( - x / l );
       f.add( addForce );
-    }
+    }*/
 
     return f;
 
@@ -102,19 +105,32 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   this.update = function(){
 
 
+    /*
+     
+       Since we always want to look at the anchor,
+       This means that we want to make sure that it doesn't jump
+       from position to position whenever we select a new target
+
+       Because of this, always move the anchor towards the target
+
+    */
+
     var a = this.anchor.position;
     var t = this.target.position;
    
     // Moves the anchor towards the target
-    a.x   = a.x - ( a.x - t.x )/12;
-    a.y   = a.y - ( a.y - t.y )/12;
-    a.z   = a.z - ( a.z - t.z )/12;
-    
-    f     = this.getForce();
+    a.x   = a.x - ( a.x - t.x ) / this.anchorToTarget;
+    a.y   = a.y - ( a.y - t.y ) / this.anchorToTarget;
+    a.z   = a.z - ( a.z - t.z ) / this.anchorToTarget;
+   
 
+    // Get and apply the spring photos
+    f = this.getForce();
     this.applyForce( f );
 
 
+    // Makes sure that we are always looking at the 
+    // anchor position
     this.object.lookAt( this.anchor.position );
 
     this.frame = this.controller.frame();
@@ -124,6 +140,12 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
 
       if( this.frame.hands[0] && this.frame.pointables.length ){
 
+
+        /*
+
+           First off move the finger indicator to the correct position
+
+        */
         var position    = this.controller.leapToScene( this.frame , this.frame.pointables[0].tipPosition );
         position.z     -= this.size;
         position.applyMatrix4( this.object.matrix ); 
