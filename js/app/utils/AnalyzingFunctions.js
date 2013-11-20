@@ -1,6 +1,8 @@
 define(function(require, exports, module) {
 
 
+  // TODO: Clean UP PATH!
+  
   // Gonna use some Weirrrdddd math here
   var M = require('app/utils/Math');
 

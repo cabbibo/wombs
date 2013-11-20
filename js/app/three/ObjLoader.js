@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var l = require( 'js/lib/OBJLoader.js' );
+  var l = require( 'lib/three/OBJLoader' );
 
   function ObjectLoader( world , params ){
 

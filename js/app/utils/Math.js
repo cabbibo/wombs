@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
 
+  require( 'js/lib/three.min.js' );
+
   var M = Math;
 
   M.toCart = function( r , t , p ){
@@ -63,6 +65,8 @@ define(function(require, exports, module) {
 
     },
 
+    // Gives random spherical position,  
+    // can choose theta and phi distrubtions
     randomSpherePosition: function( size , theta , phi ){
 
       var r = M.randomRangePos( size );
@@ -92,6 +96,20 @@ define(function(require, exports, module) {
 
 
   }
+
+  THREE.setRandomRotation = function( rotation ){
+
+    rotation.x = M.randomRangePos( 2 * Math.PI );
+    rotation.y = M.randomRangePos( 2 * Math.PI );
+    rotation.z = M.randomRangePos( 2 * Math.PI );
+
+    return rotation;
+
+  }
+
+
+
+
 
   module.exports = M;
 

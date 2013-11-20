@@ -1,13 +1,15 @@
 define(function(require, exports, module) {
 
-  require('js/lib/three.min.js');
-  require('lib/OrbitControls');
-  require('lib/FlyControls');
-  require('lib/LeapPaddleControls');
-  require('lib/LeapSpringControls');
-  require('lib/LeapFlyControls');
+  require( 'lib/three.min'                  );
+  require( 'controls/MomentumOrbitControls' );
+  require( 'controls/OrbitControls'         );
+  require( 'controls/MomentumFlyControls'   );
+  require( 'controls/FlyControls'           );
+  require( 'controls/LeapPaddleControls'    );
+  require( 'controls/LeapSpringControls'    );
+  require( 'controls/LeapFlyControls'       );
 
-  var LeapController      = require('app/utils/LeapController'    );
+  var LeapController = require('app/utils/LeapController'    );
 
   function CameraController( world , params ){
 
@@ -18,9 +20,17 @@ define(function(require, exports, module) {
       
       this.controls = new THREE.OrbitControls( this.world.camera , params );
     
+    }else if( this.womb.params.cameraController == 'MomentumOrbitControls' ){
+      
+      this.controls = new THREE.MomentumOrbitControls( this.world.camera , params );
+    
     }else if( this.womb.params.cameraController == 'FlyControls' ){
     
       this.controls = new THREE.FlyControls( this.world.camera , params );
+    
+    }else if( this.womb.params.cameraController == 'MomentumFlyControls' ){
+    
+      this.controls = new THREE.MomentumFlyControls( this.world.camera , params );
     
     }else if( this.womb.params.cameraController == 'LeapPaddleControls' ){
 

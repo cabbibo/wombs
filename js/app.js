@@ -17,9 +17,9 @@
 define(function(require, exports, module) {
 
   
-  var Womb    = require('app/Womb');
+  var Womb    = require( 'app/Womb' );
   womb        = new Womb({
-    cameraController: 'LeapFlyControls',
+    cameraController: 'MomentumOrbitControls',
     objLoader:        true,
     massController:   true,
     springController: true,
@@ -43,7 +43,7 @@ define(function(require, exports, module) {
   womb.audioController.gain.gain.value = 1;
 */
 
-  //womb.audioController.gain.gain.value = 0;
+  womb.audioController.gain.gain.value = 0;
 
   womb.leapController = LeapController;
 
@@ -90,6 +90,25 @@ define(function(require, exports, module) {
 
   ];
 
+
+  /*
+  
+
+     AAAAAA UU  UU DDDD   II OOOOOO
+     AA  AA UU  UU DD  DD II OO  OO
+     AAAAAA UU  UU DD  DD II OO  OO
+     AA  AA UU  UU DD  DD II OO  OO
+     AA  AA UUUUUU DDDD   II OOOOOO
+
+     CCCCCC LL     UU  UU SSSSSS TTTTTT EEEEEE RRRRR
+     CC     LL     UU  UU SS       TT   EE     RR  RR
+     CC     LL     UU  UU SSSSSS   TT   EEEEEE RRRRR 
+     CC     LL     UU  UU     SS   TT   EE     RR RR 
+     CCCCCC LLLLLL UUUUUU SSSSSS   TT   EEEEEE RR  RR 
+
+
+  */
+
   function AUDIOCLUSTER( loop , color , radius ){
 
     this.scene = womb.world.sceneController.createScene({
@@ -103,6 +122,7 @@ define(function(require, exports, module) {
     this.audio = womb.audioController.createLoop( loop , {
      
       onLoad:function( loop ){
+        console.log( 'does audio load fire here?' );
         loop.turnOnFilter();
       }
 
@@ -134,7 +154,8 @@ define(function(require, exports, module) {
     this.material = new THREE.MeshPhongMaterial({
       color:             this.color,
       specular:       this.specular,
-      shinines:                 500,
+      emmisive:       this.emmisive,
+      shininess:                500,
     });
 
 
@@ -146,6 +167,7 @@ define(function(require, exports, module) {
 
   AUDIOCLUSTER.prototype.onAudioLoad = function(){
 
+    console.log('Does Audio Load fire Here? ');
      this.audio.turnOnFilter();
 
   }
@@ -159,11 +181,13 @@ define(function(require, exports, module) {
     var d  = new THREE.Vector3().subVectors( cP , p );
     var l  = d.length();
 
+    // If we are within the radius of the cluster, 
+    // make it so the frequency cutoff
     var scaled = ( this.radius - l  ) / this.radius ;
 
     if( scaled < 0 ){
 
-      this.audio.filter.frequency.value = this.audio.filter.frequency.minValue;
+      this.audio.filter.frequency.value = this.audio.filter.frequency.minValue * 5;
 
     }else{
 

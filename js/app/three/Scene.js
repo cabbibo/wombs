@@ -9,6 +9,7 @@ define(function(require, exports, module) {
     this.womb = this.world.womb;
 
     this.params = _.defaults( params || {} , {
+     
       scene:                    this,
       transition:         'position',
       transitionTime:              1,
