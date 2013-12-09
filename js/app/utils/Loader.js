@@ -17,6 +17,7 @@ define(function(require, exports, module) {
 
 
     this.curtain = document.createElement('div');
+    this.curtain.id = "curtain";
 
     this.curtain.style.position     = 'absolute';
     this.curtain.style.zIndex       = '999';
@@ -30,6 +31,7 @@ define(function(require, exports, module) {
 
 
     this.loadBar = document.createElement('div');
+    this.loadBar.id = "loadBar";
     
     this.loadBar.style.position     = 'absolute';
     this.loadBar.style.top          = '50%';

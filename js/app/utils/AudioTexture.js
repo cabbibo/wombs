@@ -14,6 +14,11 @@ define(function(require, exports, module) {
 
     //creates a canvas element
     this.canvas = document.createElement('canvas');
+    this.canvas.style.zIndex = 999;
+    this.canvas.style.position = 'absolute';
+    this.canvas.style.top       = '0px'
+
+    document.body.appendChild( this.canvas );
     
     this.canvas.width = this.pixels;
     this.canvas.height = 1;
@@ -30,9 +35,6 @@ define(function(require, exports, module) {
     this.texture = new THREE.Texture( this.canvas );
     
 
-   
-
-
   }
 
   AudioTexture.prototype.update = function(){
@@ -42,14 +44,14 @@ define(function(require, exports, module) {
       this.imageData = this.c.createImageData( this.width , this.height );
 
       //transfers audio data to rgb values
-      for (var i = 0; i < pixels ; i++) {
+      for (var i = 0; i < this.pixels ; i++) {
         x = i;
         y = 0;
         r = this.analyser.array[i]   | 0;
         g = this.analyser.array[i+1] | 0;;       
         b = this.analyser.array[i+2] | 0;;
         a = this.analyser.array[i+3] | 0;;
-        setPixel( this.imageData , x , y , r , g , b , a ); 
+        this.setPixelData( this.imageData , x , y , r , g , b , a ); 
       }
 
 
@@ -59,6 +61,7 @@ define(function(require, exports, module) {
       this.texture.needsUpdate =  true;
     }
 
+    //console.log('ss');
 
   }
 

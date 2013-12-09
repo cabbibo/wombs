@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
 
+  var AudioTexture = require( 'app/utils/AudioTexture' );
 
   function UserAudio( controller , params ){
  
@@ -10,6 +11,7 @@ define(function(require, exports, module) {
     this.params = _.defaults( params || {}, {
         
       fbc:            128,
+      texture:       true,
 
     });
 
@@ -34,7 +36,7 @@ define(function(require, exports, module) {
     navigator.getUserMedia( constraints , this.successCallback.bind( this ) , this.errorCallback.bind( this ) );
 
 
-    
+       
   }
   
   UserAudio.prototype.successCallback = function( stream ) {
@@ -49,6 +51,14 @@ define(function(require, exports, module) {
     this.source.connect(                    this.gain );
     this.gain.connect(                  this.analyser );
     this.analyser.connect( this.controller.compressor );
+
+    if( this.params.texture ){
+
+      this.audioTexture = new AudioTexture( this );
+      this.texture      = this.audioTexture.texture;
+
+    }
+    
 
 
     this.onStreamCreated();
@@ -79,6 +89,10 @@ define(function(require, exports, module) {
   UserAudio.prototype._update = function(){
 
     this.analyser.getByteFrequencyData( this.analyser.array );
+    
+    if( this.audioTexture )
+      this.audioTexture.update();
+    
     this.update();
 
   }

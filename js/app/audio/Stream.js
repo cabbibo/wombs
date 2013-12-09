@@ -2,6 +2,8 @@
 define(function(require, exports, module) {
 
   //var utils = require( 'app/util.js'  );
+  //
+  var AudioTexture = require( 'app/utils/AudioTexture' );
 
 
   function Stream( controller , file , params ){
@@ -10,7 +12,8 @@ define(function(require, exports, module) {
         
       looping:      false,
       fbc:           1024,
-      fadeTime:         1,  
+      fadeTime:         1, 
+      texture:       true
 
     });
 
@@ -23,6 +26,12 @@ define(function(require, exports, module) {
 
     this.createSource();
 
+
+    if( this.params.texture ){
+
+      this.texture = new AudioTexture( this );
+
+    }
   }
 
   Stream.prototype.createAudio  = function(){
@@ -137,31 +146,15 @@ define(function(require, exports, module) {
   }
 
 
-
-  /*Stream.prototype.stop = function(){
-
-    this.playing = false;
-    this.source.noteOff(0);
-
-  };
-		
-  Stream.prototype.play = function(){
-		
-    this.playing = true
-    this.source.noteOn(0);
-
-    // Creates a new source for the audio right away
-    // so we can play the next one with no delay
-    if(this.source.loop == false){
-      this.createSource();	
-    }
-
-  };*/
-
-
   Stream.prototype._update = function(){
 
     this.analyser.getByteFrequencyData( this.analyser.array );
+
+    console.log('aaa');
+    if( this.texture )
+      this.texture.update();
+
+
     this.update();
 
   }

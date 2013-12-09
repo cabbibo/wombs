@@ -69,6 +69,8 @@ define(function(require, exports, module) {
 
       // Getting the container in the right location
       this.container = document.createElement( 'div' );
+      this.container.id = 'renderingContainer';
+
       this.container.style.width      = '100%';
       this.container.style.height     = '100%';
       this.container.style.position   = 'absolute';
@@ -82,6 +84,7 @@ define(function(require, exports, module) {
 
       this.renderer.setSize( window.innerWidth, window.innerHeight );
       this.container.appendChild( this.renderer.domElement );
+
 
 
 
