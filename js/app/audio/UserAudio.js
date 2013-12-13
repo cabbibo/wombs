@@ -25,6 +25,7 @@ define(function(require, exports, module) {
     this.analyser.array = new Uint8Array( this.params.fbc );
 
 
+
     this.controller = controller;
 
     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -53,13 +54,8 @@ define(function(require, exports, module) {
     this.analyser.connect( this.controller.compressor );
 
     if( this.params.texture ){
-
-      this.audioTexture = new AudioTexture( this );
-      this.texture      = this.audioTexture.texture;
-
+      this.texture  = new AudioTexture( this ); 
     }
-    
-
 
     this.onStreamCreated();
 
@@ -90,8 +86,8 @@ define(function(require, exports, module) {
 
     this.analyser.getByteFrequencyData( this.analyser.array );
     
-    if( this.audioTexture )
-      this.audioTexture.update();
+    if( this.texture )
+      this.texture.update();
     
     this.update();
 

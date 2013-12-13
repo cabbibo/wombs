@@ -32,6 +32,7 @@ define(function(require, exports, module) {
       this.texture = new AudioTexture( this );
 
     }
+
   }
 
   Stream.prototype.createAudio  = function(){
@@ -150,7 +151,6 @@ define(function(require, exports, module) {
 
     this.analyser.getByteFrequencyData( this.analyser.array );
 
-    console.log('aaa');
     if( this.texture )
       this.texture.update();
 
@@ -163,7 +163,6 @@ define(function(require, exports, module) {
 
   }
 
-
-  return Stream
+  module.exports = Stream;
 
 });

@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     this.audioController  = new AudioController(  this );
     this.world            = new World(            this );
 
+
     this.clock            = new THREE.Clock();
 
 

@@ -190,17 +190,21 @@ define(function(require, exports, module) {
     //AudioController.looper._update();
     this.update();
 
+    if ( this.stream ){
+      this.stream._update();
+    }
+
     if( this.userAudio ){
       this.userAudio._update();
     }
 
-    /*for( var i = 0; i < this.loops.length; i++ ){
+    for( var i = 0; i < this.loops.length; i++ ){
       this.loops[i]._update();
     }
 
     for( var i = 0; i < this.notes.length; i++ ){
       this.notes[i]._update();
-    }*/
+    }
 
   }
 

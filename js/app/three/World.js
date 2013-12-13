@@ -92,23 +92,22 @@ define(function(require, exports, module) {
         this.cameraController = new CameraController( this );
       
       if( this.womb.params.raycaster )
-        this.raycaster = new Raycaster(               this );
+        this.raycaster        = new Raycaster(        this );
 
       if( this.womb.params.objLoader )
-        this.objLoader = new ObjLoader(               this );
+        this.objLoader        = new ObjLoader(        this );
 
       if( this.womb.params.effectComposer )
-        this.effectComposer = new EffectComposer(     this );
+        this.effectComposer   = new EffectComposer(   this );
 
       if( this.womb.params.userMediaTexture )
         this.userMediaTexture = new UserMediaTexture( this );
 
       if( this.womb.params.textCreator )
-        this.textCreator      = new TextCreator(        this );
+        this.textCreator      = new TextCreator(      this );
       
       
       this.sceneController  = new SceneController(    this );
-      console.log( this.sceneController );
 
       window.addEventListener( 'resize', this.onWindowResize.bind( this ), false );
 

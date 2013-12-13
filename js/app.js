@@ -19,7 +19,7 @@ define(function(require, exports, module) {
   
   var Womb    = require( 'app/Womb' );
   womb        = new Womb({
-    cameraController: 'MomentumOrbitControls',
+    cameraController: 'LeapFlyControls',
     objLoader:        true,
     massController:   true,
     springController: true,
