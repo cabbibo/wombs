@@ -1,57 +1,27 @@
 define(function(require, exports, module) {
 
-  var m                   = require('app/utils/Math'              );
-  var AudioGeometry       = require('app/three/AudioGeometry'     );
-  var AnalyzingFunctions  = require('app/utils/AnalyzingFunctions');
+  var m                   = require( 'app/utils/Math'                 );
+  var AudioGeometry       = require( 'app/three/AudioGeometry'        );
+  var AnalyzingFunctions  = require( 'app/utils/AnalyzingFunctions'   );
 
-  var ShaderMaterial       = require( 'app/utils/ShaderMaterial' );
+  var ShaderMaterial      = require( 'app/utils/ShaderMaterial'       );
 
-  var Womb                = require('app/Womb');
+  var Womb                = require( 'app/Womb'                       );
+  
+
+  var fragmentShaders     = require( 'app/shaders/fragmentShaders'    );
+  var vertexShaders       = require( 'app/shaders/vertexShaders'      );
 
   var fragmentShader = [
 
-    "uniform float      time;",
-    "uniform vec2       resolution;",
     "uniform sampler2D  texture;",
-    "uniform float      textureSize;",
-
+    "uniform vec3 color;",
     "varying vec2 vUv;",
-
-    "float getAudio( float coord ){",
-    
-      "float index = coord * textureSize;",
-      "int rIndex = int( mod( coord , 4.0 ) );",
-
-      "vec2 audioCoord = vec2( index , 0.0 );",
-
-      "float audioValue = 0.0;",
-      
-      "if( rIndex == 0 ){",
-        "audioValue = texture2D( texture , audioCoord ).r;",
-      "}else if( rIndex == 1 ){",
-        "audioValue = texture2D( texture , audioCoord ).g;",
-      "}else if( rIndex == 2 ){",
-        "audioValue = texture2D( texture , audioCoord ).b;",
-      "}else if( rIndex == 3 ){",
-        "audioValue = texture2D( texture , audioCoord ).a;",
-      "}",
-
-
-      "return audioValue;",
-    
-    "}",
 
     "void main( void ) {",
 
-        "vec2 position = -1.0 + 2.0 * vUv;",
-//        "float audioX = getAudio( vUv.x );",
-        //"float audioY = getAudio( vUv.y );",
-
         "float audio = texture2D( texture , vec2( vUv.x , 0.0 ) ).g;",
-        "float red = abs( sin( position.x * position.y + time / 5.0 ) );",
-        "float green = abs( sin( position.x * position.y + time / 4.0 ) );",
-        "float blue = abs( sin( position.x * position.y + time / 3.0 ) );",
-        "gl_FragColor = vec4( audio * 1.0 , 0.1 , 0.1 , 1.0 );",
+        "gl_FragColor = vec4( audio * color.r , audio * color.g , audio * color.b , 1.0 );",
 
     "}"
 
@@ -107,33 +77,38 @@ define(function(require, exports, module) {
 
 
     var uniforms = {
-      time: { type: "f", value: 1.0 },
-      resolution: { type: "v2", value: new THREE.Vector2( window.innerWidth , window.innerHeight ) },
       texture: { type: "t", value: womb.stream.texture.texture },
-      textureSize: { type: "float" , value: womb.stream.texture.pixels }
+      color:{ type: "v3" , value: new THREE.Vector3( 0.1 , 0.8 , 0.9 ) }
     };
 
   womb.material = new THREE.ShaderMaterial( {
 
     uniforms: uniforms,
-    vertexShader: vertexShader,
-    fragmentShader: fragmentShader,
-    side: THREE.DoubleSide
+    //vertexShader: vertexShader,
+    vertexShader: vertexShaders.audio.uv.absPos,
+    //vertexShader: vertexShaders.passThrough,
+    fragmentShader: fragmentShaders.audio.color.uv.absXY,
+    side: THREE.DoubleSide,
+    blending: THREE.AdditiveBlending,
+    transparent: true
 
   } );
 
 
-  for( var i = 0; i < 2; i++ ){
+  var numOf = 10;
+
+  for( var i = 0; i < numOf; i++ ){
     
     var sphere = new THREE.Mesh( 
-      //new THREE.CubeGeometry( womb.world.size / 10 , womb.world.size / 10   , womb.world.size / 10 , 20 , 20 , 20  ),
+      new THREE.CubeGeometry( womb.world.size / 10 , womb.world.size / 10   , womb.world.size / 10 , 20 , 20 , 20  ),
       //new THREE.SphereGeometry( womb.world.size / 10 , 30 , 30 ),
-      new THREE.IcosahedronGeometry( womb.world.size / (i+1), 5 ),
+      //new THREE.IcosahedronGeometry( womb.world.size / 2, 4 ),
       womb.material
     );
 
-   // var pos = m.toCart( womb.world.size / 4 , 0, 2* Math.PI * (i / 2)  );
-    sphere.position.x = womb.world.size/4 * i;
+   var pos = m.toCart( womb.world.size / 4 ,  Math.PI * 2 * ( i / numOf ) , 0 );
+   console.log( pos );
+    sphere.position = pos;
 
     womb.scene.add( sphere );
 
@@ -157,7 +132,6 @@ define(function(require, exports, module) {
   womb.update = function(){
 
     
-    womb.material.uniforms.time.value += 1.0;
 
   }
 
