@@ -75,10 +75,14 @@ define(function(require, exports, module) {
     
     var light = new THREE.AmbientLight( 0x404040 );
 
+    
+    var r = Math.random();
+    var g = Math.random();
+    var b = Math.random();
 
     var uniforms = {
       texture: { type: "t", value: womb.stream.texture.texture },
-      color:{ type: "v3" , value: new THREE.Vector3( 0.1 , 0.8 , 0.9 ) }
+      color:{ type: "v3" , value: new THREE.Vector3( r , g , b ) }
     };
 
   womb.material = new THREE.ShaderMaterial( {
@@ -87,28 +91,42 @@ define(function(require, exports, module) {
     //vertexShader: vertexShader,
     vertexShader: vertexShaders.audio.uv.absPos,
     //vertexShader: vertexShaders.passThrough,
-    fragmentShader: fragmentShaders.audio.color.uv.absXY,
+    fragmentShader: fragmentShaders.audio.color.position.absDiamond,
     side: THREE.DoubleSide,
-    blending: THREE.AdditiveBlending,
-    transparent: true
+    //blending: THREE.AdditiveBlending,
+    //transparent: true
 
   } );
 
 
-  var numOf = 10;
+  var numOf = 100;
 
   for( var i = 0; i < numOf; i++ ){
     
     var sphere = new THREE.Mesh( 
-      new THREE.CubeGeometry( womb.world.size / 10 , womb.world.size / 10   , womb.world.size / 10 , 20 , 20 , 20  ),
-      //new THREE.SphereGeometry( womb.world.size / 10 , 30 , 30 ),
+      //new THREE.CubeGeometry( womb.world.size / 10 , womb.world.size / 10   , womb.world.size / 10 , 20 , 20 , 20  ),
+      new THREE.SphereGeometry( womb.world.size / 10 , 30 , 30 ),
       //new THREE.IcosahedronGeometry( womb.world.size / 2, 4 ),
       womb.material
     );
 
-   var pos = m.toCart( womb.world.size / 4 ,  Math.PI * 2 * ( i / numOf ) , 0 );
+    var x = (Math.random() - .5 ) * womb.world.size;
+    var y = (Math.random() - .5 ) * womb.world.size;
+    var z = (Math.random() - .5 ) * womb.world.size;
+
+    var pos = new THREE.Vector3( x , y , z );
+
+    var x = Math.random() * Math.PI * 2;
+    var y = Math.random() * Math.PI * 2;
+    var z = Math.random() * Math.PI * 2;
+
+    var rot = new THREE.Vector3( x , y, z );
+   //var pos = m.toCart( womb.world.size / 4 ,  Math.PI * 2 * ( i / numOf ) , 0 );
    console.log( pos );
     sphere.position = pos;
+    sphere.rotation.x = Math.randomRad();
+    sphere.rotation.y = Math.randomRad();
+    sphere.rotation.z = Math.randomRad();
 
     womb.scene.add( sphere );
 
