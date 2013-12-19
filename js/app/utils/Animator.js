@@ -21,7 +21,7 @@ define(function(require, exports, module) {
 
     this.delta = 0;
 
-    document.body.appendChild( this.stats.domElement );
+    this.womb.interface.domElement.appendChild( this.stats.domElement );
 
 
   }

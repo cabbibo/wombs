@@ -4,6 +4,7 @@ define(function(require, exports, module) {
                           require( 'js/lib/underscore.js'         );
                           require( 'js/lib/stats.min.js'          );
   
+  var Interface         = require( 'app/utils/Interface'          );
   var Loader            = require( 'app/utils/loader'             );
   var Animator          = require( 'app/utils/animator'           );
   var AudioController   = require( 'app/audio/AudioController'    );
@@ -23,8 +24,11 @@ define(function(require, exports, module) {
       leapController:   false
     });
 
+
+    this.interface        = new Interface(        this );
     this.loader           = new Loader(           this );
     this.tweener          = new Tweener(          this );
+
     this.animator         = new Animator(         this );
     this.audioController  = new AudioController(  this );
     this.world            = new World(            this );

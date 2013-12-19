@@ -7,7 +7,7 @@ define(function(require, exports, module) {
 
     this.params = _.defaults( params || {}, {
       numberToLoad:   1,
-      loadGif:        "img/gifs/loadGif.gif"
+      loadGif:        "lib/img/gifs/loadGif.gif"
     });
 
     this.womb     = womb;
