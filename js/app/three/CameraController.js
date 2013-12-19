@@ -3,6 +3,7 @@ define(function(require, exports, module) {
   require( 'lib/three.min'                  );
   require( 'controls/MomentumOrbitControls' );
   require( 'controls/OrbitControls'         );
+  require( 'controls/TrackballControls'     );
   require( 'controls/MomentumFlyControls'   );
   require( 'controls/FlyControls'           );
   require( 'controls/LeapPaddleControls'    );
@@ -11,28 +12,33 @@ define(function(require, exports, module) {
 
   var LeapController = require('app/utils/LeapController'    );
 
-  function CameraController( world , params ){
+  function CameraController( world , type , params ){
 
     this.world = world;
     this.womb  = this.world.womb;
+    this.type  = type;
 
-    if( this.womb.params.cameraController == 'OrbitControls' ){
+    if( type == 'OrbitControls' ){
       
       this.controls = new THREE.OrbitControls( this.world.camera , params );
     
-    }else if( this.womb.params.cameraController == 'MomentumOrbitControls' ){
+    }else if( type == 'TrackballControls' ){
+      
+      this.controls = new THREE.TrackballControls( this.world.camera , params );
+    
+    }else if( type == 'MomentumOrbitControls' ){
       
       this.controls = new THREE.MomentumOrbitControls( this.world.camera , params );
     
-    }else if( this.womb.params.cameraController == 'FlyControls' ){
+    }else if( type == 'FlyControls' ){
     
       this.controls = new THREE.FlyControls( this.world.camera , params );
     
-    }else if( this.womb.params.cameraController == 'MomentumFlyControls' ){
+    }else if( type == 'MomentumFlyControls' ){
     
       this.controls = new THREE.MomentumFlyControls( this.world.camera , params );
     
-    }else if( this.womb.params.cameraController == 'LeapPaddleControls' ){
+    }else if( type == 'LeapPaddleControls' ){
 
       if( !this.womb.leapController ){
         this.womb.leapController       = LeapController;
@@ -41,7 +47,7 @@ define(function(require, exports, module) {
 
       this.controls = new THREE.LeapPaddleControls( this.world.camera , this.womb.leapController , params );
 
-    }else if( this.womb.params.cameraController == 'LeapSpringControls' ){
+    }else if( type == 'LeapSpringControls' ){
 
       if( !this.womb.leapController ){
         this.womb.leapController       = LeapController;
@@ -56,7 +62,7 @@ define(function(require, exports, module) {
         params 
       );
 
-    }else if( this.womb.params.cameraController == 'LeapFlyControls' ){
+    }else if( type == 'LeapFlyControls' ){
 
       if( !this.womb.leapController ){
         this.womb.leapController       = LeapController;

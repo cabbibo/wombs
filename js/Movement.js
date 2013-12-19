@@ -49,7 +49,7 @@ define(function(require, exports, module) {
   ].join( "\n" );
 
   womb = new Womb({
-    cameraController: 'LeapFlyControls',
+    cameraController: 'OrbitControls',
     objLoader:        true,
     massController:   true,
     springController: true,
@@ -88,9 +88,13 @@ define(function(require, exports, module) {
     womb.material = new THREE.ShaderMaterial( {
 
       uniforms: uniforms,
+      //vertexShader: vertexShader,
       vertexShader: vertexShaders.audio.uv.absPos,
+      //vertexShader: vertexShaders.passThrough,
       fragmentShader: fragmentShaders.audio.color.position.absDiamond,
       side: THREE.DoubleSide,
+      //blending: THREE.AdditiveBlending,
+      //transparent: true
 
     } );
 
@@ -100,7 +104,9 @@ define(function(require, exports, module) {
     for( var i = 0; i < numOf; i++ ){
       
       var sphere = new THREE.Mesh( 
+        //new THREE.CubeGeometry( womb.world.size / 10 , womb.world.size / 10   , womb.world.size / 10 , 20 , 20 , 20  ),
         new THREE.SphereGeometry( womb.world.size / 10 , 30 , 30 ),
+        //new THREE.IcosahedronGeometry( womb.world.size / 2, 4 ),
         womb.material
       );
 

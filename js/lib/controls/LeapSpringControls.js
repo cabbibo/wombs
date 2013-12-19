@@ -9,7 +9,7 @@
  *
  */
 
-THREE.LeapSpringControls = function ( object , controller , scene , params , domElement ) {
+THREE.LeapSpringControls = function ( object , controller , scene , domElement ) {
 
   this.object     = object;
   this.controller = controller;
@@ -43,6 +43,7 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   //this.lDivisionFactor     = 50;
 
 
+  // Creates the Target Object ( object that will tween to anchor
   this.target = new THREE.Object3D();
   this.targetIndicator = new THREE.Mesh( 
     new THREE.IcosahedronGeometry( this.size / 250 , 1 ), 
@@ -51,20 +52,22 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
   this.target.add( this.targetIndicator );
   this.scene.add( this.target );
 
+
+  // Creates the Anchor Object ( object hat will switch instantly )
   this.anchor = new THREE.Object3D();
   this.anchorIndicator = new THREE.Mesh( 
     new THREE.IcosahedronGeometry( this.size/200 , 1 ),
     new THREE.MeshBasicMaterial({ color:0x00ff00  }) 
   );
-  //this.anchor.add( this.anchorIndicator );
+  //this.anchor.add( this.anchorIndicator ); // Uncomment , so show where target is tweening
   this.scene.add( this.anchor );
 
 
+  // Lets us know where our finger is
   this.fingerIndicator = new THREE.Mesh(
     new THREE.IcosahedronGeometry( this.size/200 , 1 ),
     new THREE.MeshBasicMaterial({ color:0xffffff , opacity: .5 , transparent:true }) 
   );
-
   scene.add( this.fingerIndicator );
 
   this.getForce = function(){
@@ -79,7 +82,7 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
     // Hooke's Law
     var f = difference.normalize().multiplyScalar(x).multiplyScalar( this.springConstant );
 
-   /* if( x < 0 ){
+    /*if( x < 0 ){
       var addForce = difference.normalize().multiplyScalar( - x / l );
       f.add( addForce );
     }*/
@@ -133,6 +136,7 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
     // anchor position
     this.object.lookAt( this.anchor.position );
 
+    // getting our frame object
     this.frame = this.controller.frame();
     if( !this.oFrame ) this.oFrame = this.frame;
   
@@ -157,10 +161,10 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
           if( this.frame.gestures[0] && !this.oFrame.gestures[0] ){
             if( this.frame.gestures[0].type == 'circle' ){
 
-              //if( this.frame.gestures[0].
-
               var g         = this.frame.gestures[0];
 
+              // Gets the position of the center of the gesture, 
+              // in terms of the world
               var center    = g.center;
               var position  = this.controller.leapToScene( this.frame , center );
               position.z   -= this.size;
@@ -173,7 +177,6 @@ THREE.LeapSpringControls = function ( object , controller , scene , params , dom
 
               // Uses the gesture radius to define the size of attraction
               this.staticLength = (g.radius/50) * this.size;
-              console.log( g.radius );
 
             }
 

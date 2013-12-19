@@ -95,7 +95,7 @@ define(function(require, exports, module) {
     } );
 
 
-    var numOf = 500;
+    var numOf = 50;
 
     for( var i = 0; i < numOf; i++ ){
       
@@ -115,8 +115,7 @@ define(function(require, exports, module) {
       var z = Math.random() * Math.PI * 2;
 
       var rot = new THREE.Vector3( x , y, z );
-     //var pos = m.toCart( womb.world.size / 4 ,  Math.PI * 2 * ( i / numOf ) , 0 );
-     console.log( pos );
+     var pos = m.toCart( womb.world.size / 4 ,  Math.PI * 2 * ( i / numOf ) , 0 );
       sphere.position = pos;
       sphere.rotation.x = Math.randomRad();
       sphere.rotation.y = Math.randomRad();

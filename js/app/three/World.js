@@ -89,7 +89,7 @@ define(function(require, exports, module) {
 
 
       if( this.womb.params.cameraController )
-        this.cameraController = new CameraController( this );
+        this.cameraController = new CameraController( this , this.womb.params.cameraController );
       
       if( this.womb.params.raycaster )
         this.raycaster        = new Raycaster(        this );
@@ -126,6 +126,7 @@ define(function(require, exports, module) {
 
       if( this.userMediaTexture )
         this.userMediaTexture._update();
+
 
       this.update();
 

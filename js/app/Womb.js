@@ -43,6 +43,11 @@ define(function(require, exports, module) {
 
   // This is what will be called in our loaded
   Womb.prototype._start = function(){
+   
+    if( this.leapController ){
+      this.leapController.connect();
+    }
+    
     this.animator.start();
     this.start();
   }

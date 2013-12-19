@@ -100,7 +100,13 @@ THREE.LeapPaddleControls = function ( object , controller , params, domElement )
 
       }
 
-      this.object.position.add( this.velocity );
+      // Convert from straight X , Y , Z;
+      var vTemp = this.velocity.clone();
+      vTemp.applyQuaternion( this.object.quaternion );
+      this.object.position.add( vTemp );
+
+    
+   //   this.object.position.add( this.velocity );
       this.velocity.multiplyScalar( this.dampening );
 
     }
