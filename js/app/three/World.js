@@ -100,11 +100,11 @@ define(function(require, exports, module) {
       if( this.womb.params.effectComposer )
         this.effectComposer   = new EffectComposer(   this );
 
-      if( this.womb.params.userMediaTexture )
+      if( this.womb.params.userMediaTexture ){
         this.userMediaTexture = new UserMediaTexture( this );
 
-      if( this.womb.params.textCreator )
-        this.textCreator      = new TextCreator(      this );
+      if( this.womb.params.textCreator ){
+        this.textCreator = new TextCreator(      this );
       
       
       this.sceneController  = new SceneController(    this );

@@ -6,30 +6,28 @@ define( function( require , exports , module ){
 
   function Interface( womb ){
 
-    this.domElement = document.createElement('div');
-
-    this.domElement.id              = 'interface';
-
-    this.domElement.style.position  = 'absolute';
-    this.domElement.style.top       = '0px';
-    this.domElement.style.left      = '0px';
-    this.domElement.style.width     = '100%';
-    this.domElement.style.height    = '100%';
-    this.domElement.style.zIndex    = '999';
-
+    this.domElement     = document.createElement('div');
+    this.domElement.id  = 'interface';
 
     document.body.appendChild( this.domElement );
 
-    if( womb.params.title )
-      this.addTitle( womb.params.title );
 
-    if( womb.params.info )
-      this.addInfo( womb.params.info );
+    if( womb.params.title || womb.params.summary ){
 
-    if( womb.params.gui )
+      this.addInfo();
+
+      if( womb.params.title )
+        this.addTitle( womb.params.title );
+
+      if( womb.params.summary )
+        this.addSummary( womb.params.summary );
+
+    }
+
+    if( womb.params.gui ){
+      this.params = {};
       this.addGUI();
-
-    
+    }
 
     var self = this;
 
@@ -47,41 +45,116 @@ define( function( require , exports , module ){
   }
 
 
+  Interface.prototype.addInfo = function( ){
 
-  Interface.prototype.addTitle = function(title){
-
-    this.title = document.createElement('h1');
-    this.title.innerHTML = title;
-    this.domElement.appendChild( this.title );
-
-  }
-
-
-  Interface.prototype.addInfo = function( info ){
-
-    this.info = document.createElement('h2');
-    this.info.innerHTML = info;
+    this.info = document.createElement('div');
+    this.info.id = 'info';
     this.domElement.appendChild( this.info );
 
   }
 
+
+  Interface.prototype.addTitle = function(title){
+
+    this.title = document.createElement('h1');
+    this.title.id = 'title';
+    this.title.innerHTML = title;
+    this.info.appendChild( this.title );
+
+  }
+
+
+  Interface.prototype.addSummary = function( summary ){
+
+    this.summary = document.createElement('h2');
+    this.summary.id = 'summary';
+    this.summary.innerHTML = summary;
+    this.info.appendChild( this.summary );
+
+  }
+
+  Interface.prototype.addStats = function(){
+
+  }
+
   Interface.prototype.addGUI = function(){
+    
+    this.gui = new dat.GUI();
+    this.domElement.appendChild( this.gui.domElement );
+    this.gui.domElement.id = 'GUI';
+  
+  }
 
+
+  Interface.prototype.addUniform = function( uniform , folder ){
+
+    if( !this.gui )
+      this.addGUI();
+   
+    // Getting the proper place to add the uniform
+    var f = folder || this.gui;
+
+    console.log( uniform );
+
+    if( uniform.type == 't' ){
+      this.addTextureUniform( uniform , f );
+    } else if ( uniform.type == 'v3' ){
+      this.addVectorUniform( uniform , f );
+    } else if( uniform.type == 'f' ){
+      f.add( uniform , 'value', -uniform.value * 20 , uniform.value * 20 ).listen();
+    }
 
   }
 
-  Interface.prototype.addUniformToGUI = function(){
+  Interface.prototype.addAllUniforms = function( uniforms , title ){
 
+    var folder = this.gui.addFolder( title );
+    
+    for( var propt in uniforms ){
+
+      var uniform = uniforms[ propt ];
+      console.log( propt );
+      console.log( uniform );
+
+     
+      if( propt == 'color' ){
+        this.addColorUniform( uniform , folder ,  'color' );
+      }else{
+        this.addUniform( uniform , folder );
+      }
+
+    }
 
   }
+
+  Interface.prototype.addVectorUniform = function( uniform ){
+
+  }
+
+  
+  Interface.prototype.addColorUniform = function( uniform ){
+
+  }
+
+  Interface.prototype.addTextureUniform = function( uniform ){
+
+  }
+
+
 
   Interface.prototype.toggle = function(){
- 
-    console.log('whooa');
+    
     $( this.domElement ).toggle();
 
   }
 
+
+  // TODO: Make changing uniforms update
+  Interface.prototype._update = function(){
+
+
+
+  }
 
 
   module.exports = Interface;

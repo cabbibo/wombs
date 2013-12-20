@@ -1,3 +1,72 @@
-body{
+html{
   color:#fff;
+  font-family:"GeoSans";
+  background-repeat:no-repeat;
 }
+
+body{
+  margin: 0px;
+  overflow: hidden;
+}
+
+@font-face {
+  font-family: "GeoSans";
+  src: url("../lib/fonts/GeosansLight.ttf");
+}
+
+#renderingContainer{
+
+  position    :absolute;
+  top         :0px;
+  left        :0px;
+  width       :100%;
+  height      :100%;
+  background  :#000;
+
+
+
+}
+
+#interface{
+
+  position  :absolute;
+  top       :0px;
+  left      :0px;
+  width     :100%;
+  height    :100%;
+  z-index   :999;
+
+}
+
+
+#info{
+
+  position:absolute;
+  top:0px;
+
+
+}
+
+#title{}
+
+#summary{}
+
+
+#GUI{
+
+  //position:absolute;
+  right:0px;
+  top:0px;
+
+}
+
+
+
+#stats{
+
+  position:absolute;
+  right:0px;
+  bottom:0px;
+
+}
+

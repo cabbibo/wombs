@@ -72,6 +72,7 @@ define(function(require, exports, module) {
               "vec3 nNewPos = normalize( newPos );",
               "newPos *= a;",
               "vec4 mvPosition = modelViewMatrix * vec4( newPos , 1.0 );",
+              "gl_PointSize = length( newPos ) * .5;",
               "gl_Position = projectionMatrix * mvPosition;",
           "}"
 

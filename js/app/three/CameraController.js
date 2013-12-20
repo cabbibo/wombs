@@ -12,53 +12,52 @@ define(function(require, exports, module) {
 
   var LeapController = require('app/utils/LeapController'    );
 
-  function CameraController( world , type , params ){
+  function CameraController( womb , type , params ){
 
-    this.world = world;
-    this.womb  = this.world.womb;
+    this.womb  = womb;
     this.type  = type;
 
     if( type == 'OrbitControls' ){
       
-      this.controls = new THREE.OrbitControls( this.world.camera , params );
+      this.controls = new THREE.OrbitControls( this.womb.camera , this.womb.renderer.domElement , params );
     
     }else if( type == 'TrackballControls' ){
       
-      this.controls = new THREE.TrackballControls( this.world.camera , params );
+      this.controls = new THREE.TrackballControls( this.womb.camera , this.womb.renderer.domElement , params );
     
     }else if( type == 'MomentumOrbitControls' ){
       
-      this.controls = new THREE.MomentumOrbitControls( this.world.camera , params );
+      this.controls = new THREE.MomentumOrbitControls( this.womb.camera, this.womb.renderer.domElement  , params );
     
     }else if( type == 'FlyControls' ){
     
-      this.controls = new THREE.FlyControls( this.world.camera , params );
+      this.controls = new THREE.FlyControls( this.womb.camera, this.womb.renderer.domElement  , params );
     
     }else if( type == 'MomentumFlyControls' ){
     
-      this.controls = new THREE.MomentumFlyControls( this.world.camera , params );
+      this.controls = new THREE.MomentumFlyControls( this.womb.camera, this.womb.renderer.domElement  , params );
     
     }else if( type == 'LeapPaddleControls' ){
 
       if( !this.womb.leapController ){
         this.womb.leapController       = LeapController;
-        this.womb.leapController.size  = this.world.size;
+        this.womb.leapController.size  = this.womb.size;
       }
 
-      this.controls = new THREE.LeapPaddleControls( this.world.camera , this.womb.leapController , params );
+      this.controls = new THREE.LeapPaddleControls( this.womb.camera , this.womb.leapController , params );
 
     }else if( type == 'LeapSpringControls' ){
 
       if( !this.womb.leapController ){
         this.womb.leapController       = LeapController;
-        this.womb.leapController.size  = this.world.size;
+        this.womb.leapController.size  = this.womb.size;
       }
 
 
       this.controls = new THREE.LeapSpringControls( 
-        this.world.camera, 
+        this.womb.camera, 
         this.womb.leapController , 
-        this.world.scene , 
+        this.womb.scene, 
         params 
       );
 
@@ -66,12 +65,12 @@ define(function(require, exports, module) {
 
       if( !this.womb.leapController ){
         this.womb.leapController       = LeapController;
-        this.womb.leapController.size  = this.world.size;
+        this.womb.leapController.size  = this.womb.size;
       }
 
 
       this.controls = new THREE.LeapFlyControls( 
-        this.world.camera, 
+        this.womb.camera, 
         this.womb.leapController , 
         params 
       );

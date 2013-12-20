@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 
     this.params = _.defaults( params || {}, {
       massController:     massController,
-      staticLength:       this.womb.world.size / 4,
+      staticLength:       this.womb.size / 4,
       springColor:        0xaaaaaa,
       flatten:            false
     });

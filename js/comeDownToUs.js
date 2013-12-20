@@ -15,8 +15,9 @@ define(function(require, exports, module) {
 
  
 
+  // TODO: Fix momentum fly controls
   womb = new Womb({
-    cameraController: 'TrackballControls',
+    cameraController: 'LeapSpringControls',
     objLoader:        true,
     massController:   true,
     springController: true,
@@ -28,7 +29,7 @@ define(function(require, exports, module) {
   
   womb.scene = womb.world.scene;
   
-  womb.stream = womb.audioController.createStream( '../lib/audio/aTooth.mp3' );
+  womb.stream = womb.audioController.createStream( '../lib/audio/readyToLose.mp3' );
 
   womb.uniforms = {
     texture: { type: "t", value: womb.stream.texture.texture },
@@ -42,6 +43,7 @@ define(function(require, exports, module) {
 
     uniforms: womb.uniforms,
     vertexShader: vertexShaders.audio.noise.position,
+    //vertexShader: vertexShaders.passThrough,
     fragmentShader: fragmentShaders.audio.color.position.absDiamond,
     //side: THREE.DoubleSide,
     blending:THREE.AdditiveBlending,
@@ -52,7 +54,7 @@ define(function(require, exports, module) {
   var s = womb.world.size / 10;
   var geo = new THREE.CubeGeometry( s , s , s , 30 , 30 , 30 );
 
-  var numOf = 10;
+  var numOf = 1;
   for( var i = 0; i < numOf; i++ ){
     
     var cube = new THREE.Mesh(
