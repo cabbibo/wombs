@@ -4,7 +4,62 @@ define(function(require, exports, module) {
 
 
   var ShaderChunks = {
-  
+ 
+    main  : "void main() {",
+    end   : "}",
+
+    modelView : [
+      "vec4 mvPosition = modelViewMatrix * vec4( pos , 1.0 );",
+      "gl_Position = projectionMatrix * mvPosition;"
+    ].join( "\n" ),
+
+    varyingPos : [
+      "varying vec2       vUv;",
+      "varying vec3       vPos;",
+    ].join( "\n" ),
+
+    setVarying : [
+      "vUv = uv;",    
+      "vPos = position;",
+    ].join( "\n" ),
+
+    sampleTexture : [
+
+      'vec4 sampleTexture( sampler2D t , vec2 p ){',
+        '\tvec4 tex = texture2D( t , p );',
+        '\treturn tex;',
+      '}'
+
+    ].join( "\n" ),
+
+    audioPosition:[ 
+
+      'vec3 audioPosition( sampler2D t , vec3 p ){',
+        '\tvec3 nPos = normalize( p );',
+        '\tvec3 coord = ( nPos + 1.0 ) * 0.5;',
+        '\tnPos.x = texture2D( t , vec2( coord.x , 0.0 ) ).a;',
+        '\tnPos.y = texture2D( t , vec2( coord.y , 0.0 ) ).a;',
+        '\tnPos.z = texture2D( t , vec2( coord.z , 0.0 ) ).a;',
+        '\treturn nPos;',
+      '}'
+
+   ].join( "\n" ),
+
+   absAudioPosition:[ 
+
+      'vec3 absAudioPosition( sampler2D t , vec3 p ){',
+        '\tvec3 nPos = normalize( p );',
+        '\tnPos.x = texture2D( t , vec2( abs(nPos.x) , 0.0 ) ).a;',
+        '\tnPos.y = texture2D( t , vec2( abs(nPos.x) , 0.0 ) ).a;',
+        '\tnPos.z = texture2D( t , vec2( abs(nPos.x) , 0.0 ) ).a;',
+        '\treturn nPos;',
+      '}'
+
+   ].join( "\n" ),
+
+
+
+
     noise3D: [
         'vec3 mod289(vec3 x) {',
             '\treturn x - floor(x * (1.0 / 289.0)) * 289.0;',
@@ -80,8 +135,10 @@ define(function(require, exports, module) {
             '\tm = m * m;',
             '\treturn 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));',
         '}'
-    ].join('\n')
+    ].join('\n'),
 
+
+   
 
   }
 

@@ -10,13 +10,16 @@ define(function(require, exports, module) {
       type:                  "Bold 20px Arial", 
       color:  "rgba( 255 , 255 , 255 , 0.95 )",
       crispness:                            10,
-          
+      margin:             this.world.size / 20   
+
+
     });
 
     
   }
 
-  TextCreator.prototype.createMesh = function( string , params ){
+
+  TextCreator.prototype.createTexture = function( string , params ){
 
     var canvas  = document.createElement('canvas');
     var ctx     = canvas.getContext( '2d' ); 
@@ -43,15 +46,17 @@ define(function(require, exports, module) {
 
     // If you want a margin, you can define it in the params
     if( !params.margin )
-      margin = size * .5;
+      margin = size*.5;
+    else
+      margin = params.margin;
 
     // Gets how wide the tesxt is
     ctx.font      = fullSize + "pt Arial";
     var textWidth = ctx.measureText(string).width;
  
     canvas.width  = textWidth + margin;
-    canvas.height = fullSize + margin;
-    ctx.font      = fullSize + "pt Arial";
+    canvas.height = fullSize  + margin;
+    ctx.font      = fullSize  + "pt Arial";
 
 
     // Gives us a background instead of transparent background
@@ -73,17 +78,46 @@ define(function(require, exports, module) {
 
     // Creates a texture
     var texture = new THREE.Texture(canvas);
+
+    texture.scaledWidth  = canvas.width;
+    texture.scaledHeight = canvas.height;
+
+    if( texture.scaledWidth > texture.scaleHeight ){
+      texture.scaledWidth  /= texture.scaledWidth;
+      texture.scaledHeight /= texture.scaledWidth;
+    }else{
+      texture.scaledWidth  /= texture.scaledHeight;
+      texture.scaledHeight /= texture.scaledHeight;
+    }
+    
+
     texture.needsUpdate = true;
 
+    return texture;
+
+  }
+
+  TextCreator.prototype.createMesh = function( string , params ){
+
+    var params  = _.defaults( params || {}, {
+      
+      color:      this.params.color,
+      size:       this.params.size,
+      crispness:  this.params.crispness
+          
+    });
+
+    var texture = this.createTexture( string , params );
+
     var material = new THREE.MeshBasicMaterial({
-      map:         texture,
+      map:          texture,
       transparent:  true,
       side:         THREE.DoubleSide
     });
 
     var geo = new THREE.PlaneGeometry( 
-      canvas.width  / scaleFactor, 
-      canvas.height / scaleFactor
+      texture.scaledWidth  / params.crispness, 
+      texture.scaledHeight / params.crispness
     );
     var mesh = new THREE.Mesh(geo, material);
     

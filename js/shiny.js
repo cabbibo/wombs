@@ -30,7 +30,7 @@ define(function(require, exports, module) {
   
   womb.stream = womb.audioController.createUserAudio();
  // womb.stream = womb.audioController.createStream( '../lib/audio/aTooth.mp3' );
-  //womb.audioController.gain.gain.value = 0;
+  womb.audioController.gain.gain.value = 0;
 
  
   womb.stream.onStreamCreated = function(){
@@ -40,25 +40,50 @@ define(function(require, exports, module) {
     // Communal uniform
     womb.time = { type: "f" , value: 0 };
 
+    var imgTexture = THREE.ImageUtils.loadTexture( "img/blueGalaxy.jpg" );
+
+    var textTexture = womb.textCreator.createTexture( 'XOCHITL' , { margin: womb.size/1.2 } );
     womb.uniforms1 = {
-      texture: { type: "t", value: womb.stream.texture.texture },
-      color:{ type: "v3" , value: new THREE.Vector3( 0.5 , 0.2 , 1.5 ) },
-      time: womb.time,
-      pow_noise:{ type: "f" , value: 1.0 },
-      pow_audio:{ type: "f" , value: 2.0 }
+      texture:    { type: "t", value: womb.stream.texture.texture },
+      image:      { type: "t", value: textTexture },
+      color:      { type: "v3" , value: new THREE.Vector3( 0.5 , 0.2 , 1.5 ) },
+      time:       womb.time,
+      pow_noise:  { type: "f" , value: 1.0 },
+      pow_audio:  { type: "f" , value: 2.0 }
     };
+
+
+    console.log( womb.textCreator );
+
+    var s = womb.size / 6;
+    var w = s * textTexture.scaledWidth;
+    var h = s * textTexture.scaledHeight;
+
+    var geometry = new THREE.PlaneGeometry( w  , h , 100 , 100 );
+    var material = new THREE.MeshBasicMaterial({
+      map: textTexture,
+      transparent: true,
+    });
+
+    var mesh = new THREE.Mesh( geometry , material );
+
+    mesh.position.z = womb.size / 3;
+    womb.scene.add( mesh );
+
 
     womb.interface.addAllUniforms( womb.uniforms1 , 'uniforms1' );
 
+    console.log( vertexShaders );
     womb.material1 = new THREE.ShaderMaterial( {
       uniforms: womb.uniforms1,
       vertexShader: vertexShaders.audio.noise.position,
-      fragmentShader: fragmentShaders.audio.color.position.absDiamond,
-      transparent:true
+      fragmentShader: fragmentShaders.audio.color.image.absDiamond,
+      transparent:true,
+      map:textTexture
     });
 
-    var s = womb.size / 20;
-    var geo = new THREE.PlaneGeometry( s , s , 100 , 100 );
+    var geo = new THREE.PlaneGeometry( w , h , 100 , 100 );
+    var geo = new THREE.CubeGeometry( w, w , h , 100 , 100 , 100 );
 
     var numOf = 1;
     for( var i = 0; i < numOf; i++ ){

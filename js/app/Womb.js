@@ -46,8 +46,6 @@ define(function(require, exports, module) {
      *
      * SETTING UP THE SCENE
      *
-     *
-     *
      */
 
 
@@ -69,7 +67,7 @@ define(function(require, exports, module) {
     this.camera.position.z = this.size;
 
 
-    this.scene.fog = new THREE.Fog( this.params.hex , this.size , this.camera.far );
+    this.scene.fog = new THREE.Fog( this.params.color , this.size , this.camera.far );
 
     // Getting the container in the right location
     this.container = document.createElement( 'div' );
@@ -112,8 +110,6 @@ define(function(require, exports, module) {
 
     this.animator         = new Animator(         this );
     this.audioController  = new AudioController(  this );
-    //this.world            = new World(            this );
-
 
     this.clock            = new THREE.Clock();
 

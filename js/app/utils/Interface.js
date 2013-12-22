@@ -94,8 +94,6 @@ define( function( require , exports , module ){
     // Getting the proper place to add the uniform
     var f = folder || this.gui;
 
-    console.log( uniform );
-
     if( uniform.type == 't' ){
       this.addTextureUniform( uniform , f );
     } else if ( uniform.type == 'v3' ){
@@ -113,9 +111,6 @@ define( function( require , exports , module ){
     for( var propt in uniforms ){
 
       var uniform = uniforms[ propt ];
-      console.log( propt );
-      console.log( uniform );
-
      
       if( propt == 'color' ){
         this.addColorUniform( uniform , folder ,  'color' );
