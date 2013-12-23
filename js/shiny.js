@@ -4,18 +4,20 @@ define(function(require, exports, module) {
   var AudioGeometry       = require( 'app/three/AudioGeometry'        );
   var AnalyzingFunctions  = require( 'app/utils/AnalyzingFunctions'   );
 
-  var ShaderMaterial      = require( 'app/utils/ShaderMaterial'       );
-
   var Womb                = require( 'app/Womb'                       );
-  
 
-  var recursiveFunctions  = require( 'app/utils/RecursiveFunctions'    );
+  var recursiveFunctions  = require( 'app/utils/RecursiveFunctions'   );
   
   var fragmentShaders     = require( 'app/shaders/fragmentShaders'    );
   var vertexShaders       = require( 'app/shaders/vertexShaders'      );
-  var shaderChunks        = require( 'app/shaders/shaderChunks'      );
+  var shaderChunks        = require( 'app/shaders/shaderChunks'       );
 
 
+  /*
+  
+     Setting up parameters for Dat.gui
+
+  */
   var params = {
 
     softMaterial:{
@@ -58,13 +60,20 @@ define(function(require, exports, module) {
 
   }
 
+  /*
+  <D-e>
+     Create our womb
+
+  */
   womb = new Womb({
     cameraController: 'TrackballControls',
     objLoader:        true,
     textCreator:      true,
     title:            'STAY SHINY!',
     summary:          'And keep on making inspirational art!',
-    gui:              true
+    gui:              true,
+    stats:            true,
+
   });
 
   // Communal uniform
@@ -74,37 +83,30 @@ define(function(require, exports, module) {
  // womb.stream = womb.audioController.createStream( '../lib/audio/aTooth.mp3' );
   womb.audioController.gain.gain.value = 0;
 
-  womb.objLoader.loadFile( 'lib/models/tree.obj' , function(geo){
 
-    womb.loader.loadBarAdd();
-    womb.treeGeo = geo;
+  /*  
+   *  TEXT
+   */
+  womb.textCreator.params.crispness = 30;
+  womb.textTexture = womb.textCreator.createTexture( '[o_O]' , { 
+    square: true,
+  });
 
+  womb.shinyTexture = THREE.ImageUtils.loadTexture( 'lib/img/shiny/cross.png' );
+  womb.metaTexture  = THREE.ImageUtils.loadTexture( 'lib/img/shiny/meta.png' );
+  womb.moonTexture  = THREE.ImageUtils.loadTexture( 'lib/img/moon_1024.jpg' , function(){
+    console.log('HEY');
   });
 
 
-    /*  
-     *  TEXT
-     */
-    womb.textCreator.params.crispness = 30;
-    womb.textTexture = womb.textCreator.createTexture( '[o_O]' , { 
-      square: true,
-    });
+  womb.textureArray = [
 
-    womb.shinyTexture = THREE.ImageUtils.loadTexture( 'lib/img/shiny/cross.png' );
-    womb.metaTexture  = THREE.ImageUtils.loadTexture( 'lib/img/shiny/meta.png' );
-    womb.starsTexture = THREE.ImageUtils.loadTexture( 'lib/img/starMap.png' );
-    womb.moonTexture  = THREE.ImageUtils.loadTexture( 'lib/img/moon_1024.jpg' );
+    womb.textTexture,
+    womb.shinyTexture,
+    womb.metaTexture,
+    womb.moonTexture,
 
-
-    womb.textureArray = [
-
-      womb.textTexture,
-      womb.shinyTexture,
-      womb.metaTexture,
-      womb.starsTexture,
-      womb.moonTexture,
-
-    ]
+  ]
 
 
  
@@ -118,24 +120,15 @@ define(function(require, exports, module) {
 
   womb.update = function(){
 
-    
     womb.time.value ++;
 
-    if( womb.shinyMeshes ){
-      for( var i =0; i < womb.shinyMeshes.length; i++ ){
-
-        womb.shinyMeshes[i].rotation.x += Math.sin( (womb.time.value * i )/ 1000 )/1000;
-        womb.shinyMeshes[i].rotation.y += Math.cos( (womb.time.value * i )/ 1000 )/1000;
-        womb.shinyMeshes[i].rotation.z += Math.tan( (womb.time.value * i )/ 1000 )/100;
-      }
-    }
   }
 
   womb.start = function(){
 
-    womb.soft = {}
 
-      // SHARED UNIFORMS
+
+    // SHARED UNIFORMS
     womb.u = {
 
       texture:    { type: "t", value: womb.stream.texture.texture },
@@ -147,6 +140,12 @@ define(function(require, exports, module) {
 
     };
 
+    /*
+      
+       Merging with the basic uniforms,
+       so we can use fog
+
+    */
     womb.uSoft = THREE.UniformsUtils.merge( [
         THREE.ShaderLib['basic'].uniforms,
         womb.u,
@@ -157,6 +156,17 @@ define(function(require, exports, module) {
         womb.u,
     ]);
 
+
+    /*
+
+       Once the uniforms are merged, 
+       we need to assign the proper values
+       because in the process of merging,
+       the values are cloned, meaning they will 
+       not be linked with textures that are updated, 
+       etc...
+
+    */
     womb.uSoft.texture.value    = womb.stream.texture.texture;
     womb.uSoft.image.value      = womb.stream.texture.texture;
     womb.uSoft.time             = womb.time;
@@ -171,27 +181,33 @@ define(function(require, exports, module) {
    
 
     /*
-     *
-     *  GUI
-     *
-     */
+
+       Setting up the GUI
+
+    */
+
+    womb.interface.addColorUniform( womb.uSoft.color );
     var guiSoft   = womb.interface.gui.addFolder( 'Snow Material' );
     var guiShiny  = womb.interface.gui.addFolder( '[o_O] Material' );
 
-    var v = params.softMaterial.noise_power * 3;
-    guiSoft.add( params.softMaterial , 'noise_power', -v , v)
+    // Giving a range for the noise
+    var range = params.softMaterial.noise_power * 3;
+
+    guiSoft.add( params.softMaterial , 'noise_power', -range , range )
+      .onChange( function( value ){
+        womb.uSoft.pow_noise.value  = value;   
+      });
+    
+    guiSoft.add( params.softMaterial , 'audio_power', -range , range )
       .onChange( function(v ){
-        womb.uSoft.pow_noise.value  = v;   
+        womb.uSoft.pow_audio.value  = value;   
       });
 
-    var v = params.softMaterial.audio_power * 3;
-    guiSoft.add( params.softMaterial , 'audio_power', -v , v)
-      .onChange( function(v ){
-        womb.uSoft.pow_audio.value  = v;   
-      });
-
+    // Function to switch from texture to texture
     guiSoft.add( params.softMaterial , 'switchTexture' );
      
+    // Need a seperate r , g and b slider for each color
+    // Although this will be changed as we build out the interface
     var color = guiSoft.addFolder( 'Color' );
     color.add( params.softMaterial.color , 'r' , 0 , 1  )
       .onChange( function( v ){
@@ -296,12 +312,12 @@ define(function(require, exports, module) {
 
     var fullGeo = new THREE.Geometry();
     var basicMaterial = new THREE.MeshBasicMaterial();
-    var treeGeo = womb.treeGeo[0];
-
+    var s = womb.size / 20;
+    var geo = new THREE.CubeGeometry( s , s, s, 10 , 10 , 10 );
     for( var i  = 0; i < recursiveArray.length; i++ ){
 
       var mesh = new THREE.Mesh(
-        womb.treeGeo[0],
+        geo,
         basicMaterial 
       );
 
@@ -313,7 +329,7 @@ define(function(require, exports, module) {
 
     }
 
-    var numOf = 6;
+    var numOf = 3;
     for( var i = 0; i < numOf; i++ ){
       
       var mesh = new THREE.Mesh( fullGeo , womb.materialSoft );
@@ -341,7 +357,7 @@ define(function(require, exports, module) {
       opacity:.1
     });
 
-    var numOf = 50;
+    var numOf = 1;
 
     womb.shinyMeshes = [];
 
@@ -370,9 +386,9 @@ define(function(require, exports, module) {
     }
 
 
-    var mesh = new THREE.Mesh( fullGeo , womb.materialShiny );
-    mesh.scale.multiplyScalar( .5 );
-    womb.scene.add( mesh );
+   // var mesh = new THREE.Mesh( fullGeo , womb.materialShiny );
+    //mesh.scale.multiplyScalar( .5 );
+    //womb.scene.add( mesh );
 
 
 

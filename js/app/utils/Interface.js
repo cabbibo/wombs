@@ -1,17 +1,30 @@
 define( function( require , exports , module ){
-
+ 
+  require( 'js/lib/stats.min.js'        );
   require( 'js/lib/jquery-1.7.1.min.js' );
   require( 'js/lib/dat.gui.min.js'      );
 
 
   function Interface( womb ){
 
+    // The DOM element of the interface will lay over
+    // the entire application
     this.domElement     = document.createElement('div');
     this.domElement.id  = 'interface';
 
     document.body.appendChild( this.domElement );
 
+    // We will always have stats, even if they are not added
+    // to the interface tree
+    this.stats  = new Stats();
 
+    //this.domElement.appendChild( this.stats.domElement );
+    if( womb.params.stats )
+      this.addStats();
+    
+
+    // If we have a title or summary, add an info section
+    // to the interface tree
     if( womb.params.title || womb.params.summary ){
 
       this.addInfo();
@@ -24,6 +37,7 @@ define( function( require , exports , module ){
 
     }
 
+    // If we are using a GUI for altering, create one
     if( womb.params.gui ){
       this.params = {};
       this.addGUI();
@@ -44,8 +58,14 @@ define( function( require , exports , module ){
 
   }
 
+  Interface.prototype.addStats = function(){
 
-  Interface.prototype.addInfo = function( ){
+    this.domElement.appendChild( this.stats.domElement );
+    this.stats.domElement.id = 'stats';
+  
+  }
+
+  Interface.prototype.addInfo = function(){
 
     this.info = document.createElement('div');
     this.info.id = 'info';
@@ -73,9 +93,6 @@ define( function( require , exports , module ){
 
   }
 
-  Interface.prototype.addStats = function(){
-
-  }
 
   Interface.prototype.addGUI = function(){
     
@@ -127,7 +144,20 @@ define( function( require , exports , module ){
   }
 
   
-  Interface.prototype.addColorUniform = function( uniform ){
+  Interface.prototype.addColorUniform = function( uniform , folder ){
+
+    // Getting the proper place to add the uniform
+    var f = folder || this.gui;
+
+    this.params.tempValue = '#ffffff';
+    //this.params.tempValue = { h: 350, s: 0.9, v: 0.3 };
+    console.log('HE');
+    console.log( this.params );
+    f.add( this.params , 'tempValue' ).onChange( function( value ){
+
+      console.log( value );
+
+    });
 
   }
 

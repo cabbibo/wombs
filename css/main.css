@@ -16,25 +16,24 @@ body{
 
 #renderingContainer{
 
-  position    :absolute;
-  top         :0px;
-  left        :0px;
-  width       :100%;
-  height      :100%;
-  background  :#000;
-
-
+  position    : absolute;
+  top         : 0px;
+  left        : 0px;
+  width       : 100%;
+  height      : 100%;
+  background  : #000;
 
 }
 
 #interface{
 
-  position  :absolute;
-  top       :0px;
-  left      :0px;
-  width     :100%;
-  height    :100%;
-  z-index   :999;
+  position        : absolute;
+  top             : 0px;
+  left            : 0px;
+  width           : 100%;
+  height          : 100%;
+  z-index         : 999;
+  pointer-events  : none;
 
 }
 
@@ -43,7 +42,6 @@ body{
 
   position:absolute;
   top:0px;
-
 
 }
 
@@ -55,8 +53,9 @@ body{
 #GUI{
 
   //position:absolute;
-  right:0px;
-  top:0px;
+  right           : 0px;
+  top             : 0px;
+  pointer-events  : auto;
 
 }
 

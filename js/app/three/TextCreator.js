@@ -56,9 +56,6 @@ define(function(require, exports, module) {
     ctx.font      = fullSize + "pt Arial";
     var textWidth = ctx.measureText(string).width;
 
-    console.log( 'SWAUre');
-    console.log( params.square ); 
-
     // Can choose to make a square texture if we want to 
     if( !params.square ){
     
@@ -72,10 +69,7 @@ define(function(require, exports, module) {
 
     }
 
-    console.log( canvas.width + "  |  " + canvas.height );
-
     ctx.font      = fullSize  + "pt Arial";
-
 
     // Gives us a background instead of transparent background
     if( params.backgroundColor ) {

@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
   
-  var a = require( 'js/lib/stats.min.js'  );
-  var b = require( 'js/lib/three.min.js'  );
+  require( 'js/lib/stats.min.js'  );
+  require( 'js/lib/three.min.js'  );
   
   function Animator( womb ){
 
@@ -10,18 +10,18 @@ define(function(require, exports, module) {
     this.clock = new THREE.Clock();
     this.clock.autostart = false;
 
-    this.stats = new Stats();
+    this.stats = this.womb.interface.stats;
+
+   /* this.stats = new Stats();
     this.stats.domElement.style.position  = 'absolute';
     this.stats.domElement.style.bottom    = '0px';
     this.stats.domElement.style.right     = '0px';
-    this.stats.domElement.style.zIndex    = '999';
+    this.stats.domElement.style.zIndex    = '999';*/
     //this.stats.domElement.style.display   = 'none';
 
     this.requestAnimationFrame = requestAnimationFrame;
 
     this.delta = 0;
-
-    this.womb.interface.domElement.appendChild( this.stats.domElement );
 
 
   }
