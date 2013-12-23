@@ -25,9 +25,9 @@ define(function(require, exports, module) {
       speed:        .3,
 
       color:{
-        r:.1,
+        r:1,
         g:.4,
-        b:.5
+        b:.3
       },
 
       switchTexture: function(){
@@ -118,8 +118,17 @@ define(function(require, exports, module) {
 
   womb.update = function(){
 
-   womb.time.value ++;
+    
+    womb.time.value ++;
 
+    if( womb.shinyMeshes ){
+      for( var i =0; i < womb.shinyMeshes.length; i++ ){
+
+        womb.shinyMeshes[i].rotation.x += Math.sin( (womb.time.value * i )/ 1000 )/1000;
+        womb.shinyMeshes[i].rotation.y += Math.cos( (womb.time.value * i )/ 1000 )/1000;
+        womb.shinyMeshes[i].rotation.z += Math.tan( (womb.time.value * i )/ 1000 )/100;
+      }
+    }
   }
 
   womb.start = function(){
@@ -131,7 +140,7 @@ define(function(require, exports, module) {
 
       texture:    { type: "t", value: womb.stream.texture.texture },
       image:      { type: "t", value: womb.stream.texture.texture },
-      color:      { type: "v3" , value: new THREE.Vector3( .8 , .9 , 1.2 ) },
+      color:      { type: "v3", value: new THREE.Vector3( 1 , .5 , .4 ) },
       time:       womb.time,
       pow_noise:  { type: "f" , value: 0.2 },
       pow_audio:  { type: "f" , value: .3 },
@@ -321,7 +330,6 @@ define(function(require, exports, module) {
      */
     var s = womb.size / 30;
     var cubeGeo = new THREE.CubeGeometry( s , s , s , 10 , 10 , 10 );
-    var cubeGeo = new THREE.SphereGeometry( s , 20 , 20);
     
     womb.materialShiny = new THREE.ShaderMaterial( {
       uniforms:womb.uShiny, 
