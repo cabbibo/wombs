@@ -38,7 +38,7 @@ define(function(require, exports, module) {
       noise:{
 
 
-        position:[
+        position0:[
 
           SC.varyingPos, 
 
@@ -77,6 +77,52 @@ define(function(require, exports, module) {
           SC.end
 
         ].join( "\n" ),
+
+        position:[
+
+          SC.varyingPos, 
+
+          "uniform float      time;",
+          "uniform float      pow_noise;",
+          "uniform float      pow_audio;",
+          "uniform sampler2D  texture;",
+
+          SC.noise3D,
+          SC.absAudioPosition,
+
+          SC.main,
+
+              SC.setVarying, 
+
+              "vec3 aAP = absAudioPosition( texture , position );",
+              "vec3 nPos = normalize(position);",
+              "nPos *= aAP;",
+
+              "float l = length( nPos );",
+
+              "vec3 offset = nPos * 2.0 * l +time/100.0;",
+
+              "float d = snoise( offset );",
+
+              "float a = ( l + 2.0 ) * pow_audio;",
+              "float n = ( d + 2.0 ) * pow_noise;",
+
+              "gl_PointSize = length( position ) * .5;",
+             
+              "vec3 pos = position;",
+              "vec3 noisePos = position;",
+              "vec3 audioPos = position;",
+              "noisePos *= a;",
+              "audioPos *= n;",
+              "pos += noisePos;",
+              "pos += audioPos;",
+
+              SC.modelView,
+              
+          SC.end
+
+        ].join( "\n" ),
+
 
         //image:
 

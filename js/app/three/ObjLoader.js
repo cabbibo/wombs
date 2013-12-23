@@ -2,10 +2,9 @@ define(function(require, exports, module) {
 
   var l = require( 'lib/three/OBJLoader' );
 
-  function ObjectLoader( world , params ){
+  function ObjectLoader( womb , params ){
 
-    this.world  = world;
-    this.womb   = world.womb;
+    this.womb   = womb;
 
     this.loader = new THREE.OBJLoader(); 
 

@@ -31,8 +31,19 @@ define(function(require, exports, module) {
     return ( Math.random() - .5) * size;
   }
 
-  M.randomRangePos = function(size){
-    return Math.random() * size;
+  M.randomRangePos = function( high , low){
+
+    if( low ){
+
+      var range = high - low;
+      var num = Math.random() * range;
+      return low + num;
+
+    } else {
+    
+      return Math.random() * high;
+
+    }
   }
 
   M.randomFromArray = function(array){
@@ -53,21 +64,78 @@ define(function(require, exports, module) {
     return true;
   }
 
-  M.THREE = {
+  M.THREE = {};
 
-    randomPosition: function( size ){
+  M.THREE.randomPosition = function( size , low ){
 
-      var x = M.randomRange( size );
-      var y = M.randomRange( size );
-      var z = M.randomRange( size );
+    var x = M.randomRange( size );
+    var y = M.randomRange( size );
+    var z = M.randomRange( size );
 
-      return new THREE.Vector3( x , y , z );
+    return new THREE.Vector3( x , y , z );
 
-    },
+  },
 
-    // Gives random spherical position,  
-    // can choose theta and phi distrubtions
-    randomSpherePosition: function( size , theta , phi ){
+  // Gives random spherical position,  
+  // can choose theta and phi distrubtions
+  M.THREE.randomSpherePosition = function( size , theta , phi ){
+
+    var r = M.randomRangePos( size );
+    var t;
+    var p;
+
+    if( theta ) t = M.randomRangePos( theta );
+    else        t = M.randomRangePos( Math.PI * 2 );
+
+    if( phi )   p = M.randomRange( phi );
+    else        p = M.randomRange( Math.PI * 2 );
+   
+    return M.toCart( r , t , p );
+
+
+  }
+
+
+  // Making a setter, to keep the same vector throughout
+  M.THREE.setRandomVector = function( vector , high , low ){
+
+    if( low ){
+
+      vector.x = M.randomRangePos( high , low );
+      vector.y = M.randomRangePos( high , low );
+      vector.z = M.randomRangePos( high , low );
+
+    }else{
+
+      var h = high || 1 ;
+
+      vector.x = M.randomRange( h );
+      vector.y = M.randomRange( h );
+      vector.z = M.randomRange( h );
+
+
+    }
+
+
+    return vector;
+
+  }
+
+
+  // Making a setter, to keep the same vector throughout
+  M.THREE.setRandomPosition = function( position , size, low ){
+
+    position.x = M.randomRange( size );
+    position.y = M.randomRange( size );
+    position.z = M.randomRange( size );
+
+    return position;
+
+  }
+
+  // Gives random spherical position,  
+  // can choose theta and phi distrubtions
+  M.THREE.randomSpherePosition = function( position ,  size , theta , phi ){
 
       var r = M.randomRangePos( size );
       var t;
@@ -79,25 +147,15 @@ define(function(require, exports, module) {
       if( phi )   p = M.randomRange( phi );
       else        p = M.randomRange( Math.PI * 2 );
      
-      return M.toCart( r , t , p );
+      position = M.toCart( r , t , p );
 
-    },
-
-    setRandomRotation: function( rotation ){
-
-      rotation.x = M.randomRangePos( 2 * Math.PI );
-      rotation.y = M.randomRangePos( 2 * Math.PI );
-      rotation.z = M.randomRangePos( 2 * Math.PI );
-
-      return rotation;
-
-    }
-
-
-
+      return position
   }
 
-  THREE.setRandomRotation = function( rotation ){
+
+
+  // Need to set because would have to be changing quaternion
+  M.THREE.setRandomRotation = function( rotation ){
 
     rotation.x = M.randomRangePos( 2 * Math.PI );
     rotation.y = M.randomRangePos( 2 * Math.PI );
@@ -106,6 +164,7 @@ define(function(require, exports, module) {
     return rotation;
 
   }
+
 
 
 

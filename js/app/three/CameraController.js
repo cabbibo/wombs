@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  require( 'lib/three.min'                  );
+  require( 'js/lib/three.min.js'            );
   require( 'controls/MomentumOrbitControls' );
   require( 'controls/OrbitControls'         );
   require( 'controls/TrackballControls'     );
