@@ -61,7 +61,7 @@ define(function(require, exports, module) {
   }
 
   /*
-  <D-e>
+   
      Create our womb
 
   */
@@ -70,18 +70,17 @@ define(function(require, exports, module) {
     objLoader:        true,
     textCreator:      true,
     title:            'STAY SHINY!',
-    summary:          'And keep on making inspirational art!',
+    summary:          "press 'x' to hide interface",
     gui:              true,
     stats:            true,
-
   });
 
   // Communal uniform
   womb.time = { type: "f" , value: 0 };
   
-  womb.stream = womb.audioController.createUserAudio();
- // womb.stream = womb.audioController.createStream( '../lib/audio/aTooth.mp3' );
-  womb.audioController.gain.gain.value = 0;
+  //womb.stream = womb.audioController.createUserAudio();
+  womb.stream = womb.audioController.createStream( '../lib/audio/tracks/littleBitFrightened.mp3' );
+  womb.audioController.gain.gain.value = 1;
 
 
   /*  
@@ -92,12 +91,22 @@ define(function(require, exports, module) {
     square: true,
   });
 
+  
   womb.shinyTexture = THREE.ImageUtils.loadTexture( 'lib/img/shiny/cross.png' );
-  womb.metaTexture  = THREE.ImageUtils.loadTexture( 'lib/img/shiny/meta.png' );
-  womb.moonTexture  = THREE.ImageUtils.loadTexture( 'lib/img/moon_1024.jpg' , function(){
-    console.log('HEY');
+  womb.metaTexture  = THREE.ImageUtils.loadTexture( 'lib/img/shiny/meta.png', THREE.UVMapping , function(){
+    console.log('META' );   
   });
 
+  womb.moonTexture  = THREE.ImageUtils.loadTexture( 'lib/img/moon_1024.jpg', THREE.UVMapping  , function(){
+    console.log('MOON' );
+  });
+
+ 
+  womb.loader.addCondition( womb.metaTexture && womb.moonTexture == true  , function(){
+    
+    console.log( 'MOON AND META' );
+
+  });
 
   womb.textureArray = [
 
@@ -109,13 +118,18 @@ define(function(require, exports, module) {
   ]
 
 
+  womb.stream.play();
+  womb.textureArray.push( womb.stream.texture.texture );
+  womb.loader.loadBarAdd();
+
+
  
-  womb.stream.onStreamCreated = function(){
+  /*womb.stream.onStreamCreated = function(){
 
     womb.textureArray.push( womb.stream.texture.texture );
     womb.loader.loadBarAdd();
 
-  }
+  }*/
   
 
   womb.update = function(){
@@ -168,7 +182,7 @@ define(function(require, exports, module) {
 
     */
     womb.uSoft.texture.value    = womb.stream.texture.texture;
-    womb.uSoft.image.value      = womb.stream.texture.texture;
+    womb.uSoft.image.value      = womb.textTexture;
     womb.uSoft.time             = womb.time;
     womb.uSoft.pow_noise.value  = params.softMaterial.noise_power;
     womb.uSoft.pow_audio.value  = params.softMaterial.audio_power;
@@ -199,7 +213,8 @@ define(function(require, exports, module) {
       });
     
     guiSoft.add( params.softMaterial , 'audio_power', -range , range )
-      .onChange( function(v ){
+      .onChange( function( value ){
+
         womb.uSoft.pow_audio.value  = value;   
       });
 

@@ -1,10 +1,7 @@
 
 define(function(require, exports, module) {
 
-  //var utils = require( 'app/util.js'  );
-  //
   var AudioTexture = require( 'app/utils/AudioTexture' );
-
 
   function Stream( controller , file , params ){
 

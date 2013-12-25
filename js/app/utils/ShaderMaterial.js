@@ -1,7 +1,5 @@
 define(function(require, exports, module) {
 
-  var a = require( 'js/lib/Tween.js'  );
-
 
   function ShaderMaterial( uniforms , vertexShader , fragmentShader ){
 

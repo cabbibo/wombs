@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var a = require( 'js/lib/Tween.js'  );
+  var a = require( 'lib/Tween'  );
 
 
   function Tweener( womb , params ){

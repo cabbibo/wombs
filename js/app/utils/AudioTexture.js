@@ -1,8 +1,5 @@
 define(function(require, exports, module) {
 
-  var a = require( 'js/lib/Tween.js'  );
-
-
   function AudioTexture( audio ){
 
     this.audio = audio;

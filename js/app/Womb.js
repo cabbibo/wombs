@@ -1,16 +1,16 @@
 define(function(require, exports, module) {
 
-                          require( 'js/lib/three.min.js'          );
-                          require( 'js/lib/underscore.js'         );
-                          require( 'js/lib/stats.min.js'          );
+                          require( 'lib/three.min'                );
+                          require( 'lib/underscore'               );
+                          require( 'lib/stats.min'                );
  
 
   // NON-THREE parts of the WOMB
   var Interface         = require( 'app/utils/Interface'          );
-  var Loader            = require( 'app/utils/loader'             );
-  var Animator          = require( 'app/utils/animator'           );
+  var Detector          = require( 'app/utils/Detector'           );
+  var Loader            = require( 'app/utils/Loader'             );
+  var Animator          = require( 'app/utils/Animator'           );
   var AudioController   = require( 'app/audio/AudioController'    );
- // var World             = require( 'app/three/World'              );
   var Tweener           = require( 'app/utils/Tweener'            );
   var MassController    = require( 'app/physics/MassController'   );
   var SpringController  = require( 'app/physics/SpringController' );
@@ -24,6 +24,7 @@ define(function(require, exports, module) {
   var TextCreator       = require( 'app/three/TextCreator'      );
   var SceneController   = require( 'app/three/SceneController'  );
   var ObjLoader         = require( 'app/three/ObjLoader'        );
+  var JSONLoader        = require( 'app/three/JSONLoader'       );
   var EffectComposer    = require( 'app/three/EffectComposer'   );
   var UserMediaTexture  = require( 'app/three/UserMediaTexture' );
 
@@ -36,6 +37,7 @@ define(function(require, exports, module) {
       springController: false,
       leapController:   false,
       textCreator:      false,
+      JSONLoader:       false,
       size:               100,
       color:         0x000000,
     });
@@ -88,6 +90,9 @@ define(function(require, exports, module) {
 
     if( this.params.objLoader )
       this.objLoader = new ObjLoader( this );
+
+    if( this.params.JSONLoader )
+      this.JSONLoader = new JSONLoader( this );
 
     if( this.params.effectComposer )
       this.effectComposer  = new EffectComposer(  this );

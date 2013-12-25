@@ -202,7 +202,7 @@ define(function(require, exports, module) {
             "}"
           ].join( "\n" ),
 
-          add_absDiamond:[
+          add_uv_absDiamond:[
 
             THREE.ShaderChunk[ "fog_pars_fragment" ],
             "uniform sampler2D texture;",
@@ -231,7 +231,7 @@ define(function(require, exports, module) {
             "}"
           ].join( "\n" ),
           
-          sub_absDiamond:[
+          sub_uv_absDiamond:[
 
             THREE.ShaderChunk[ "fog_pars_fragment" ],
             "uniform sampler2D texture;",

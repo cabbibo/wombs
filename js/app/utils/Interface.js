@@ -1,8 +1,8 @@
 define( function( require , exports , module ){
  
-  require( 'js/lib/stats.min.js'        );
-  require( 'js/lib/jquery-1.7.1.min.js' );
-  require( 'js/lib/dat.gui.min.js'      );
+  require( 'lib/stats.min'        );
+  require( 'lib/jquery-1.7.1.min' );
+  require( 'lib/dat.gui.min'      );
 
 
   function Interface( womb ){
@@ -146,19 +146,17 @@ define( function( require , exports , module ){
   
   Interface.prototype.addColorUniform = function( uniform , folder ){
 
-    // Getting the proper place to add the uniform
+    /*// Getting the proper place to add the uniform
     var f = folder || this.gui;
 
     this.params.tempValue = '#ffffff';
     //this.params.tempValue = { h: 350, s: 0.9, v: 0.3 };
-    console.log('HE');
-    console.log( this.params );
     f.add( this.params , 'tempValue' ).onChange( function( value ){
 
       console.log( value );
 
     });
-
+*/
   }
 
   Interface.prototype.addTextureUniform = function( uniform ){

@@ -1,9 +1,6 @@
 
 define(function(require, exports, module) {
 
-  //var utils = require( 'app/util.js'  );
-
-
   function Audio( controller , file , params ){
 
     this.params = _.defaults( params || {}, {

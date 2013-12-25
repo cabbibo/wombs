@@ -14,6 +14,38 @@ body{
   src: url("../lib/fonts/GeosansLight.ttf");
 }
 
+#curtain{
+
+  position      : absolute;
+  z-index       : 999;
+  top           : 0px;
+  left          : 0px;
+  width         : 100%;
+  height        : 100%;
+  background    : #000;
+
+}
+
+#loadBar{
+
+  position      : absolute;
+  top           : 50%;
+  height        : 1px;
+  width         : 0px;
+  background    : #fff;
+
+
+
+}
+
+#loadingGif{
+
+  position      : absolute;
+  top           : 50%;
+  left          : 50%;
+
+}
+
 #renderingContainer{
 
   position    : absolute;
@@ -42,12 +74,18 @@ body{
 
   position:absolute;
   top:0px;
+  padding-left: 20px;
 
 }
 
-#title{}
+#title{
 
-#summary{}
+
+}
+
+#summary{
+  font-size:16px;
+}
 
 
 #GUI{

@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  require( 'js/lib/three.min.js' );
+  require( 'lib/three.min' );
 
 
   var CanvasFunctions = {};

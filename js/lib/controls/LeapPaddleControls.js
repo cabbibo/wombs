@@ -4,120 +4,125 @@
  *  Move your hand like a paddle
  *
  */
+define(function(require, exports, module) {
 
-THREE.LeapPaddleControls = function ( object , controller , params, domElement ) {
+  require( 'lib/three.min' );
 
-  this.object     = object;
-  this.controller = controller;
-  this.domElement = ( domElement !== undefined ) ? domElement : document;
+  THREE.LeapPaddleControls = function ( object , controller , params, domElement ) {
 
-  // API
-  
-  this.enable = true;
+    this.object     = object;
+    this.controller = controller;
+    this.domElement = ( domElement !== undefined ) ? domElement : document;
 
-  this.velocity = new THREE.Vector3();
+    // API
+    
+    this.enable = true;
 
-  this.dampening = ( object.dampening !== undefined ) ? object.dampening : .95;
+    this.velocity = new THREE.Vector3();
 
-  this.weakDampening = .99;
-  this.strongDampening = .9;
+    this.dampening = ( object.dampening !== undefined ) ? object.dampening : .95;
 
-  this.dampening = this.strongDampening;
-  
-  // Tells you how much the matching of direction matters
-  this.directionStrength = 4;
+    this.weakDampening = .99;
+    this.strongDampening = .9;
 
-  // Tells you how much the power should be augmented
-  // keep in mind that a higher power means a higher turn on
-  this.power = 1;
-  this.divisionFactor = 500;
+    this.dampening = this.strongDampening;
+    
+    // Tells you how much the matching of direction matters
+    this.directionStrength = 4;
 
-  this.maxVelocity = 10;
+    // Tells you how much the power should be augmented
+    // keep in mind that a higher power means a higher turn on
+    this.power = 1;
+    this.divisionFactor = 500;
 
-  this.handVel = new THREE.Vector3();
-  this.handNorm = new THREE.Vector3();
+    this.maxVelocity = 10;
 
-  this.update = function(){
+    this.handVel = new THREE.Vector3();
+    this.handNorm = new THREE.Vector3();
 
-    var frame = this.controller.frame();
+    this.update = function(){
 
-    if( frame.valid == false ){
+      var frame = this.controller.frame();
 
-      this.controller.connect();
-      frame = this.controller.frame();
+      if( frame.valid == false ){
 
-    }
-    //console.log( frame );
+        this.controller.connect();
+        frame = this.controller.frame();
 
-    if( frame ){
+      }
+      //console.log( frame );
 
-      if( frame.hands[0] && frame.pointables.length == 0 ){
+      if( frame ){
 
-        this.dampening = this.strongDampening;
+        if( frame.hands[0] && frame.pointables.length == 0 ){
 
-      }else if( frame.hands[0] && frame.pointables.length == 1 ){
-        
-        this.dampening = this.weakDampening;
+          this.dampening = this.strongDampening;
 
-      }else if( frame.hands[0] && frame.pointables.length > 1 ){
+        }else if( frame.hands[0] && frame.pointables.length == 1 ){
+          
+          this.dampening = this.weakDampening;
 
-        this.dampening = this.weakDampening;
+        }else if( frame.hands[0] && frame.pointables.length > 1 ){
 
-        // First off check to see if the hand is moving in 
-        // the same direction or opposite direction 
-        // as the palm normal.
-        var hpv = frame.hands[0].palmVelocity;
-        this.handVel.set( hpv[0] , hpv[1] , hpv[2] );
-         
-        var hpn = frame.hands[0].palmNormal;
-        this.handNorm.set( hpn[0] , hpn[1] , hpn[2] );
+          this.dampening = this.weakDampening;
 
-        // Copying over the hand velocity before we alter it
-        preVel = this.handVel.clone();
-        
-        this.handVel.normalize();
-        // No need to normalize handNorm, b/c is direction already
+          // First off check to see if the hand is moving in 
+          // the same direction or opposite direction 
+          // as the palm normal.
+          var hpv = frame.hands[0].palmVelocity;
+          this.handVel.set( hpv[0] , hpv[1] , hpv[2] );
+           
+          var hpn = frame.hands[0].palmNormal;
+          this.handNorm.set( hpn[0] , hpn[1] , hpn[2] );
 
-        // Getting the angle between the handVel and handNorm
-        this.angle = this.handVel.dot( this.handNorm );
-        
-        // Scaling by the neccesary Dampening factor
-        this.directionFactor = Math.abs( Math.pow( this.angle, this.directionStrength ) );
+          // Copying over the hand velocity before we alter it
+          preVel = this.handVel.clone();
+          
+          this.handVel.normalize();
+          // No need to normalize handNorm, b/c is direction already
 
-        preVel.multiplyScalar( this.directionFactor );
+          // Getting the angle between the handVel and handNorm
+          this.angle = this.handVel.dot( this.handNorm );
+          
+          // Scaling by the neccesary Dampening factor
+          this.directionFactor = Math.abs( Math.pow( this.angle, this.directionStrength ) );
 
-        this.velocity.x -= Math.pow( preVel.x , this.power ) / this.divisionFactor;
-        this.velocity.y -= Math.pow( preVel.y , this.power ) / this.divisionFactor;
-        this.velocity.z -= Math.pow( preVel.z , this.power ) / this.divisionFactor;
+          preVel.multiplyScalar( this.directionFactor );
 
-        var l = this.velocity.length();
+          this.velocity.x -= Math.pow( preVel.x , this.power ) / this.divisionFactor;
+          this.velocity.y -= Math.pow( preVel.y , this.power ) / this.divisionFactor;
+          this.velocity.z -= Math.pow( preVel.z , this.power ) / this.divisionFactor;
 
-        if( l >= this.maxVelocity ){
+          var l = this.velocity.length();
 
-           this.velocity.normalize().multiplyScalar( this.maxVelocity );
+          if( l >= this.maxVelocity ){
+
+             this.velocity.normalize().multiplyScalar( this.maxVelocity );
+
+          }
 
         }
 
+        // Convert from straight X , Y , Z;
+        var vTemp = this.velocity.clone();
+        vTemp.applyQuaternion( this.object.quaternion );
+        this.object.position.add( vTemp );
+
+      
+     //   this.object.position.add( this.velocity );
+        this.velocity.multiplyScalar( this.dampening );
+
       }
-
-      // Convert from straight X , Y , Z;
-      var vTemp = this.velocity.clone();
-      vTemp.applyQuaternion( this.object.quaternion );
-      this.object.position.add( vTemp );
-
-    
-   //   this.object.position.add( this.velocity );
-      this.velocity.multiplyScalar( this.dampening );
 
     }
 
+
+    
   }
 
 
-  
-}
 
 
+ module.exports =  THREE.LeapPaddleControls;
 
-
-
+});

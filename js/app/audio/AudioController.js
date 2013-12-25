@@ -20,7 +20,16 @@ define(function(require, exports, module) {
         CREATION
     */
 
-    this.ctx      = new webkitAudioContext();
+    try {
+      // Fix up for prefixing
+      window.AudioContext = window.AudioContext||window.webkitAudioContext;
+      context = new AudioContext();
+    }
+    catch(e) {
+      alert('Web Audio API is not supported in this browser');
+    }
+
+    this.ctx      = new AudioContext();
 
     this.womb = womb;
 
