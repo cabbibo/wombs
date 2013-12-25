@@ -23,6 +23,8 @@ define(function(require, exports, module) {
   var Raycaster         = require( 'app/three/Raycaster'        );
   var TextCreator       = require( 'app/three/TextCreator'      );
   var SceneController   = require( 'app/three/SceneController'  );
+  var ImageLoader       = require( 'app/three/ImageLoader'      );
+  var ModelLoader       = require( 'app/three/ModelLoader'      );
   var ObjLoader         = require( 'app/three/ObjLoader'        );
   var JSONLoader        = require( 'app/three/JSONLoader'       );
   var EffectComposer    = require( 'app/three/EffectComposer'   );
@@ -37,9 +39,8 @@ define(function(require, exports, module) {
       springController: false,
       leapController:   false,
       textCreator:      false,
-      JSONLoader:       false,
       size:               100,
-      color:         0x000000,
+      color:         '#000000',
     });
 
 
@@ -68,8 +69,11 @@ define(function(require, exports, module) {
 
     this.camera.position.z = this.size;
 
-
-    this.scene.fog = new THREE.Fog( this.params.color , this.size , this.camera.far );
+    var c = this.params.color.replace( "#" , "0x" );
+    this.color = new THREE.Color( );
+    this.color.setHex( c );
+   
+    this.scene.fog = new THREE.Fog( this.color , this.size , this.camera.far * .8 );
 
     // Getting the container in the right location
     this.container = document.createElement( 'div' );
@@ -80,13 +84,23 @@ define(function(require, exports, module) {
     this.renderer = new THREE.WebGLRenderer();
 
     this.renderer.setSize( window.innerWidth, window.innerHeight );
+
+ 
+    this.renderer.domElement.style.background = this.params.color;
     this.container.appendChild( this.renderer.domElement );
+
 
     if( this.params.cameraController )
       this.cameraController = new CameraController( this , this.params.cameraController );
       
     if( this.params.raycaster )
       this.raycaster = new Raycaster( this );
+
+    if( this.params.imageLoader )
+      this.imageLoader = new ImageLoader( this );
+
+    if( this.params.modelLoader )
+      this.modelLoader = new ModelLoader( this );
 
     if( this.params.objLoader )
       this.objLoader = new ObjLoader( this );

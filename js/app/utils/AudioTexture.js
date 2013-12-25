@@ -17,7 +17,7 @@ define(function(require, exports, module) {
     this.canvas.style.position = 'absolute';
     this.canvas.style.top       = '0px'
 
-    document.body.appendChild( this.canvas );
+    //document.body.appendChild( this.canvas );
     
     this.canvas.width = this.pixels;
     this.canvas.height = 1;

@@ -13,7 +13,19 @@ body{
   font-family: "GeoSans";
   src: url("../lib/fonts/GeosansLight.ttf");
 }
+a{
 
+  color: #fff;
+  text-decoration: none;
+  underline: none;
+
+}
+
+a:hover{
+
+  text-decoration: underline;
+
+}
 #curtain{
 
   position      : absolute;
@@ -80,11 +92,14 @@ body{
 
 #title{
 
+  pointer-events  : auto;
 
 }
 
 #summary{
+
   font-size:16px;
+
 }
 
 

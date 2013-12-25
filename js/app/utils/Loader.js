@@ -98,6 +98,8 @@ define(function(require, exports, module) {
     // and trigger whatever is necessary when we need to
     checkConditions: function(){
 
+      console.log('dds');
+
       for( var i = 0; i < this.conditions.length; i++ ){
 
         console.log( 'conditions checked' );

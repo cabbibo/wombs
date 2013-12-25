@@ -7,6 +7,8 @@ define( function( require , exports , module ){
 
   function Interface( womb ){
 
+    this.womb = womb;
+
     // The DOM element of the interface will lay over
     // the entire application
     this.domElement     = document.createElement('div');
@@ -78,7 +80,16 @@ define( function( require , exports , module ){
 
     this.title = document.createElement('h1');
     this.title.id = 'title';
-    this.title.innerHTML = title;
+
+    if( this.womb.params.link ){
+      this.link = document.createElement('a');
+      this.link.href = this.womb.params.link;
+      this.link.target = '_blank';
+      this.link.innerHTML = title;
+      this.title.appendChild( this.link );
+    }else{
+      this.title.innerHTML = title;
+    }
     this.info.appendChild( this.title );
 
   }

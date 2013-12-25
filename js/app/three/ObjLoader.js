@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 
   ObjectLoader.prototype.loadFile = function( file , callback ){
 
-    this.womb.loader.objectsToLoad ++;
+    this.womb.loader.addToLoadBar();
 
     this.loader.load( file , function( object ){
 
