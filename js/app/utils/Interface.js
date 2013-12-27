@@ -114,7 +114,7 @@ define( function( require , exports , module ){
   }
 
 
-  Interface.prototype.addUniform = function( uniform , folder ){
+  Interface.prototype.addUniform = function( propt , uniform , folder ){
 
     if( !this.gui )
       this.addGUI();
@@ -123,11 +123,11 @@ define( function( require , exports , module ){
     var f = folder || this.gui;
 
     if( uniform.type == 't' ){
-      this.addTextureUniform( uniform , f );
+      this.addTextureUniform( propt , uniform , f );
     } else if ( uniform.type == 'v3' ){
-      this.addVectorUniform( uniform , f );
+      this.addVectorUniform( propt , uniform , f );
     } else if( uniform.type == 'f' ){
-      f.add( uniform , 'value', -uniform.value * 20 , uniform.value * 20 ).listen();
+      f.add( uniform , 'value', -uniform.value * 2 , uniform.value * 2 ).listen();
     }
 
   }
@@ -143,14 +143,24 @@ define( function( require , exports , module ){
       if( propt == 'color' ){
         this.addColorUniform( uniform , folder ,  'color' );
       }else{
-        this.addUniform( uniform , folder );
+        this.addUniform( propt , uniform , folder );
       }
 
     }
 
   }
 
-  Interface.prototype.addVectorUniform = function( uniform ){
+  Interface.prototype.addVectorUniform = function( title , uniform , folder , size ){
+
+    // Getting the proper place to add the uniform
+    var f = folder || this.gui;
+    var s = size || 20;
+
+    var u = f.addFolder( title );
+    u.add( uniform.value , 'x' , -1 , 1 ).listen();
+    u.add( uniform.value , 'y' , -1 , 1 ).listen();
+    u.add( uniform.value , 'z' , -1 , 1 ).listen();
+
 
   }
 

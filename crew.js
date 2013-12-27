@@ -17,26 +17,26 @@ define(function(require, exports, module) {
      Create our womb
 
   */
-  var link = 'https://soundcloud.com/cashmerecat/sets/mirrormaruep';
+  var link = 'http://thehitandrun.bandcamp.com/album/road-kill-vol-2-hnr18';
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
     cameraController: 'TrackballControls',
     modelLoader:      true,
     textCreator:      true,
-    title:            'Mirror Maru - Cashmere Cat',
+    title:            'Old English - Om Unit x Sweatson Klank',
     link:             link, 
     summary:          info,
     //gui:              true,
     imageLoader:      true,
     //stats:            true,
-    color:            '#100e30' 
+    color:            '#000000' 
   });
 
   // Communal uniform
   womb.time = { type: "f" , value: 0 };
   
-  var file = '/wombs/lib/audio/tracks/mirrorMaru.mp3';
+  var file = '/wombs/lib/audio/tracks/oldEnglish.mp3';
   womb.stream = womb.audioController.createStream( file );
   womb.audioController.gain.gain.value = 1;
 
@@ -49,7 +49,9 @@ define(function(require, exports, module) {
     square: true,
   });
 
-   womb.modelLoader.loadFile( 'OBJ' , '../lib/models/mug_11530_10.obj' , function( object ){
+  womb.crewTexture = womb.imageLoader.load('../lib/img/hnrW.png' ); 
+
+   womb.modelLoader.loadFile( 'OBJ' , '../lib/models/tree.obj' , function( object ){
 
     if( object[0] instanceof THREE.Mesh ){
     }
@@ -117,14 +119,14 @@ define(function(require, exports, module) {
 
     */
     womb.uSoft.texture.value    = womb.stream.texture.texture;
-    womb.uSoft.image.value      = womb.textTexture;
+    womb.uSoft.image.value      = womb.crewTexture;
     womb.uSoft.time             = womb.time;
-    womb.uSoft.color.value      = new THREE.Vector3( .4 , .4 , .7 );
+    womb.uSoft.color.value      = new THREE.Vector3( .9 , .1 , .0 );
 
     womb.uShiny.texture.value   = womb.stream.texture.texture;
     womb.uShiny.image.value     = womb.stream.texture.texture;
     womb.uShiny.time            = womb.time;
-    womb.uShiny.color.value     = new THREE.Vector3( .3 , .1 , .5 );
+    womb.uShiny.color.value     = new THREE.Vector3( .9 , .1 , .0 );
 
 
     /*
@@ -137,18 +139,18 @@ define(function(require, exports, module) {
       uniforms:womb.uShiny, 
       vertexShader: vertexShaders.audio.noise.position,
       fragmentShader: fragmentShaders.audio.color.image.sample_pos_diamond,
-      transparent:true,
+     // transparent:true,
       fog: true,
-      blending: THREE.AdditiveBlending,
-      transparent: true,
-      opacity:.1
+     // blending: THREE.AdditiveBlending,
+     // transparent: true,
+     // opacity:.1
     });
 
     
     womb.shinyMeshes = [];
 
 
-    var numOf = 6;
+    var numOf = 2;
     var normalMat = new THREE.MeshNormalMaterial();
     var basicMaterial = new THREE.MeshBasicMaterial({
      
@@ -161,10 +163,10 @@ define(function(require, exports, module) {
         womb.mugGeo,
         womb.materialShiny
       );
-      mesh.scale.multiplyScalar( 10 );
+      
+      mesh.scale.multiplyScalar( 1 );
 
       mesh.rotation.z = 2 * Math.PI * i / numOf;
-
     
       womb.shinyMeshes.push( mesh );
       
@@ -173,7 +175,9 @@ define(function(require, exports, module) {
     }
 
     var numOf = 6;
-    
+   
+    var mainObj = new THREE.Object3D();
+
     for( var i = 0; i < numOf; i ++ ){
      
       var object = new THREE.Object3D();
@@ -188,9 +192,13 @@ define(function(require, exports, module) {
 
       object.rotation.x = 2 * Math.PI * i / 6;
 
-      womb.scene.add( object );
+      mainObj.add( object );
 
     }
+
+    mainObj.rotation.y = Math.PI / 2;
+    womb.scene.add( mainObj );
+
 
     /*
      *
@@ -208,15 +216,15 @@ define(function(require, exports, module) {
       opacity:.1
     });
 
-    var s = womb.size / 20;
+    var s = womb.size / 50;
     var n = 20;
     var geo = new THREE.CubeGeometry( s , s , s , n , n ,n );
 
-    var numOf = 50;
+    var numOf = 100;
     for( var i = 0; i < numOf; i ++ ){
 
       var mesh = new THREE.Mesh( geo , womb.materialBox );
-      Math.THREE.setRandomVector( mesh.position , womb.size );
+      Math.THREE.setRandomVector( mesh.position , womb.size * 2 );
       Math.THREE.setRandomVector( mesh.rotation , 2 * Math.PI );
       womb.scene.add( mesh );
     

@@ -32,6 +32,17 @@ define(function(require, exports, module) {
 
     ].join( "\n" ),
 
+    audioUV: [
+
+      "vec2 audioUV( sampler2D t , vec2 uv ){",
+        "float x = length( texture2D( t , vec2( uv.x , 0.0 ) ) );",
+        "float y = length( texture2D( t , vec2( uv.x , 0.0 ) ) );",
+        "return  vec2( x , y );",
+      "}",
+
+
+    ].join( "\n" ),
+
     audioPosition:[ 
 
       'vec3 audioPosition( sampler2D t , vec3 p ){',
@@ -43,19 +54,58 @@ define(function(require, exports, module) {
         '\treturn nPos;',
       '}'
 
-   ].join( "\n" ),
+    ].join( "\n" ),
 
-   absAudioPosition:[ 
+    absAudioPosition:[ 
 
       'vec3 absAudioPosition( sampler2D t , vec3 p ){',
         '\tvec3 nPos = normalize( p );',
-        '\tnPos.x = texture2D( t , vec2( abs(nPos.x) , 0.0 ) ).a;',
-        '\tnPos.y = texture2D( t , vec2( abs(nPos.x) , 0.0 ) ).a;',
-        '\tnPos.z = texture2D( t , vec2( abs(nPos.x) , 0.0 ) ).a;',
+        '\tnPos.x = length( texture2D( t , vec2( abs(nPos.x) , 0.0 ) ) );',
+        '\tnPos.y = length( texture2D( t , vec2( abs(nPos.y) , 0.0 ) ) );',
+        '\tnPos.z = length( texture2D( t , vec2( abs(nPos.z) , 0.0 ) ) );',
         '\treturn nPos;',
       '}'
 
-   ].join( "\n" ),
+    ].join( "\n" ),
+
+
+    kali_30: [
+       // v : vertex
+       // s : seed
+       // p : precesion
+      "vec3 kali( vec3 v , vec3 s , float p ){",
+        "float m = 0.0;",
+        "for( int i = 0; i < 30 ; i ++){",
+          "v.x = abs(v.x);",
+          "v.y = abs(v.y);", 
+          "v.z = abs(v.z);",
+          "m = v.x * v.x + v.y * v.y + v.z * v.z;",
+          "v.x = v.x / m + s.x;",
+          "v.y = v.y / m + s.y;",
+          "v.z = v.z / m + s.z;",
+        "}",
+        "return v;",
+      "}",
+    ].join("\n"),
+
+    kali_10: [
+       // v : vertex
+       // s : seed
+       // p : precesion
+      "vec3 kali( vec3 v , vec3 s , float p ){",
+        "float m = 0.0;",
+        "for( int i = 0; i < 10 ; i ++){",
+          "v.x = abs(v.x);",
+          "v.y = abs(v.y);", 
+          "v.z = abs(v.z);",
+          "m = v.x * v.x + v.y * v.y + v.z * v.z;",
+          "v.x = v.x / m + s.x;",
+          "v.y = v.y / m + s.y;",
+          "v.z = v.z / m + s.z;",
+        "}",
+        "return v;",
+      "}",
+    ].join("\n"),
 
 
 
