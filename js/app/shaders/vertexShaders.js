@@ -169,6 +169,14 @@ define(function(require, exports, module) {
       SC.modelView,
       SC.end
     
+    ].join( "\n" ),
+
+    passThrough_noMV:[
+    
+      SC.main,
+      "gl_Position = vec4(  position , 1.0 );",
+      SC.end
+    
     ].join( "\n" )
 
 

@@ -14,4 +14,14 @@
 
 
 // TODO NOTES:
-  di
+   
+  - loader conditions
+  - loader.failure() to be called on errors
+  - loader.failureDOM to be called whenever a application doesn't work.
+
+
+  // Particle Simulations
+  - create easy debug meshes
+  - create physicShaders
+  - create
+  - 

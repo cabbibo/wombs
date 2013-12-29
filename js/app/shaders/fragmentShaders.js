@@ -4,6 +4,17 @@ define(function(require, exports, module) {
 
   var fragmentShaders = {
 
+    texture:[
+      "uniform vec2 resolution;",
+      "uniform float time;",
+      "uniform sampler2D texture;",
+      SC.main,
+        "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+        "vec3 color = texture2D( texture, uv ).xyz;",
+        "gl_FragColor=vec4(color, 1.0);",
+      SC.end
+    ].join( "\n" ),
+
     //straightColor:
     audio:{
       color:{
@@ -126,8 +137,8 @@ define(function(require, exports, module) {
             "uniform vec3 color;",
             "varying vec3 vPos;",
             "varying vec2 vUv;",
-            
-            
+           
+          
             "void main( void ) {",
               "vec2 centerUV = vUv - 0.5;",
               "vec3 nPos = normalize( vPos );",

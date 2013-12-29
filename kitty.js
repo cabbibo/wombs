@@ -45,7 +45,7 @@ define(function(require, exports, module) {
    *  TEXT
    */
   womb.textCreator.params.crispness = 30;
-  womb.textTexture = womb.textCreator.createTexture( '=^.^=' , { 
+  womb.textTexture = womb.textCreator.createTexture( 'ALL LOVELY' , { 
     square: true,
   });
 

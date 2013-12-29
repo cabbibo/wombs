@@ -24,6 +24,7 @@ define(function(require, exports, module) {
     cameraController: 'TrackballControls',
     modelLoader:      true,
     textCreator:      true,
+    raycaster:        true,
     title:            'Philip Glass - Knee 1 ( Nosaj Thing Remix )',
     link:             link, 
     summary:          info,
@@ -37,38 +38,15 @@ define(function(require, exports, module) {
   womb.stream = womb.audioController.createStream( '../lib/audio/tracks/knee1.mp3' );
   womb.stream.play();
   
+  womb.stream = womb.audioController.createUserAudio();
+  womb.audioController.gain.gain.value = 0; 
   
-  // SHARED UNIFORM
-
-  var size = womb.size / 5;
-  womb.sphereGeo = new THREE.IcosahedronGeometry( size , 6 );
-  womb.sphereGeo = new THREE.SphereGeometry( size , 100 , 100 );
-
-  womb.sphereGeo = new THREE.CubeGeometry( size , size , size , 100 , 100  ,100 );
-  womb.normalMaterial = new THREE.MeshNormalMaterial();
-
-
-  womb.uniforms  = {
-
-    color:      { type: "v3", value: new THREE.Vector3( .0 , .0 , .9 ) },
-    seed:       { type: "v3", value: new THREE.Vector3( -0.1 , -0.1 ,  -0.9) },
-    texture:    { type: "t" , value: womb.stream.texture.texture },
-    time:       { type: "f" , value: 0 },
-    noiseSize:  { type: "f" , value: 1 },
-    noisePower: { type: "f" , value: .2 },
-    audioPower: { type: "f" , value: 0.2 },
-
-
-  };
-
-
-  womb.interface.addAllUniforms( womb.uniforms , 'WEIRD SQUARE' );
-
 
   womb.vertexShader = [
 
     "varying vec2 vUv;",
     "varying vec3 vPos;",
+    "varying vec3 pPos;",
     "varying float displacement;",
 
     "uniform sampler2D texture;",
@@ -77,45 +55,37 @@ define(function(require, exports, module) {
     "uniform float noisePower;",
     "uniform float audioPower;",
     "uniform float noiseSize;",
+    "uniform vec3  seed;",
+
     
 
     shaderChunks.noise3D,
     shaderChunks.absAudioPosition,
     shaderChunks.audioUV,
+    shaderChunks.polar,
+    shaderChunks.kali_10,
 
     "void main( void ){",
 
       "vUv = uv;",
       "vPos = position;",
+      "pPos = polar( position );",
 
       "vec3 pos = position;",
      
       "vec3 offset;",
       "vec3 nPos = normalize( position );",
 
-      "offset.x = nPos.x + cos( time / 100.0 );",
-      "offset.y = nPos.y + sin( time / 100.0 );",
-      "offset.z = nPos.z;", //+ tan( time / 100.0 );",
-      "offset *= noiseSize;",
+      "vec3 c = kali( nPos , seed );",
+      "vec3 cN = abs( normalize( c ) );",
+      "pos = cN * vPos;",
+      "displacement = snoise( cN ) + 1.0;",
+      "pos =  cN * vPos;",
+      //"pos.z = polar( vec3( 1.0 , vUv ) ).z;",
+      //"pos.z = ( displacement - 0.5 ) * 5.0;",
+      "vPos = pos;",
 
-      "vec2 absUV =  abs( uv - .5 );",
-      "vec2 audioUV = audioUV( texture , absUV );",
-
-
-      "vec3 audioPosition = absAudioPosition( texture , position );",
-
-      "float dAudio = snoise( audioPosition );",
-      "float dNoise = snoise( offset );",
-
-      "float aP = length( audioPosition );",
-
-      "displacement = length( (audioPosition * audioPower) ) + ( dNoise * noisePower ) + .8;",
-
-
-      "pos *= displacement;",
-
-      "vec4 mvPosition = modelViewMatrix * vec4( pos , 1.0 );",
-      "gl_Position = projectionMatrix * mvPosition;",
+      shaderChunks.modelView, 
 
     "}"
 
@@ -126,55 +96,87 @@ define(function(require, exports, module) {
 
     "uniform vec3 color;",
     "uniform vec3 seed;",
-    "uniform float loop;",
     "uniform float noisePower;",
     "varying vec2 vUv;",
     "varying vec3 vPos;",
+    "varying vec3 pPos;",
 
-    shaderChunks.kali_30,
+    shaderChunks.kali_10, 
+    shaderChunks.noise3D,
+    shaderChunks.polar,
+
 
 
     "varying float displacement;",
 
     "void main( void ){",
+     
+      "vec3 k = kali( displacement * vPos , seed );",
+      "vec3 polar = polar( vec3( 1.0 , vUv ) );",
       "vec3 nPos = normalize( vPos );",
-
-      "vec3 c = kali( nPos , seed , loop );",
-
-      "vec3 cN = normalize( normalize( c ) + 3.0 * color );",
-      "gl_FragColor = vec4( cN * ( ( displacement -.5 ) / ( noisePower * 2.0 ) ) , 1.0 );",
+      "float l = 1.0 - length( nPos );",
+      "gl_FragColor = vec4( normalize(k) * .2 + polar * .7 + displacement * l , 1.0 );",
     "}"
 
   ].join( "\n" );
 
-  womb.material = new THREE.ShaderMaterial({
 
-    uniforms        : womb.uniforms,       
-    vertexShader    : womb.vertexShader,
-    fragmentShader  : womb.fragmentShader,
- 
-
-    //depthTest       : false,
-    //side            : THREE.DoubleSide,
-    //blending        : THREE.AdditiveBlending,
-    //transparent     : true,
-    //wireframe       : true
-  
-  });
-
-
-  womb.sphereMesh = new THREE.Mesh( 
-
-      womb.sphereGeo ,
-      womb.material
-
-  );
-
-  womb.scene.add( womb.sphereMesh );
-
-  
   womb.loader.loadBarAdd();
 
+  function initMain(){
+
+    // SHARED UNIFORM
+
+    var s = womb.size / 5;
+    womb.geometry = new THREE.CubeGeometry( s , s , s , 100 , 100  ,100 );
+   //womb.geometry = new THREE.PlaneGeometry( s , s , 50 , 50 );
+
+
+    womb.uniforms  = {
+
+      color:      { type: "v3", value: new THREE.Vector3( .1 , .1 , .9 ) },
+      seed:       { type: "v3", value: new THREE.Vector3( -0.1 , -0.1 ,  -0.9) },
+      texture:    { type: "t" , value: womb.stream.texture.texture },
+      time:       { type: "f" , value: 0 },
+      noiseSize:  { type: "f" , value: 1 },
+      noisePower: { type: "f" , value: .2 },
+      audioPower: { type: "f" , value: 0.2 },
+
+
+    };
+
+    womb.interface.addAllUniforms( womb.uniforms , 'WEIRD SQUARE' );
+
+
+    womb.material = new THREE.ShaderMaterial({
+
+      uniforms        : womb.uniforms,       
+      vertexShader    : womb.vertexShader,
+      fragmentShader  : womb.fragmentShader,
+   
+
+      //depthTest       : false,
+      //side            : THREE.DoubleSide,
+      //blending        : THREE.AdditiveBlending,
+      //transparent     : true,
+      //wireframe       : true
+    
+    });
+
+
+    womb.sphereMesh = new THREE.Mesh( 
+
+        womb.geometry ,
+        womb.material
+
+    );
+
+   // womb.sphereMesh.scale.multiplyScalar( 10 );
+
+    womb.scene.add( womb.sphereMesh );
+
+
+  }
 
   womb.update = function(){
 
@@ -183,13 +185,29 @@ define(function(require, exports, module) {
     //womb.uniforms.noiseSize.value = 0;
    // womb.uniforms.noiseSize.value = 1 * Math.sin( womb.uniforms.time.value / 1000.0 );
 
-    womb.uniforms.seed.value.x = ( Math.sin( womb.uniforms.time.value / 1000.0 ) -1.0 ) / 2;
-    womb.uniforms.seed.value.y = ( Math.cos( womb.uniforms.time.value / 1000.0 ) -1.0 ) / 2;
+    var c = womb.uniforms.color.value;
+    womb.uniforms.seed.value.x = -c.x + .01 * ( Math.sin( womb.uniforms.time.value / 1000.0 ) -1.0 ) / 2;
+    womb.uniforms.seed.value.y = -c.y + .1 * ( Math.cos( womb.uniforms.time.value / 1000.0 ) -1.0 ) / 2;
   }
 
   womb.start = function(){
 
+    initMain();
+
   }
 
+  womb.raycaster.onMeshHoveredOver = function(){
+
+    console.log( 'WHOA' );
+
+  }
+
+  womb.raycaster.onMeshHoveredOut = function(){
+
+    console.log( 'WHO' );
+
+  }
+
+  
 
 });

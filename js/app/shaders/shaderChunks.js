@@ -23,6 +23,18 @@ define(function(require, exports, module) {
       "vPos = position;",
     ].join( "\n" ),
 
+    polar : [
+
+      "vec3 polar( vec3 v ){",
+        "float r = length( v );",
+        "float t = acos( v.z / r );",
+        "float p = atan( v.y / v.x);",
+        "return vec3( r , t , p );",
+      "}",
+        
+    ].join( "\n" ),
+
+
     sampleTexture : [
 
       'vec4 sampleTexture( sampler2D t , vec2 p ){',
@@ -37,6 +49,44 @@ define(function(require, exports, module) {
       "vec2 audioUV( sampler2D t , vec2 uv ){",
         "float x = length( texture2D( t , vec2( uv.x , 0.0 ) ) );",
         "float y = length( texture2D( t , vec2( uv.x , 0.0 ) ) );",
+        "return  vec2( x , y );",
+      "}",
+
+
+    ].join( "\n" ),
+
+    absUV: [
+
+      "vec2 absUV( vec2 pos ){",
+        "return abs( pos - .5 ) * 2.0;",
+      "}"
+
+    ].join( "\n" ),
+
+    absNPos: [
+
+      "vec2 absNPos( vec3 pos ){",
+        "vec3 nPos = normalize( pos );",
+        "return abs( nPos );",
+      "}"
+
+    ].join( "\n" ),
+
+    sampleAudio_diamond: [
+
+      "vec4 sampleAudio_diamond( sample2D t , vec2 UV ){",
+        "vec2 cUV = UV - 0.5;",
+        "float abs = abs( cUV.x )  + abs( cUV.y );",
+        "return texture2D( t , ( abs , 0.0 ) );",
+      "}"
+      
+    ].join( "\n" ),
+
+    audioUV: [
+
+      "vec2 audioUV( sampler2D t , vec2 uv ){",
+        "float x = length( texture2D( t , vec2( uv.x , 0.0 ) ) );",
+        "float y = length( texture2D( t , vec2( uv.y , 0.0 ) ) );",
         "return  vec2( x , y );",
       "}",
 
@@ -73,7 +123,7 @@ define(function(require, exports, module) {
        // v : vertex
        // s : seed
        // p : precesion
-      "vec3 kali( vec3 v , vec3 s , float p ){",
+      "vec3 kali( vec3 v , vec3 s ){",
         "float m = 0.0;",
         "for( int i = 0; i < 30 ; i ++){",
           "v.x = abs(v.x);",
@@ -92,7 +142,7 @@ define(function(require, exports, module) {
        // v : vertex
        // s : seed
        // p : precesion
-      "vec3 kali( vec3 v , vec3 s , float p ){",
+      "vec3 kali( vec3 v , vec3 s ){",
         "float m = 0.0;",
         "for( int i = 0; i < 10 ; i ++){",
           "v.x = abs(v.x);",

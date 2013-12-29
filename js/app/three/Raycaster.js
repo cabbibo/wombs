@@ -1,9 +1,9 @@
 define(function(require, exports, module) {
 
-  function Raycaster( world , params ){
+  function Raycaster( womb , params ){
   
-    this.world            = world;
-    this.camera           = this.world.camera;
+    this.womb             = womb;
+    this.camera           = this.womb.camera;
 
     this.rayPosition      = new THREE.Vector3();
 
@@ -15,7 +15,7 @@ define(function(require, exports, module) {
 
     this.intersectedMesh;
 
-    var c = this.world.container;
+    var c = this.womb.container;
 
     c.addEventListener( 'mousemove', this.onMouseMove.bind( this ), false );
     
@@ -41,7 +41,7 @@ define(function(require, exports, module) {
     r.set( this.camera.position , dir );
 
     this.oIntersections = this.intersections;
-    this.intersections  = r.intersectObjects( this.world.scene.children , true );
+    this.intersections  = r.intersectObjects( this.womb.scene.children , true );
 
     //console.log( this.oIntersections );
     //console.log( this.intersections );

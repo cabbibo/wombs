@@ -139,7 +139,7 @@ define(function(require, exports, module) {
     "void main( void ){",
       "vec3 nPos = normalize( vPos );",
 
-      "vec3 c = kali( nPos , seed , loop );",
+      "vec3 c = kali( nPos , seed );",
 
       "vec3 cN = normalize( normalize( c ) + 3.0 * color );",
       "gl_FragColor = vec4( cN * ( ( displacement -.5 ) / ( noisePower * 2.0 ) ) , 1.0 );",

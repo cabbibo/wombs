@@ -147,8 +147,10 @@ define(function(require, exports, module) {
       this.leapController.connect();
     }
     
-    this.animator.start();
     this.start();
+
+    this.animator.start();
+
   }
 
 
@@ -164,8 +166,6 @@ define(function(require, exports, module) {
 
     this.delta = this.clock.getDelta();
     
-    this.update();
-
     TWEEN.update();
 
     if( this.massController   ) this.massController._update();
