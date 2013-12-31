@@ -10,13 +10,20 @@ define(function(require, exports, module) {
   require( 'lib/three.min'                );
   require( 'lib/underscore'               );
 
+  var SC                = require( 'app/shaders/shaderChunks'       );
+  var fragmentShaders   = require( 'app/shaders/fragmentShaders'    );
+  var vertexShaders     = require( 'app/shaders/vertexShaders'      );
+  var tempParticles     = require( 'app/shaders/tempParticles'      );
+  
+  // Visual part of system
+  var physicsParticles  = require( 'app/shaders/physicsParticles'   );
 
-  var SC              = require("app/shaders/shaderChunks");
-  var fragmentShaders = require("app/shaders/fragmentShaders");
-  var vertexShaders   = require("app/shaders/vertexShaders");
-  var tempParticles   = require( 'app/shaders/tempParticles'      );
+  var physicsShaders    = require( 'app/shaders/physicsShaders'     );
 
-  var PS = require("app/shaders/physicsShaders");
+  var helperFunctions   = require( 'app/utils/helperFunctions'      );
+  
+  
+  var ps                = physicsShaders;
 
   var PhysicsSimulator = function( womb , params ){
 
@@ -29,11 +36,22 @@ define(function(require, exports, module) {
     // Setting up Params!
     // Make sure particles are 
     this.params = _.defaults( params || {} , {
-      textureWidth:     100,
+      textureWidth:     50,
       bounds:           womb.size,
-      velocityShader:   PS.velocity.flocking,
-      debug:            false
+      velocityShader:   ps.velocity.flocking,
+      debug:            false,
+      particles:        physicsParticles.basic,
+      particleParams:   {
+        size: 10,
+        map: THREE.ImageUtils.loadTexture( '../lib/img/moon_1024.jpg' ),
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        opacity:    .1
+      }
     });
+
+    this.particles = this.params.particles;
+
 
     this.params.textureHeight = this.params.textureWidth;
 
@@ -107,7 +125,8 @@ define(function(require, exports, module) {
       texture: { type: "t", value: null },
       // Inputs
     };
-  
+ 
+    
     this.textureMaterial = new THREE.ShaderMaterial( {
 
 	  uniforms: this.textureUniforms,
@@ -139,7 +158,7 @@ define(function(require, exports, module) {
           textureVelocity: { type: "t", value: null },
       },
       vertexShader: vertexShaders.passThrough_noMV,
-      fragmentShader: PS.position
+      fragmentShader: ps.position
     
     });
 
@@ -168,7 +187,6 @@ define(function(require, exports, module) {
        first time around
 
     */
-    console.log( this );
     this.dtPosition = this.generatePositionTexture();
     this.dtVelocity = this.generateVelocityTexture();
 
@@ -193,37 +211,115 @@ define(function(require, exports, module) {
 
     this.particleGeometry = this.getBufferParticleGeometry();
 
-    this.particleMaterial = new THREE.ParticleBasicMaterial( {
-      size: 3, 
+
+
+    // TODO: break this out of here! 
+    particle_basic = THREE.ShaderLib['particle_basic'] = {
+
+      uniforms:  THREE.UniformsUtils.merge( [
+
+          {
+              "lookup": { type: "t", value: null }
+          },
+          THREE.UniformsLib[ "particle" ],
+          THREE.UniformsLib[ "shadowmap" ],
+          {
+              "moocolor": { type: "vec3", value: new THREE.Color( 0xffffff ) }
+          },
+
+      ] ),
+
+      vertexShader: [
+
+
+          "uniform sampler2D lookup;",
+
+          "uniform float size;",
+          "uniform float scale;",
+
+          THREE.ShaderChunk[ "color_pars_vertex" ],
+          THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
+
+          "void main() {",
+
+              THREE.ShaderChunk[ "color_vertex" ],
+
+
+      "vec2 lookupuv = position.xy + vec2( 0.5 / 32.0, 0.5 / 32.0 );",
+  "vec3 pos = texture2D( lookup, lookupuv ).rgb;",
+
+// position
+              "vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );",
+
+              "#ifdef USE_SIZEATTENUATION",
+                  "gl_PointSize = size * ( scale / length( mvPosition.xyz ) );",
+              "#else",
+                  "gl_PointSize = size;",
+              "#endif",
+
+              "gl_Position = projectionMatrix * mvPosition;",
+
+              THREE.ShaderChunk[ "worldpos_vertex" ],
+              THREE.ShaderChunk[ "shadowmap_vertex" ],
+
+          "}"
+
+      ].join("\n"),
+
+      fragmentShader: [
+
+          "uniform vec3 psColor;",
+          "uniform float opacity;",
+
+          THREE.ShaderChunk[ "color_pars_fragment" ],
+          THREE.ShaderChunk[ "map_particle_pars_fragment" ],
+          THREE.ShaderChunk[ "fog_pars_fragment" ],
+          THREE.ShaderChunk[ "shadowmap_pars_fragment" ],
+
+          "void main() {",
+
+              "gl_FragColor = vec4( psColor, opacity );",
+
+              THREE.ShaderChunk[ "map_particle_fragment" ],
+              THREE.ShaderChunk[ "alphatest_fragment" ],
+              THREE.ShaderChunk[ "color_fragment" ],
+              THREE.ShaderChunk[ "shadowmap_fragment" ],
+              THREE.ShaderChunk[ "fog_fragment" ],
+
+          "}"
+
+      ].join("\n")
+
+    };
+
+    this.particleMaterial = new THREE.ParticleSystemMaterial(
+      this.params.particleParams
+    );
+    
+    /*this.particleMaterial = new THREE.ShaderMaterial({
+
+      //size: 10,
       vertexColors: false,
       //map: THREE.ImageUtils.loadTexture( '../lib/img/hnrW.png' ),
       transparent: true,
-      blending: THREE.AdditiveBlending,
-      //depthWrite: false, depthTest: false,
-      uniforms: {
-          'color': {}
-      },
-      opacity: 0.3
-    });
-
-    this.particleMaterial = new THREE.ShaderMaterial({
-
-      size: 3,
-      vertexColors: false,
-      map: THREE.ImageUtils.loadTexture( '../lib/img/hnrW.png' ),
-      transparent: true,
-      blending: THREE.AdditiveBlending,
+      //blending: THREE.AdditiveBlending,
       
-      uniforms: tempParticles.basicParticle.uniforms,
-      vertexShader: tempParticles.basicParticle.vertexShader,
-      fragmentShader: tempParticles.basicParticle.fragmentShader,
+      uniforms: this.particles.uniforms,
+      vertexShader: this.particles.vertexShader,
+      fragmentShader: this.particles.fragmentShader,
 
 
+    });*/
 
+    /*helperFunctions.setMaterialUniforms( this.particleMaterial , this.params.particleParams );
 
+    console.log( this.particleMaterial.uniforms );
+    this.particleMaterial.transparent = true;
+    this.particleMaterial.needsUpdate = true;*/
+      
 
-
-    });
+    // TODO: Fix 
+    //helperFunctions.setParameters( this.particleMaterial , this.params.particleParams );
 
     this.particleSystem = new THREE.ParticleSystem(
       this.particleGeometry,
@@ -287,50 +383,81 @@ define(function(require, exports, module) {
     this.debugScene = new THREE.Object3D();
 
     var s = womb.size / 6;
+
+    var left = - s*1.1 / 2;
+    var right = -left ;
+
+    var top = s * 1.1 ;
+    var middle = 0;
+    var bottom = -s * 1.1 ;
+
+   //this. var p = womb.textCreator.createMesh( 'p');
+    //this.debugScene.add( p );
+    
+    
     var geo = new THREE.PlaneGeometry( s , s );
 
+    // Starting Position
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
       map: this.dtPosition
     }));
 
-    mesh.position.x = -womb.size / 8;
+    mesh.position.x = left ;
+    mesh.position.y = top; 
+
     this.debugScene.add( mesh );
 
+
+    // Starting Velocity
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
       map: this.dtVelocity
     }));
 
-    mesh.position.x = womb.size / 8;
+    mesh.position.x = right;
+    mesh.position.y = top; 
+
     this.debugScene.add( mesh );
 
 
-
+    // Render Texture Position1
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
       map: this.RT.position1
     }));
 
-    mesh.position.x = -womb.size / 2;
+    mesh.position.x = left ;
+    mesh.position.y = middle;
+
     this.debugScene.add( mesh );
 
-    var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
-      map: this.RT.position2
-    }));
 
-    mesh.position.x = -womb.size / 4;
-    this.debugScene.add( mesh );
-
+    // Render Texture Velocity1
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
       map: this.RT.velocity1
     }));
 
-    mesh.position.x = womb.size / 4;
+    mesh.position.x = right ;
+    mesh.position.y = middle;
     this.debugScene.add( mesh );
 
+
+    // Render Texture Position2
+    var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
+      map: this.RT.position2
+    }));
+
+    mesh.position.x = left ;
+    mesh.position.y = bottom; 
+
+    this.debugScene.add( mesh );
+
+    // Render Texture Velocity2
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
       map: this.RT.velocity2
     }));
 
-    mesh.position.x = womb.size / 2;
+    mesh.position.x = right ;
+    mesh.position.y = bottom;
+
     this.debugScene.add( mesh );
 
     this.womb.scene.add( this.debugScene );
@@ -388,8 +515,6 @@ define(function(require, exports, module) {
     texture.needsUpdate = true;
     texture.flipY = false;
 
-    console.log( texture );
-
     return texture;
 
   };
@@ -426,8 +551,6 @@ define(function(require, exports, module) {
     texture.needsUpdate = true;
     texture.flipY = false;
     
-    console.log(texture);
-
     return texture;
 
 

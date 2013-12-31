@@ -41,7 +41,7 @@ define(function(require, exports, module) {
   });
 
   var ps = new ParticleSim( womb , {
-    textureWidth:300
+    textureWidth:100
     
   });
 

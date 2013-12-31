@@ -27,6 +27,34 @@ define(function(require, exports, module) {
     velocity:{
 
 
+      gravity: [
+
+        "uniform vec2 resolution;",
+        "uniform float time;",
+
+        "uniform sampler2D textureVelocity;",
+        "uniform sampler2D texturePosition;",
+
+        "uniform vec3 otherParticlePosition;",
+        "uniform vec3 otherParticleVelocity;",
+
+        "uniform float size;",
+
+
+        "void main(){",
+          "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+
+          "for (float y=0.0;y<height;y++) {",
+            "for (float x=0.0;x<width;x++) {",
+
+
+            "}",
+          "}",
+
+
+
+      ].join("\n"),
+
       flocking:[
         
         "uniform vec2 resolution;",
@@ -38,12 +66,13 @@ define(function(require, exports, module) {
         "uniform float cohesionDistance;", // 200
         "uniform float freedomFactor;",
 
+        "uniform float size;",
 
         "uniform sampler2D textureVelocity;",
         "uniform sampler2D texturePosition;",
 
-        "const float width = 64.0/2.0;",
-        "const float height = 64.0/2.0;",
+        "const float width = 50.0;",
+        "const float height = 50.0;",
 
         "const float PI = 3.141592653589793;",
         "const float PI_2 = 3.141592653589793 * 2.0;",
@@ -78,8 +107,8 @@ define(function(require, exports, module) {
           "float alignmentCount = 0.0;",
           "if ( rand( uv + time * 0.00005 ) > freedomFactor ) {",
 
-            "for (float y=0.0;y<height;y++) {",
-              "for (float x=0.0;x<width;x++) {",
+            "for (float y=0.0; y < width;y++) {",
+              "for (float x=0.0; x < height;x++) {",
 
                  "if ( x == gl_FragCoord.x && y == gl_FragCoord.y ) continue;",
 
