@@ -44,6 +44,8 @@ define(function(require, exports, module) {
     });
 
 
+    // Time uniform
+    this.time = { type: "f", value: 1.0 } ;
 
     /*
      *
@@ -55,6 +57,7 @@ define(function(require, exports, module) {
     this.size = this.params.size;
 
     this.scene = new THREE.Scene();
+
 
     // CAMERA
     this.width = window.innerWidth;
@@ -165,6 +168,8 @@ define(function(require, exports, module) {
   Womb.prototype._update = function(){
 
     this.delta = this.clock.getDelta();
+
+    this.time.value += this.delta;
     
     TWEEN.update();
 

@@ -14,9 +14,13 @@
 
 
 // TODO NOTES:
+
+  WHAT IS FLIPFLOP?!?!??!
    
   - loader conditions
   - loader.failure() to be called on errors
+  - loader.addFailure();
+  - loader.onFailure();   // To make sure there are no extra
   - loader.failureDOM to be called whenever a application doesn't work.
 
 
@@ -24,4 +28,21 @@
   - create easy debug meshes
   - create physicShaders
   - create
-  - 
+
+// THANK YOU NOTES:
+
+  http://threejs.org
+
+  Reza Ali
+  Robbie
+  http://jabtunes.com/labs/3d/gpuflocking/webgl_gpgpu_flocking3.html
+  Theo Armor
+
+  West Langley
+  Kali
+  IQ
+
+
+
+
+   

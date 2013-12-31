@@ -48,6 +48,10 @@ define(function(require, exports, module) {
     // of the program after a specific condition is made
     this.conditions = [];
 
+    // Failures are things that the browser doesn't have.
+    // If there are a non 0 number of failures the user will be alerted
+    this.failures = [];
+
 
   }
 
@@ -120,6 +124,15 @@ define(function(require, exports, module) {
       this.conditions.push( [ condition , callback ] ); 
     },
 
+
+    addFailure: function( failureName , failureLink ){
+
+      alert( "you don't have" + failureName );
+      alert( "check out" + failureLink );
+
+      this.failures.push( [failureName,failureLink] );
+
+    },
 
     onFinishedLoading: function(){
    
