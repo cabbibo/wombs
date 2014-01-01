@@ -38,19 +38,47 @@ define(function(require, exports, module) {
         "uniform vec3 otherParticlePosition;",
         "uniform vec3 otherParticleVelocity;",
 
-        "uniform float size;",
+        "const float width = 50.0;",
+        "const float height = 50.0;",
+
+        "const float UPPER_BOUNDS = 200.0;",
+        "const float LOWER_BOUNDS = -UPPER_BOUNDS;",
 
 
         "void main(){",
+
           "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+
+          "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
+          "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
+          "vec3 selfNorm      = normalize( selfVelocity );",
+
+          "vec3 velocity      = selfVelocity;",
 
           "for (float y=0.0;y<height;y++) {",
             "for (float x=0.0;x<width;x++) {",
+
+              "if ( x == gl_FragCoord.x && y == gl_FragCoord.y ) continue;",
+
+              "otherParticlePosition = texture2D( texturePosition,",
+                  "vec2(x/resolution.x, y/resolution.y) ).xyz;",
+
+              "otherParticleVelocity = texture2D( textureVelocity,",
+                "vec2(x/resolution.x, y/resolution.y) ).xyz;",
+
+              "diff = otherParticlePosition - selfPosition;",
+              "float l = length( diff );",
+              "float f = 1.0/l;",
+              "velocity += f * selfNorm;", 
 
 
             "}",
           "}",
 
+
+          "if(", 
+
+        "}"
 
 
       ].join("\n"),
@@ -78,8 +106,11 @@ define(function(require, exports, module) {
         "const float PI_2 = 3.141592653589793 * 2.0;",
         "const float VISION = PI * 0.55;",
 
+        
         "const float UPPER_BOUNDS = 200.0;",
         "const float LOWER_BOUNDS = -UPPER_BOUNDS;",
+
+        SC.bound,
 
         "float rand(vec2 co){",
           "return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);",
@@ -157,6 +188,9 @@ define(function(require, exports, module) {
               // velocity.y -= 0.01;
 
           "}",
+
+
+          //"velocity = bindPosition( vec2( LOWER_BOUNDS , UPPER_BOUNDS ) , selfPosition.xyz , velocity );",
 
           "if ((selfPosition.x + velocity.x * 5.0) < LOWER_BOUNDS) velocity.x = -velocity.x;",
           "if ((selfPosition.y + velocity.y * 5.0) < LOWER_BOUNDS) velocity.y = -velocity.y;",

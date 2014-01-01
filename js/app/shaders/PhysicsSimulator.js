@@ -41,12 +41,13 @@ define(function(require, exports, module) {
       velocityShader:   ps.velocity.flocking,
       debug:            false,
       particles:        physicsParticles.basic,
+      //bounds:           new THREE.Vector2( -100 , 100 ),
       particleParams:   {
         size: 10,
-        map: THREE.ImageUtils.loadTexture( '../lib/img/moon_1024.jpg' ),
+        map: THREE.ImageUtils.loadTexture( '../lib/img/hnrW.png' ),
         blending: THREE.AdditiveBlending,
         transparent: true,
-        opacity:    .1
+        opacity:    .5
       }
     });
 
@@ -167,12 +168,14 @@ define(function(require, exports, module) {
       uniforms: {
           time: { type: "f", value: 1.0 },
           resolution: { type: "v2", value: new THREE.Vector2( this.TW , this.TW ) },
+          //bounds: { type: "v2", value: this.params.bounds },
           texturePosition: { type: "t", value: null },
           textureVelocity: { type: "t", value: null },
           testing: { type: "f", value: 1.0 },
-          seperationDistance: { type: "f", value: 200.0 },
-          alignmentDistance: { type: "f", value: 150.0 },
-          cohesionDistance: { type: "f", value: 30000.0 },
+          seperationDistance: { type: "f", value: 20.0 },
+          alignmentDistance: { type: "f", value: 15.0 },
+          cohesionDistance: { type: "f", value: 60.0 },
+
           freedomFactor: { type: "f", value: 0.3 },
       },
 

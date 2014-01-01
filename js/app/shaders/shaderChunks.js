@@ -238,6 +238,23 @@ define(function(require, exports, module) {
     ].join('\n'),
 
 
+    bindPosition:[
+      "vec3 bound( vec2 bounds , vec3 position , vec3 velocity ){",
+        "if( position.x + velocity.x * 5.0 < bounds[0] ) vector.x = -vector.x;",
+        "if( position.x + velocity.x * 5.0 > bounds[1] ) vector.x = -vector.x;",
+
+        "if( position.y + velocity.y * 5.0 < bounds[0] ) vector.y = -vector.y;",
+        "if( position.y + velocity.y * 5.0 > bounds[1] ) vector.y = -vector.y;",
+
+        "if( position.z + velocity.z * 5.0 < bounds[0] ) vector.z = -vector.z;",
+        "if( position.z + velocity.z * 5.0 > bounds[1] ) vector.z = -vector.z;",
+
+        "return vector;",
+      "}"
+    ].join('\n'),
+
+
+   
    
 
   }
