@@ -27,8 +27,7 @@
   // Particle Simulations
   - create easy debug meshes
   - create physicShaders
-  - create
-
+  - create 'const' creator which will stringify a passed in Variable
 // THANK YOU NOTES:
 
   http://threejs.org
