@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  require( 'lib/three.min' );
+  require( 'lib/three' );
 
   var helperFunctions = {
 
@@ -9,11 +9,11 @@ define(function(require, exports, module) {
 
       for( var propt in parameters ){
 
-        if( object[propt] ){
+        //if( object[propt] ){
           object[ propt ] = parameters[ propt ];
-        }else{
-          console.log( 'No propt for this object' );
-        }
+        //}else{
+       //   console.log( 'No propt for this object' );
+       // }
   
       }
 

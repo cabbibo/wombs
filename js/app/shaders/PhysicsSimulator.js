@@ -36,41 +36,41 @@ define(function(require, exports, module) {
     // Setting up Params!
     // Make sure particles are 
     this.params = _.defaults( params || {} , {
-      textureWidth:     50,
+      textureWidth:     50.0,
       bounds:           womb.size,
-      velocityShader:   ps.velocity.flocking,
-      debug:            false,
+      velocityShader:   ps.velocity.gravity,
+      debug:            true,
+      startingVelocityRange: 10,
       particles:        physicsParticles.basic,
-      //bounds:           new THREE.Vector2( -100 , 100 ),
       particleParams:   {
-        size: 10,
-        map: THREE.ImageUtils.loadTexture( '../lib/img/hnrW.png' ),
+        size: 20,
         blending: THREE.AdditiveBlending,
+        depthWrite: false,
         transparent: true,
-        opacity:    .5
+        fog: true, 
+        map: THREE.ImageUtils.loadTexture( '../lib/img/hnrW.png' ),
+        opacity:    .9,
       }
     });
 
-    this.particles = this.params.particles;
 
+    this.particles = this.params.particles;
 
     this.params.textureHeight = this.params.textureWidth;
 
     this.velocityShader = this.params.velocityShader;
-
 
     // Camera and scene for renderering physics texture
     this.camera = new THREE.Camera();
     this.scene  = new THREE.Scene();
     this.camera.position.z = 1;
 
-
     this.textureWidth   = this.params.textureWidth;
-    this.textureHeight  = this.params.textureHeight;
     
     this.TW             = this.textureWidth;
 
-
+    console.log('TEXTURe' );
+    console.log( this.TW );
     // Bounds for physics Parameters requiring bounds
     this.bounds         = this.params.bounds;
 
@@ -163,6 +163,11 @@ define(function(require, exports, module) {
     
     });
 
+
+    // In Order to create correct For Loops
+    // HACKEY AS FUCK
+    this.velocityVertexShader = this.createVelocityShader( this.velocityShader );
+
     this.velocityShader = new THREE.ShaderMaterial( {
 
       uniforms: {
@@ -171,16 +176,19 @@ define(function(require, exports, module) {
           //bounds: { type: "v2", value: this.params.bounds },
           texturePosition: { type: "t", value: null },
           textureVelocity: { type: "t", value: null },
-          testing: { type: "f", value: 1.0 },
-          seperationDistance: { type: "f", value: 20.0 },
-          alignmentDistance: { type: "f", value: 15.0 },
-          cohesionDistance: { type: "f", value: 60.0 },
 
+          testing: { type: "f", value: 1.0 },
+          seperationDistance: { type: "f", value: 100.0 },
+          alignmentDistance: { type: "f", value: 150.0 },
+          cohesionDistance: { type: "f", value: 10000.0 },
           freedomFactor: { type: "f", value: 0.3 },
+
+          dampening:  { type: "f" , value: .999 },
+          gravityStrength: { type: "f" , value: 500.0 },
       },
 
       vertexShader: vertexShaders.passThrough_noMV,
-      fragmentShader: this.velocityShader 
+      fragmentShader: this.velocityVertexShader
 
     });
 
@@ -214,115 +222,21 @@ define(function(require, exports, module) {
 
     this.particleGeometry = this.getBufferParticleGeometry();
 
+    this.particleMaterial = new THREE.ShaderMaterial({
 
-
-    // TODO: break this out of here! 
-    particle_basic = THREE.ShaderLib['particle_basic'] = {
-
-      uniforms:  THREE.UniformsUtils.merge( [
-
-          {
-              "lookup": { type: "t", value: null }
-          },
-          THREE.UniformsLib[ "particle" ],
-          THREE.UniformsLib[ "shadowmap" ],
-          {
-              "moocolor": { type: "vec3", value: new THREE.Color( 0xffffff ) }
-          },
-
-      ] ),
-
-      vertexShader: [
-
-
-          "uniform sampler2D lookup;",
-
-          "uniform float size;",
-          "uniform float scale;",
-
-          THREE.ShaderChunk[ "color_pars_vertex" ],
-          THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
-
-          "void main() {",
-
-              THREE.ShaderChunk[ "color_vertex" ],
-
-
-      "vec2 lookupuv = position.xy + vec2( 0.5 / 32.0, 0.5 / 32.0 );",
-  "vec3 pos = texture2D( lookup, lookupuv ).rgb;",
-
-// position
-              "vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );",
-
-              "#ifdef USE_SIZEATTENUATION",
-                  "gl_PointSize = size * ( scale / length( mvPosition.xyz ) );",
-              "#else",
-                  "gl_PointSize = size;",
-              "#endif",
-
-              "gl_Position = projectionMatrix * mvPosition;",
-
-              THREE.ShaderChunk[ "worldpos_vertex" ],
-              THREE.ShaderChunk[ "shadowmap_vertex" ],
-
-          "}"
-
-      ].join("\n"),
-
-      fragmentShader: [
-
-          "uniform vec3 psColor;",
-          "uniform float opacity;",
-
-          THREE.ShaderChunk[ "color_pars_fragment" ],
-          THREE.ShaderChunk[ "map_particle_pars_fragment" ],
-          THREE.ShaderChunk[ "fog_pars_fragment" ],
-          THREE.ShaderChunk[ "shadowmap_pars_fragment" ],
-
-          "void main() {",
-
-              "gl_FragColor = vec4( psColor, opacity );",
-
-              THREE.ShaderChunk[ "map_particle_fragment" ],
-              THREE.ShaderChunk[ "alphatest_fragment" ],
-              THREE.ShaderChunk[ "color_fragment" ],
-              THREE.ShaderChunk[ "shadowmap_fragment" ],
-              THREE.ShaderChunk[ "fog_fragment" ],
-
-          "}"
-
-      ].join("\n")
-
-    };
-
-    this.particleMaterial = new THREE.ParticleSystemMaterial(
-      this.params.particleParams
-    );
-    
-    /*this.particleMaterial = new THREE.ShaderMaterial({
-
-      //size: 10,
-      vertexColors: false,
-      //map: THREE.ImageUtils.loadTexture( '../lib/img/hnrW.png' ),
-      transparent: true,
-      //blending: THREE.AdditiveBlending,
-      
       uniforms: this.particles.uniforms,
       vertexShader: this.particles.vertexShader,
       fragmentShader: this.particles.fragmentShader,
 
+      color: true,
+      blending:     this.params.particleParams.blending,
+      transparent:  this.params.particleParams.transparent,
+      depthWrite:   this.params.particleParams.depthWrite,
+      fog:          this.params.particleParams.fog
 
-    });*/
+    });
 
-    /*helperFunctions.setMaterialUniforms( this.particleMaterial , this.params.particleParams );
-
-    console.log( this.particleMaterial.uniforms );
-    this.particleMaterial.transparent = true;
-    this.particleMaterial.needsUpdate = true;*/
-      
-
-    // TODO: Fix 
-    //helperFunctions.setParameters( this.particleMaterial , this.params.particleParams );
+    helperFunctions.setMaterialUniforms( this.particleMaterial , this.params.particleParams );
 
     this.particleSystem = new THREE.ParticleSystem(
       this.particleGeometry,
@@ -501,7 +415,7 @@ define(function(require, exports, module) {
       a[ k*4 + 0 ] = x;
       a[ k*4 + 1 ] = y;
       a[ k*4 + 2 ] = z;
-      a[ k*4 + 3 ] = 1;
+      a[ k*4 + 3 ] = .001;//Math.random();
 
     }
 
@@ -534,10 +448,16 @@ define(function(require, exports, module) {
       y = Math.random() - 0.5;
       z = Math.random() - 0.5;
 
-      a[ k*4 + 0 ] = x * 100;
-      a[ k*4 + 1 ] = y * 100;
-      a[ k*4 + 2 ] = z * 100;
-      a[ k*4 + 3 ] = 1;
+      a[ k*4 + 0 ] = (( k / this.numberOfParticles ) - .5) * 10;
+      a[ k*4 + 1 ] = y * this.params.startingVelocityRange;
+      a[ k*4 + 2 ] = z * this.params.startingVelocityRange;
+      a[ k*4 + 3 ] = 25;
+
+
+      //a[ k*4 + 0 ] = x * this.params.startingVelocityRange;
+      a[ k*4 + 1 ] = y * this.params.startingVelocityRange;
+      a[ k*4 + 2 ] = z * this.params.startingVelocityRange;
+     // a[ k*4 + 3 ] = 0.0001;
 
     }
 
@@ -599,6 +519,7 @@ define(function(require, exports, module) {
       positions[ i ]     = x;
       positions[ i + 1 ] = y;
       positions[ i + 2 ] = z;
+
     }
 
     geometry.computeBoundingSphere();
@@ -641,6 +562,17 @@ define(function(require, exports, module) {
 
 
 
+  // This method is made in order to add const for the width of the texture
+  PhysicsSimulator.prototype.createVelocityShader = function( shader ){
+
+    var newShader = shader.replace(
+      "void main(){",
+      "const float textureWidth = "+this.TW+".0;\nvoid main(){"
+    );
+
+    return newShader;
+
+  }
 
 
 

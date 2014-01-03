@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-                          require( 'lib/three.min'                );
+                          require( 'lib/three'                );
                           require( 'lib/underscore'               );
                           require( 'lib/stats.min'                );
  

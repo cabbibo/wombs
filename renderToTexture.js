@@ -12,9 +12,8 @@ define(function(require, exports, module) {
   var vertexShaders       = require( 'app/shaders/vertexShaders'      );
   var physicsShaders      = require( 'app/shaders/physicsShaders'     );
   var shaderChunks        = require( 'app/shaders/shaderChunks'       );
- // var tempParticles       = require( 'app/shaders/tempParticles'      );
 
-  var ParticleSim         = require( 'app/shaders/PhysicsSimulator'   );
+  var PhysicsSimulator       = require( 'app/shaders/PhysicsSimulator'   );
 
 
   /*
@@ -40,18 +39,31 @@ define(function(require, exports, module) {
     size: 400
   });
 
-  var ps = new ParticleSim( womb , {
-    textureWidth:100
+
+  womb.ps = new PhysicsSimulator( womb , {
+
+    textureWidth:5
     
   });
 
-  womb.interface.addAllUniforms( ps.velocityShader.uniforms );
+   womb.particleSystem = new THREE.ParticleSystem( 
+      new THREE.CubeGeometry( womb.size , womb.size , womb.size , 2 , 2 , 2 ),
+      new THREE.ParticleSystemMaterial 
+  );
+  womb.scene.add( womb.particleSystem );
+
+  womb.particleSystem.scale.multiplyScalar( 1 );
+
+  console.log( womb.particleSystem );
+
+  womb.interface.addAllUniforms( womb.ps.velocityShader.uniforms );
+
 
   womb.loader.loadBarAdd();
   
   womb.update = function(){
 
-    ps._update();
+    womb.ps._update();
 
     //render();
     

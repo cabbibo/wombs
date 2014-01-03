@@ -17,7 +17,8 @@ define(function(require, exports, module) {
         "vec2 uv = gl_FragCoord.xy / resolution.xy;",
         "vec3 position = texture2D( texturePosition, uv ).xyz;",
         "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
-        "gl_FragColor=vec4(position + velocity * 2.0, 1.0);",
+        "float mass = texture2D( textureVelocity, uv ).a;",
+        "gl_FragColor=vec4(position + velocity * 2.0, mass );",
 
       "}"
 
@@ -31,6 +32,9 @@ define(function(require, exports, module) {
 
         "uniform vec2 resolution;",
         "uniform float time;",
+
+        "uniform float gravityStrength;",
+        "uniform float dampening;",
 
         "uniform sampler2D textureVelocity;",
         "uniform sampler2D texturePosition;",
@@ -51,32 +55,39 @@ define(function(require, exports, module) {
 
           "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
           "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
+          "float mass         = texture2D( textureVelocity , uv ).w;", 
           "vec3 selfNorm      = normalize( selfVelocity );",
 
           "vec3 velocity      = selfVelocity;",
 
-          "for (float y=0.0;y<height;y++) {",
-            "for (float x=0.0;x<width;x++) {",
+          "for (float y=0.0;y< textureWidth; y++) {",
+            "for (float x=0.0;x< textureWidth; x++) {",
 
               "if ( x == gl_FragCoord.x && y == gl_FragCoord.y ) continue;",
 
-              "otherParticlePosition = texture2D( texturePosition,",
+              "vec3 pPos = texture2D( texturePosition,",
                   "vec2(x/resolution.x, y/resolution.y) ).xyz;",
 
-              "otherParticleVelocity = texture2D( textureVelocity,",
+              "vec3 pVel = texture2D( textureVelocity,",
                 "vec2(x/resolution.x, y/resolution.y) ).xyz;",
 
-              "diff = otherParticlePosition - selfPosition;",
+              "float pMass = texture2D( textureVelocity,",
+                "vec2(x/resolution.x, y/resolution.y) ).w;",
+
+              "vec3 diff = pPos - selfPosition;",
               "float l = length( diff );",
-              "float f = 1.0/l;",
-              "velocity += f * selfNorm;", 
+              "velocity += pMass * mass * mass * diff / ( gravityStrength * l);", 
+              
+
 
 
             "}",
           "}",
 
 
-          "if(", 
+          "velocity *= dampening;",
+          "gl_FragColor=vec4( velocity, mass);",
+          //"if(", 
 
         "}"
 
@@ -96,11 +107,9 @@ define(function(require, exports, module) {
 
         "uniform float size;",
 
+
         "uniform sampler2D textureVelocity;",
         "uniform sampler2D texturePosition;",
-
-        "const float width = 50.0;",
-        "const float height = 50.0;",
 
         "const float PI = 3.141592653589793;",
         "const float PI_2 = 3.141592653589793 * 2.0;",
@@ -134,12 +143,14 @@ define(function(require, exports, module) {
           "vec3 cohesion = vec3(0.0);",
           "vec3 alignment = vec3(0.0);",
 
+          
+
           "float cohensionCount = 0.0;",
           "float alignmentCount = 0.0;",
           "if ( rand( uv + time * 0.00005 ) > freedomFactor ) {",
 
-            "for (float y=0.0; y < width;y++) {",
-              "for (float x=0.0; x < height;x++) {",
+            "for (float y=0.0; y < textureWidth;y++) {",
+              "for (float x=0.0; x < textureWidth;x++) {",
 
                  "if ( x == gl_FragCoord.x && y == gl_FragCoord.y ) continue;",
 
