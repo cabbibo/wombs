@@ -55,7 +55,7 @@ define(function(require, exports, module) {
 
     textureWidth:70,
     velocityShader: physicsShaders.velocity.flocking,
-    positionShader: physicsShaders.positionAudio_4
+    positionShader: physicsShaders.position
     
   });
   womb.scene.remove( womb.ps.particleSystem );
