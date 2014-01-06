@@ -237,16 +237,16 @@ define(function(require, exports, module) {
     this.dtVelocity = this.generateVelocityTexture();
 
     this.RT.position1 = this.getRenderTarget();
-    this.RT.position2 = this.getRenderTarget();
+    this.RT.position2 = this.RT.position1.clone();
    
-    this.RT.velocity1 = this.getRenderTarget();
-    this.RT.velocity2 = this.getRenderTarget();
+    this.RT.velocity1 = this.RT.position1.clone();
+    this.RT.velocity2 = this.RT.position1.clone();
 
-    this.renderTexture( this.dtPosition , this.RT.position1 );
-    this.renderTexture( this.dtPosition , this.RT.position2 );
+    this.renderTexture( this.dtPosition  , this.RT.position1 );
+    this.renderTexture( this.RT.position1 , this.RT.position2 );
 
     this.renderTexture( this.dtVelocity  , this.RT.velocity1 );
-    this.renderTexture( this.dtVelocity  , this.RT.velocity2 );
+    this.renderTexture( this.RT.velocity1 , this.RT.velocity2 );
 
 
     /*
@@ -431,8 +431,7 @@ define(function(require, exports, module) {
         magFilter: THREE.NearestFilter,
         format: THREE.RGBAFormat,
         type: THREE.FloatType,
-        stencilBuffer: false,
-        transparent: true,
+        stencilBuffer: false
     });
 
     return renderTarget;
@@ -455,7 +454,7 @@ define(function(require, exports, module) {
       z = 2 * Math.random() * this.bounds - this.bounds;
 
       m = .1; 
-      a[ k*4 + 0 ] = x;
+      a[ k*4 + 0 ] = z;
       a[ k*4 + 1 ] = y;
       a[ k*4 + 2 ] = z;
       a[ k*4 + 3 ] = m;

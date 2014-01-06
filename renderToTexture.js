@@ -26,7 +26,7 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    cameraController: 'LeapPaddleControls',
+    cameraController: 'TrackballControls',
     modelLoader:      true,
     textCreator:      true,
     raycaster:        true,
@@ -53,7 +53,8 @@ define(function(require, exports, module) {
 
   womb.ps = new PhysicsSimulator( womb , {
 
-    textureWidth:70,
+    bounds: womb.size / 10,
+    textureWidth:10,
     velocityShader: physicsShaders.velocity.flocking,
     positionShader: physicsShaders.position
     

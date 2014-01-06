@@ -158,19 +158,7 @@ define(function(require, exports, module) {
     ].join("\n"),
 
 
-    createPhysicsTextureLoop: function( ){
-
-      console.log(arguments);
-
-      var shaderChunk = [];
-      for( var i = 0; i < arguments.length; i++ ){
-
-        console.log( arguments[i] );
-        shaderChunk.push( arguments[i] );
-
-      }
-
-      shaderChunk.join("\n");
+    createPhysicsTextureLoop: function(){
 
       var string = [
         "for (float y=0.0;y< textureWidth; y++) {",
@@ -184,23 +172,54 @@ define(function(require, exports, module) {
               "vec2(x/resolution.x, y/resolution.y) ).xyz;",
 
             "float pMass = texture2D( textureVelocity,",
-              "vec2(x/resolution.x, y/resolution.y) ).w;",
+              "vec2(x/resolution.x, y/resolution.y) ).w;"
+      ];
 
-            shaderChunk,
+      // Passing in all arguments
+      for( var i = 0; i < arguments.length; i++ ){
+        string.push( arguments[i]);
+      }
 
-          "}",
-        "}",
-
-      ].join("\n")
-
-
-
-
-
-      return string
+      string.push( "}" );
+      string.push( "}" );
+      
+      return string.join("\n")
 
     },
 
+    physicsUniforms:[
+
+      "uniform vec2 resolution;",
+      "uniform float time;",
+
+      "uniform sampler2D textureVelocity;",
+      "uniform sampler2D texturePosition;"
+
+
+    ].join("\n"),
+
+    physicsUniforms_bounds:[
+
+      "uniform float upperBounds;",
+      "uniform float lowerBounds;", 
+
+    ].join("\n"),
+
+
+    assignUV: [
+
+      "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+
+    ].join("\n"),
+
+
+    PI:["const float PI = 3.141592653589793;" ].join("\n"),
+
+    rand2D: [
+      "float rand(vec2 co){",
+        "return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);",
+      "}",
+    ].join("\n"),
 
     noise3D: [
         'vec3 mod289(vec3 x) {',
@@ -280,18 +299,18 @@ define(function(require, exports, module) {
     ].join('\n'),
 
 
-    bindPosition:[
-      "vec3 bound( vec2 bounds , vec3 position , vec3 velocity ){",
-        "if( position.x + velocity.x * 5.0 < bounds[0] ) vector.x = -vector.x;",
-        "if( position.x + velocity.x * 5.0 > bounds[1] ) vector.x = -vector.x;",
+    bindUsingVelocity:[
+      "vec3 bindUsingVelocity( vec2 bounds , vec3 position , vec3 velocity ){",
+        "if( position.x + velocity.x * 5.0 < bounds.x ) velocity.x = -velocity.x;",
+        "if( position.x + velocity.x * 5.0 > bounds.y ) velocity.x = -velocity.x;",
 
-        "if( position.y + velocity.y * 5.0 < bounds[0] ) vector.y = -vector.y;",
-        "if( position.y + velocity.y * 5.0 > bounds[1] ) vector.y = -vector.y;",
+        "if( position.y + velocity.y * 5.0 < bounds.x ) velocity.y = -velocity.y;",
+        "if( position.y + velocity.y * 5.0 > bounds.y ) velocity.y = -velocity.y;",
 
-        "if( position.z + velocity.z * 5.0 < bounds[0] ) vector.z = -vector.z;",
-        "if( position.z + velocity.z * 5.0 > bounds[1] ) vector.z = -vector.z;",
+        "if( position.z + velocity.z * 5.0 < bounds.x ) velocity.z = -velocity.z;",
+        "if( position.z + velocity.z * 5.0 > bounds.y ) velocity.z = -velocity.z;",
 
-        "return vector;",
+        "return velocity;",
       "}"
     ].join('\n'),
 

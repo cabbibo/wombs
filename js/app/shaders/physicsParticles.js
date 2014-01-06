@@ -35,7 +35,7 @@ define(function(require, exports, module) {
 
           "vec2 lookupuv = position.xy + vec2( 0.5 / 32.0 , 0.5 / 32.0 );",
           "vec3 pos = texture2D( lookup, lookupuv ).rgb;",
-          "mass = texture2D( lookup, lookupuv ).a;",
+          "mass = texture2D( lookup, lookupuv ).w;",
 
           // position
           "vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );",
@@ -43,7 +43,7 @@ define(function(require, exports, module) {
           "#ifdef USE_SIZEATTENUATION",
             "gl_PointSize = size * ( scale / length( mvPosition.xyz ) ) * mass;",
           "#else",
-            "gl_PointSize = size * mass;",
+            "gl_PointSize = size * mass * 5.0;",
           "#endif",
 
           "gl_Position = projectionMatrix * mvPosition;",

@@ -18,7 +18,7 @@ define(function(require, exports, module) {
         "vec3 position = texture2D( texturePosition, uv ).xyz;",
         "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
         "float mass = texture2D( texturePosition, uv ).w;",
-        "gl_FragColor=vec4(position + velocity , 1.0 );",
+        "gl_FragColor=vec4(position + velocity , mass );",
 
       "}"
 
@@ -132,27 +132,20 @@ define(function(require, exports, module) {
 
       gravity: [
 
-        "uniform vec2 resolution;",
-        "uniform float time;",
+
+        SC.physicsUniforms,
 
         "uniform float speed;",
 
         "uniform float gravityStrength;",
         "uniform float dampening;",
 
-        "uniform sampler2D textureVelocity;",
-        "uniform sampler2D texturePosition;",
-
-        "uniform vec3 otherParticlePosition;",
-        "uniform vec3 otherParticleVelocity;",
-
-        "uniform float upperBounds;",
-        "uniform float lowerBounds;",
+        SC.physicsUniforms_bounds, 
 
 
         "void main(){",
 
-          "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+          SC.assignUV,
 
           "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
           "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
@@ -162,18 +155,18 @@ define(function(require, exports, module) {
           "vec3 velocity      = selfVelocity;",
 
 
-          SC.createPhysicsTextureLoop([ 
+          SC.createPhysicsTextureLoop(
             "vec3 diff = pPos - selfPosition;",
             "float l = length( diff );",
             "velocity += pMass * mass * mass * diff / ( gravityStrength * l);"
-          ].join("\n")),
+          ),
 
 
 
 
           "velocity *= speed;",
           "velocity *= dampening;",
-          "gl_FragColor=vec4( velocity * mass, 1.0 );",
+          "gl_FragColor=vec4( velocity * mass, mass );",
           //"if(", 
 
         "}"
@@ -182,11 +175,11 @@ define(function(require, exports, module) {
       ].join("\n"),
 
       flocking:[
+       
+        SC.physicsUniforms,
+        SC.physicsUniforms_bounds,
         
-        "uniform vec2 resolution;",
-        "uniform float time;",
         "uniform float testing;",
-        "// uniform float delta;",
         "uniform float seperationDistance;", // 10
         "uniform float alignmentDistance;", // 40
         "uniform float cohesionDistance;", // 200
@@ -195,32 +188,24 @@ define(function(require, exports, module) {
         "uniform float speed;",
         "uniform float size;",
 
-        "uniform sampler2D textureVelocity;",
-        "uniform sampler2D texturePosition;",
-
-        "const float PI = 3.141592653589793;",
-        "const float PI_2 = 3.141592653589793 * 2.0;",
+        SC.PI,
+        SC.PI_2,
         "const float VISION = PI * 0.55;",
 
-       
-        "uniform float upperBounds;",
-        "uniform float lowerBounds;",
-
-        SC.bound,
-
-        "float rand(vec2 co){",
-          "return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);",
-        "}",
+        SC.rand2D,
+        SC.bindUsingVelocity,
 
         "void main(){",
 
-          "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+          SC.assignUV,
 
           // int x, y;
           "vec3 birdPosition, birdVelocity;",
 
           "vec3 selfPosition = texture2D( texturePosition, uv ).xyz;",
           "vec3 selfVelocity = texture2D( textureVelocity, uv ).xyz;",
+
+          "float mass =  texture2D( texturePosition, uv ).w;",
 
           "float dist;",
           "vec3 diff;",
@@ -235,38 +220,26 @@ define(function(require, exports, module) {
           "float alignmentCount = 0.0;",
           "if ( rand( uv + time * 0.00005 ) > freedomFactor ) {",
 
-            "for (float y=0.0; y < textureWidth;y++) {",
-              "for (float x=0.0; x < textureWidth;x++) {",
+            SC.createPhysicsTextureLoop(
+              "diff = pPos - selfPosition;",
+              "dist = length(diff);",
 
-                 "if ( x == gl_FragCoord.x && y == gl_FragCoord.y ) continue;",
-
-
-                "birdPosition = texture2D( texturePosition,",
-                  "vec2(x/resolution.x, y/resolution.y) ).xyz;",
-
-                "birdVelocity = texture2D( textureVelocity,",
-                  "vec2(x/resolution.x, y/resolution.y) ).xyz;",
-
-                "diff = birdPosition - selfPosition;",
-                "dist = length(diff);",
-
-                "if (dist > 0.0 && dist < seperationDistance) {",
-                  "velocity -= diff / dist;",
-                  "velocity /= 2.0;",
-                "}",
-
-                "if (dist < alignmentDistance) {",
-                  "alignment += birdVelocity;",
-                  "alignmentCount ++;",
-                "}",
-
-                "if (dist < cohesionDistance) {",
-                  "cohesion += birdPosition;",
-                  "cohensionCount ++;",
-                "}",
+              "if (dist > 0.0 && dist < seperationDistance) {",
+                "velocity -= diff / dist;",
+                "velocity /= 2.0;",
               "}",
-            "}",
 
+              "if (dist < alignmentDistance) {",
+                "alignment += pVel;",
+                "alignmentCount ++;",
+              "}",
+
+              "if (dist < cohesionDistance) {",
+                "cohesion += pPos;",
+                "cohensionCount ++;",
+              "}"
+            ),
+          
             "if (alignmentCount > 0.0) {",
               "alignment /= alignmentCount;",
               "dist = length(alignment);",
@@ -288,22 +261,11 @@ define(function(require, exports, module) {
 
 
           "velocity *= speed;",
-          //"velocity = bindPosition( vec2( LOWER_BOUNDS , UPPER_BOUNDS ) , selfPosition.xyz , velocity );",
+          "velocity = bindUsingVelocity( vec2( lowerBounds , upperBounds ) , selfPosition.xyz , velocity );",
 
-          "if ((selfPosition.x + velocity.x * 5.0) < lowerBounds) velocity.x = -velocity.x;",
-          "if ((selfPosition.y + velocity.y * 5.0) < lowerBounds) velocity.y = -velocity.y;",
-
-          "if ((selfPosition.z + velocity.z * 5.0) < lowerBounds) velocity.z = -velocity.z;",
-
-
-          "if ((selfPosition.x + velocity.x * 5.0) > upperBounds) velocity.x = -velocity.x;",
-
-          "if ((selfPosition.y + velocity.y * 5.0) > upperBounds) velocity.y = -velocity.y;",
-
-          "if ((selfPosition.z + velocity.z * 5.0) > upperBounds) velocity.z = -velocity.z;",
-
-
-          "gl_FragColor=vec4(velocity, 1.0);",
+          //"gl_FragColor = vec4( mass , mass , mass , 1.0 );",
+          
+          "gl_FragColor = vec4( velocity  , mass);",
 
 
         "}"
