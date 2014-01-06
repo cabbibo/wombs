@@ -492,9 +492,20 @@ define(function(require, exports, module) {
       z = Math.random() - 0.5;
 
       m = .1;
-      a[ k*4 + 0 ] = x * this.params.startingVelocityRange;
-      a[ k*4 + 1 ] = y * this.params.startingVelocityRange;
-      a[ k*4 + 2 ] = z * this.params.startingVelocityRange;
+
+      if( this.params.startingVelocityRange.length ){
+
+        a[ k*4 + 0 ] = x * this.params.startingVelocityRange[0];
+        a[ k*4 + 1 ] = y * this.params.startingVelocityRange[1];
+        a[ k*4 + 2 ] = z * this.params.startingVelocityRange[2];
+
+      }else{
+      
+        a[ k*4 + 0 ] = x * this.params.startingVelocityRange;
+        a[ k*4 + 1 ] = y * this.params.startingVelocityRange;
+        a[ k*4 + 2 ] = z * this.params.startingVelocityRange;
+
+      }
       a[ k*4 + 3 ] = m;
 
 

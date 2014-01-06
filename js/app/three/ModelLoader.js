@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var THREE = require( 'lib/three.min' );
+  require( 'lib/three.min' );
   var l = require( 'lib/three/OBJLoader' );
 
   function ObjectLoader( womb , params ){

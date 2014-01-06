@@ -47,16 +47,16 @@ define(function(require, exports, module) {
   womb.stream.onStreamCreated = function(){
 
     womb.ps.positionShader.uniforms.audioTexture.value = womb.stream.texture.texture;
-    console.log('ass');
 
   }
 
   womb.ps = new PhysicsSimulator( womb , {
 
-    bounds: womb.size / 10,
-    textureWidth:10,
-    velocityShader: physicsShaders.velocity.flocking,
-    positionShader: physicsShaders.position
+    bounds: womb.size,
+    textureWidth:70,
+    velocityShader: physicsShaders.velocity.gravity,
+    positionShader: physicsShaders.positionAudio_4,
+    startingVelocityRange: [ 80 , 0 , 0 ]
     
   });
   womb.scene.remove( womb.ps.particleSystem );

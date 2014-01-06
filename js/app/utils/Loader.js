@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 
     this.params = _.defaults( params || {}, {
       numberToLoad:   1,
-      loadGif:        "/wombs/lib/img/gifs/loadGif.gif"
+      loadGif:        "/lib/img/gifs/loadGif.gif"
 
     });
 
@@ -87,8 +87,6 @@ define(function(require, exports, module) {
 
       this.checkConditions();
 
-      console.log( this.numberLoaded , this.numberToLoad );
-      
       if( this.numberLoaded == this.numberToLoad ){
         this.onFinishedLoading();
       }
@@ -101,8 +99,6 @@ define(function(require, exports, module) {
     // This will run through all of our saved conditions
     // and trigger whatever is necessary when we need to
     checkConditions: function(){
-
-      console.log('dds');
 
       for( var i = 0; i < this.conditions.length; i++ ){
 

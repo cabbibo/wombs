@@ -43,7 +43,7 @@ define(function(require, exports, module) {
           "#ifdef USE_SIZEATTENUATION",
             "gl_PointSize = size * ( scale / length( mvPosition.xyz ) ) * mass;",
           "#else",
-            "gl_PointSize = size * mass * 5.0;",
+            "gl_PointSize = size * mass;",
           "#endif",
 
           "gl_Position = projectionMatrix * mvPosition;",
