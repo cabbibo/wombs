@@ -21,7 +21,7 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    cameraController: 'LeapFlyControls',
+    cameraController: 'TrackballControls',
     modelLoader:      true,
     textCreator:      true,
     title:            'Philip Glass - Knee 1 ( Nosaj Thing Remix )',

@@ -158,6 +158,48 @@ define(function(require, exports, module) {
     ].join("\n"),
 
 
+    createPhysicsTextureLoop: function( ){
+
+      console.log(arguments);
+
+      var shaderChunk = [];
+      for( var i = 0; i < arguments.length; i++ ){
+
+        console.log( arguments[i] );
+        shaderChunk.push( arguments[i] );
+
+      }
+
+      shaderChunk.join("\n");
+
+      var string = [
+        "for (float y=0.0;y< textureWidth; y++) {",
+          "for (float x=0.0;x< textureWidth; x++) {",
+            "if ( x == gl_FragCoord.x && y == gl_FragCoord.y ) continue;",
+              
+            "vec3 pPos = texture2D( texturePosition,",
+                "vec2(x/resolution.x, y/resolution.y) ).xyz;",
+
+            "vec3 pVel = texture2D( textureVelocity,",
+              "vec2(x/resolution.x, y/resolution.y) ).xyz;",
+
+            "float pMass = texture2D( textureVelocity,",
+              "vec2(x/resolution.x, y/resolution.y) ).w;",
+
+            shaderChunk,
+
+          "}",
+        "}",
+
+      ].join("\n")
+
+
+
+
+
+      return string
+
+    },
 
 
     noise3D: [

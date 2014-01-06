@@ -39,12 +39,7 @@ THREE.LeapFlyControls = function ( object, controller, domElement ) {
 
       var frame = this.controller.frame();
 
-      console.log('frame');
-
       if( frame.hands[0] ){
-
-        console.log('hand');
-
 
         var hand = frame.hands[0];
 

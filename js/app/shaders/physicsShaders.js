@@ -118,6 +118,18 @@ define(function(require, exports, module) {
     velocity:{
 
 
+      simplex: [
+
+        "uniform vec2 resolution;",
+        "uniform float time;",
+
+
+
+
+
+
+      ].join("\n"),
+
       gravity: [
 
         "uniform vec2 resolution;",
@@ -134,9 +146,6 @@ define(function(require, exports, module) {
         "uniform vec3 otherParticlePosition;",
         "uniform vec3 otherParticleVelocity;",
 
-        "const float width = 50.0;",
-        "const float height = 50.0;",
-
         "uniform float upperBounds;",
         "uniform float lowerBounds;",
 
@@ -152,26 +161,14 @@ define(function(require, exports, module) {
 
           "vec3 velocity      = selfVelocity;",
 
-          "for (float y=0.0;y< textureWidth; y++) {",
-            "for (float x=0.0;x< textureWidth; x++) {",
 
-              "if ( x == gl_FragCoord.x && y == gl_FragCoord.y ) continue;",
+          SC.createPhysicsTextureLoop([ 
+            "vec3 diff = pPos - selfPosition;",
+            "float l = length( diff );",
+            "velocity += pMass * mass * mass * diff / ( gravityStrength * l);"
+          ].join("\n")),
 
-              "vec3 pPos = texture2D( texturePosition,",
-                  "vec2(x/resolution.x, y/resolution.y) ).xyz;",
 
-              "vec3 pVel = texture2D( textureVelocity,",
-                "vec2(x/resolution.x, y/resolution.y) ).xyz;",
-
-              "float pMass = texture2D( textureVelocity,",
-                "vec2(x/resolution.x, y/resolution.y) ).w;",
-
-              "vec3 diff = pPos - selfPosition;",
-              "float l = length( diff );",
-              "velocity += pMass * mass * mass * diff / ( gravityStrength * l);", 
-              
-            "}",
-          "}",
 
 
           "velocity *= speed;",
