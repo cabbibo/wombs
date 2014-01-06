@@ -113,9 +113,37 @@ define( function( require , exports , module ){
   
   }
 
+  Interface.prototype.addValue = function( object , value , folder ){
+
+    if( !this.gui )
+      this.addGUI();
+
+    var f = folder || this.gui;
+    
+    f.add( object , value );
+
+  }
+  
+  Interface.prototype.addVector = function( object , value , folder ){
+
+    if( !this.gui )
+      this.addGUI();
+
+    var f = folder || this.gui;
+   
+    console.log('WHWH');
+    var u = f.addFolder( value );
+    console.log('s');
+    u.add( object[ value ] , 'x' , -1 , 1 ).listen();
+    u.add( object[ value ] , 'y' , -1 , 1 ).listen();
+    u.add( object[ value ] , 'z' , -1 , 1 ).listen();
+
+
+  }
 
   Interface.prototype.addUniform = function( propt , uniform , folder ){
 
+    console.log( propt );
     if( !this.gui )
       this.addGUI();
    

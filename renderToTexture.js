@@ -13,7 +13,8 @@ define(function(require, exports, module) {
   var physicsShaders      = require( 'app/shaders/physicsShaders'     );
   var shaderChunks        = require( 'app/shaders/shaderChunks'       );
 
-  var PhysicsSimulator       = require( 'app/shaders/PhysicsSimulator'   );
+  var PhysicsSimulator    = require( 'app/shaders/PhysicsSimulator'   );
+  var physicsShaders      = require( 'app/shaders/physicsShaders'     );
 
 
   /*
@@ -40,21 +41,59 @@ define(function(require, exports, module) {
   });
 
 
+  womb.stream = womb.audioController.createUserAudio();
+
+  womb.audioController.gain.gain.value = 0;
+  womb.stream.onStreamCreated = function(){
+
+    womb.ps.positionShader.uniforms.audioTexture.value = womb.stream.texture.texture;
+    console.log('ass');
+
+  }
+
   womb.ps = new PhysicsSimulator( womb , {
 
-    textureWidth:5
+    textureWidth:70,
+    velocityShader: physicsShaders.velocity.flocking,
+    positionShader: physicsShaders.positionAudio_4
     
   });
+  womb.scene.remove( womb.ps.particleSystem );
+  
+  womb.psClone = womb.ps.particleSystem.clone();
+  womb.psClone.rotation.z = 0; 
+  womb.scene.add( womb.psClone );
 
-   womb.particleSystem = new THREE.ParticleSystem( 
-      new THREE.CubeGeometry( womb.size , womb.size , womb.size , 2 , 2 , 2 ),
+
+  womb.psCloneClone = womb.psClone.clone();
+  womb.psCloneClone.rotation = new THREE.Quaternion();
+  womb.psCloneClone.rotation.z = Math.PI ;
+  womb.scene.add( womb.psCloneClone );
+
+
+
+
+
+    womb.interface.addVector( womb.psClone , 'rotation' );
+
+        //womb.
+
+ // }
+
+  //console.log( womb.psClone.material.uniforms );
+  //womb.psClone.material.uniforms.psColor.value = new THREE.Color( 0xff0000 );
+ // womb.scene.add( womb.psClone );
+
+  //for( var i = 0; i < 
+  womb.particleSystem = new THREE.ParticleSystem( 
+      new THREE.CubeGeometry( womb.size , womb.size , womb.size , 100 , 100 , 100 ),
       new THREE.ParticleSystemMaterial 
   );
-  womb.scene.add( womb.particleSystem );
+  //womb.scene.add( womb.particleSystem );
+
+  //womb.interface.addVector( womb.particleSystem , 'rotation' );
 
   womb.particleSystem.scale.multiplyScalar( 1 );
-
-  console.log( womb.particleSystem );
 
   womb.interface.addAllUniforms( womb.ps.velocityShader.uniforms );
 

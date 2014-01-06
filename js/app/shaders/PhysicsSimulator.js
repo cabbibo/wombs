@@ -38,10 +38,26 @@ define(function(require, exports, module) {
     this.params = _.defaults( params || {} , {
       textureWidth:     50.0,
       bounds:           womb.size,
-      velocityShader:   ps.velocity.gravity,
+      positionShader:   ps.position,
+      velocityShader:   ps.velocity.flocking,
       debug:            true,
       startingVelocityRange: 10,
       particles:        physicsParticles.basic,
+      
+      velocityShaderUniforms:{
+          
+          speed:                 1.0,
+
+          seperationDistance:   100.0,
+          alignmentDistance:    150.0,
+          cohesionDistance:     100.0,
+          freedomFactor:          0.3,
+          
+          dampening:             1.0,
+          gravityStrength:     5000.0,
+        
+      },
+
       particleParams:   {
         size: 20,
         blending: THREE.AdditiveBlending,
@@ -54,11 +70,17 @@ define(function(require, exports, module) {
     });
 
 
-    this.particles = this.params.particles;
+    this.particles  = this.params.particles;
+    this.bounds     = this.params.bounds;
 
     this.params.textureHeight = this.params.textureWidth;
 
+    //making sure the bounds are properly set up
+    this.params.velocityShaderUniforms.upperBounds = this.bounds;
+    this.params.velocityShaderUniforms.lowerBounds = -this.bounds;
+
     this.velocityShader = this.params.velocityShader;
+
 
     // Camera and scene for renderering physics texture
     this.camera = new THREE.Camera();
@@ -69,8 +91,6 @@ define(function(require, exports, module) {
     
     this.TW             = this.textureWidth;
 
-    console.log('TEXTURe' );
-    console.log( this.TW );
     // Bounds for physics Parameters requiring bounds
     this.bounds         = this.params.bounds;
 
@@ -157,9 +177,13 @@ define(function(require, exports, module) {
           resolution: { type: "v2", value: new THREE.Vector2(  this.TW , this.TW ) },
           texturePosition: { type: "t", value: null },
           textureVelocity: { type: "t", value: null },
+
+          // for use with audio
+          audioTexture:    { type: "t" , value: null }
       },
       vertexShader: vertexShaders.passThrough_noMV,
-      fragmentShader: ps.position
+      fragmentShader: this.params.positionShader,
+      transparent: true,
     
     });
 
@@ -168,29 +192,39 @@ define(function(require, exports, module) {
     // HACKEY AS FUCK
     this.velocityVertexShader = this.createVelocityShader( this.velocityShader );
 
-    this.velocityShader = new THREE.ShaderMaterial( {
-
-      uniforms: {
+    var u =  {
           time: { type: "f", value: 1.0 },
           resolution: { type: "v2", value: new THREE.Vector2( this.TW , this.TW ) },
-          //bounds: { type: "v2", value: this.params.bounds },
-          texturePosition: { type: "t", value: null },
-          textureVelocity: { type: "t", value: null },
 
-          testing: { type: "f", value: 1.0 },
-          seperationDistance: { type: "f", value: 100.0 },
-          alignmentDistance: { type: "f", value: 150.0 },
-          cohesionDistance: { type: "f", value: 10000.0 },
-          freedomFactor: { type: "f", value: 0.3 },
+          texturePosition:    { type: "t" , value: null },
+          textureVelocity:    { type: "t" , value: null },
 
-          dampening:  { type: "f" , value: .999 },
-          gravityStrength: { type: "f" , value: 500.0 },
-      },
+          speed:              { type: "f" , value: null },
 
+          lowerBounds:    { type: "f" , value: null },
+          upperBounds:    { type: "f" , value: null },
+
+          seperationDistance: { type: "f" , value: null },
+          alignmentDistance:  { type: "f" , value: null },
+          cohesionDistance:   { type: "f" , value: null },
+          freedomFactor:      { type: "f" , value: null },
+
+          dampening:          { type: "f" , value: null },
+          gravityStrength:    { type: "f" , value: null },
+      }
+
+
+    this.velocityShader = new THREE.ShaderMaterial( {
+
+      uniforms: u,
       vertexShader: vertexShaders.passThrough_noMV,
-      fragmentShader: this.velocityVertexShader
+      fragmentShader: this.velocityVertexShader,
+      transparent: true
 
     });
+
+    // Make it so we can pass in parameters to the shader
+    helperFunctions.setMaterialUniforms( this.velocityShader , this.params.velocityShaderUniforms );
 
     /*
     
@@ -316,7 +350,8 @@ define(function(require, exports, module) {
 
     // Starting Position
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
-      map: this.dtPosition
+      map: this.dtPosition,
+      transparent: true
     }));
 
     mesh.position.x = left ;
@@ -327,7 +362,8 @@ define(function(require, exports, module) {
 
     // Starting Velocity
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
-      map: this.dtVelocity
+      map: this.dtVelocity,
+      transparent: true
     }));
 
     mesh.position.x = right;
@@ -338,7 +374,8 @@ define(function(require, exports, module) {
 
     // Render Texture Position1
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
-      map: this.RT.position1
+      map: this.RT.position1,
+      transparent: true
     }));
 
     mesh.position.x = left ;
@@ -349,7 +386,8 @@ define(function(require, exports, module) {
 
     // Render Texture Velocity1
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
-      map: this.RT.velocity1
+      map: this.RT.velocity1,
+      transparent: true
     }));
 
     mesh.position.x = right ;
@@ -359,7 +397,8 @@ define(function(require, exports, module) {
 
     // Render Texture Position2
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
-      map: this.RT.position2
+      map: this.RT.position2,
+      transparent: true
     }));
 
     mesh.position.x = left ;
@@ -369,7 +408,8 @@ define(function(require, exports, module) {
 
     // Render Texture Velocity2
     var mesh = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
-      map: this.RT.velocity2
+      map: this.RT.velocity2,
+      transparent: true
     }));
 
     mesh.position.x = right ;
@@ -408,14 +448,14 @@ define(function(require, exports, module) {
 
     for (var k = 0; k < this.numberOfParticles ; k++) {
 
-      x = Math.random() * this.bounds - this.bounds/2;
-      y = Math.random() * this.bounds - this.bounds/2;
-      z = Math.random() * this.bounds - this.bounds/2;
+      x = 2 * Math.random() * this.bounds - this.bounds;
+      y = 2 * Math.random() * this.bounds - this.bounds;
+      z = 2 * Math.random() * this.bounds - this.bounds;
 
       a[ k*4 + 0 ] = x;
       a[ k*4 + 1 ] = y;
       a[ k*4 + 2 ] = z;
-      a[ k*4 + 3 ] = .001;//Math.random();
+      a[ k*4 + 3 ] = k / this.numberOfParticles;
 
     }
 
@@ -451,13 +491,8 @@ define(function(require, exports, module) {
       a[ k*4 + 0 ] = (( k / this.numberOfParticles ) - .5) * 10;
       a[ k*4 + 1 ] = y * this.params.startingVelocityRange;
       a[ k*4 + 2 ] = z * this.params.startingVelocityRange;
-      a[ k*4 + 3 ] = 25;
+      a[ k*4 + 3 ] = k / this.numberOfParticles;
 
-
-      //a[ k*4 + 0 ] = x * this.params.startingVelocityRange;
-      a[ k*4 + 1 ] = y * this.params.startingVelocityRange;
-      a[ k*4 + 2 ] = z * this.params.startingVelocityRange;
-     // a[ k*4 + 3 ] = 0.0001;
 
     }
 
