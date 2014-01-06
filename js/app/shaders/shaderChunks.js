@@ -214,6 +214,8 @@ define(function(require, exports, module) {
 
 
     PI:["const float PI = 3.141592653589793;" ].join("\n"),
+    PI_2:["const float PI_2 = 3.141592653589793 * 2.0;" ].join("\n"),
+
 
     rand2D: [
       "float rand(vec2 co){",

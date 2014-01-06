@@ -1,12 +1,13 @@
 define(function(require, exports, module) {
 
+  var THREE = require('lib/three.min');
   var l = require( 'lib/three/OBJLoader' );
 
   function ObjectLoader( womb , params ){
 
     this.womb   = womb;
 
-    this.loader = new THREE.OBJLoader(); 
+    this.loader = new l(); 
 
     this.geometries = [];
 
