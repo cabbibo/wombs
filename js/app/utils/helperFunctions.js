@@ -25,15 +25,10 @@ define(function(require, exports, module) {
 
         if( material.uniforms[propt] ){
 
-          console.log('Propt true' );
-          console.log( propt );
-          console.log(  material.uniforms[propt] );
-          console.log( parameters[propt] );
           material.uniforms[propt].value = parameters[propt];
 
         }else{
-          console.log( 'Problem' );
-          console.log( propt );
+        
         }
        
       }

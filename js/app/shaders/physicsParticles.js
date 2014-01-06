@@ -58,6 +58,7 @@ define(function(require, exports, module) {
       fragmentShader: [
 
         "uniform vec3 psColor;",
+        "uniform vec3 color;",
         "uniform float opacity;",
 
         "varying float mass;",

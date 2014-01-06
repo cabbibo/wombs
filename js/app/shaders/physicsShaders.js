@@ -17,12 +17,102 @@ define(function(require, exports, module) {
         "vec2 uv = gl_FragCoord.xy / resolution.xy;",
         "vec3 position = texture2D( texturePosition, uv ).xyz;",
         "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
-        "float mass = texture2D( textureVelocity, uv ).a;",
-        "gl_FragColor=vec4(position + velocity * 2.0, mass );",
+        "float mass = texture2D( texturePosition, uv ).w;",
+        "gl_FragColor=vec4(position + velocity , 1.0 );",
 
       "}"
 
     ].join("\n"),
+
+    positionAudio_1:[
+
+      "uniform vec2 resolution;",
+      "uniform float time;",
+      "// uniform float delta;",
+      "uniform sampler2D textureVelocity;",
+      "uniform sampler2D texturePosition;",
+      "uniform sampler2D audioTexture;",
+
+      "void main(){",
+
+        "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+        "vec3 position = texture2D( texturePosition, uv ).xyz;",
+        "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
+        "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
+        "gl_FragColor=vec4(position + velocity *  audio  , 1.0 );",
+
+      "}"
+
+    ].join("\n"),
+    positionAudio_2:[
+
+      "uniform vec2 resolution;",
+      "uniform float time;",
+      "// uniform float delta;",
+      "uniform sampler2D textureVelocity;",
+      "uniform sampler2D texturePosition;",
+      "uniform sampler2D audioTexture;",
+
+      "void main(){",
+
+        "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+        "vec3 position = texture2D( texturePosition, uv ).xyz;",
+        "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
+        "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
+        "gl_FragColor=vec4(position + velocity *  audio  * audio  , 1.0 );",
+
+      "}"
+
+    ].join("\n"),
+
+    positionAudio_3:[
+
+      "uniform vec2 resolution;",
+      "uniform float time;",
+      "// uniform float delta;",
+      "uniform sampler2D textureVelocity;",
+      "uniform sampler2D texturePosition;",
+      "uniform sampler2D audioTexture;",
+
+      "void main(){",
+
+        "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+        "vec3 position = texture2D( texturePosition, uv ).xyz;",
+        "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
+        "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
+        "gl_FragColor=vec4(position + velocity *  audio * audio * audio , 1.0 );",
+
+      "}"
+
+    ].join("\n"),
+
+
+
+
+
+
+    positionAudio_4:[
+
+      "uniform vec2 resolution;",
+      "uniform float time;",
+      "// uniform float delta;",
+      "uniform sampler2D textureVelocity;",
+      "uniform sampler2D texturePosition;",
+      "uniform sampler2D audioTexture;",
+
+      "void main(){",
+
+        "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+        "vec3 position = texture2D( texturePosition, uv ).xyz;",
+        "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
+        "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
+        "gl_FragColor=vec4(position + velocity *  audio * audio * audio * audio , 1.0 );",
+
+      "}"
+
+    ].join("\n"),
+
+
 
 
     velocity:{
@@ -32,6 +122,8 @@ define(function(require, exports, module) {
 
         "uniform vec2 resolution;",
         "uniform float time;",
+
+        "uniform float speed;",
 
         "uniform float gravityStrength;",
         "uniform float dampening;",
@@ -45,8 +137,8 @@ define(function(require, exports, module) {
         "const float width = 50.0;",
         "const float height = 50.0;",
 
-        "const float UPPER_BOUNDS = 200.0;",
-        "const float LOWER_BOUNDS = -UPPER_BOUNDS;",
+        "uniform float upperBounds;",
+        "uniform float lowerBounds;",
 
 
         "void main(){",
@@ -78,15 +170,13 @@ define(function(require, exports, module) {
               "float l = length( diff );",
               "velocity += pMass * mass * mass * diff / ( gravityStrength * l);", 
               
-
-
-
             "}",
           "}",
 
 
+          "velocity *= speed;",
           "velocity *= dampening;",
-          "gl_FragColor=vec4( velocity, mass);",
+          "gl_FragColor=vec4( velocity * mass, 1.0 );",
           //"if(", 
 
         "}"
@@ -105,8 +195,8 @@ define(function(require, exports, module) {
         "uniform float cohesionDistance;", // 200
         "uniform float freedomFactor;",
 
+        "uniform float speed;",
         "uniform float size;",
-
 
         "uniform sampler2D textureVelocity;",
         "uniform sampler2D texturePosition;",
@@ -115,9 +205,9 @@ define(function(require, exports, module) {
         "const float PI_2 = 3.141592653589793 * 2.0;",
         "const float VISION = PI * 0.55;",
 
-        
-        "const float UPPER_BOUNDS = 200.0;",
-        "const float LOWER_BOUNDS = -UPPER_BOUNDS;",
+       
+        "uniform float upperBounds;",
+        "uniform float lowerBounds;",
 
         SC.bound,
 
@@ -126,7 +216,6 @@ define(function(require, exports, module) {
         "}",
 
         "void main(){",
-
 
           "vec2 uv = gl_FragCoord.xy / resolution.xy;",
 
@@ -201,19 +290,20 @@ define(function(require, exports, module) {
           "}",
 
 
+          "velocity *= speed;",
           //"velocity = bindPosition( vec2( LOWER_BOUNDS , UPPER_BOUNDS ) , selfPosition.xyz , velocity );",
 
-          "if ((selfPosition.x + velocity.x * 5.0) < LOWER_BOUNDS) velocity.x = -velocity.x;",
-          "if ((selfPosition.y + velocity.y * 5.0) < LOWER_BOUNDS) velocity.y = -velocity.y;",
+          "if ((selfPosition.x + velocity.x * 5.0) < lowerBounds) velocity.x = -velocity.x;",
+          "if ((selfPosition.y + velocity.y * 5.0) < lowerBounds) velocity.y = -velocity.y;",
 
-          "if ((selfPosition.z + velocity.z * 5.0) < LOWER_BOUNDS) velocity.z = -velocity.z;",
+          "if ((selfPosition.z + velocity.z * 5.0) < lowerBounds) velocity.z = -velocity.z;",
 
 
-          "if ((selfPosition.x + velocity.x * 5.0) > UPPER_BOUNDS) velocity.x = -velocity.x;",
+          "if ((selfPosition.x + velocity.x * 5.0) > upperBounds) velocity.x = -velocity.x;",
 
-          "if ((selfPosition.y + velocity.y * 5.0) > UPPER_BOUNDS) velocity.y = -velocity.y;",
+          "if ((selfPosition.y + velocity.y * 5.0) > upperBounds) velocity.y = -velocity.y;",
 
-          "if ((selfPosition.z + velocity.z * 5.0) > UPPER_BOUNDS) velocity.z = -velocity.z;",
+          "if ((selfPosition.z + velocity.z * 5.0) > upperBounds) velocity.z = -velocity.z;",
 
 
           "gl_FragColor=vec4(velocity, 1.0);",
