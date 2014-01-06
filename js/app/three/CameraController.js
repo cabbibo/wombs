@@ -1,9 +1,10 @@
 define(function(require, exports, module) {
 
   require( 'lib/three.min'                  );
+ 
   require( 'controls/MomentumOrbitControls' );
   require( 'controls/OrbitControls'         );
-  require( 'controls/TrackballControls'     );
+  var TrackballControls = require( 'controls/TrackballControls'     );
   require( 'controls/MomentumFlyControls'   );
   require( 'controls/FlyControls'           );
   require( 'controls/LeapPaddleControls'    );
@@ -23,7 +24,7 @@ define(function(require, exports, module) {
     
     }else if( type == 'TrackballControls' ){
       
-      this.controls = new THREE.TrackballControls( this.womb.camera , this.womb.renderer.domElement , params );
+      this.controls = new TrackballControls( this.womb.camera , this.womb.renderer.domElement , params );
     
     }else if( type == 'MomentumOrbitControls' ){
       
