@@ -79,7 +79,7 @@ define(function(require, exports, module) {
   womb.time = { type: "f" , value: 0 };
   
   //womb.stream = womb.audioController.createUserAudio();
-  womb.stream = womb.audioController.createStream( '/wombs/lib/audio/tracks/littleBitFrightened.mp3' );
+  womb.stream = womb.audioController.createStream( '/lib/audio/tracks/littleBitFrightened.mp3' );
   womb.audioController.gain.gain.value = 1;
 
 
@@ -92,12 +92,12 @@ define(function(require, exports, module) {
   });
 
   
-  womb.shinyTexture = THREE.ImageUtils.loadTexture( '/wombs/lib/img/shiny/cross.png' );
-  womb.metaTexture  = THREE.ImageUtils.loadTexture( '/wombs/lib/img/shiny/meta.png', THREE.UVMapping , function(){
+  womb.shinyTexture = THREE.ImageUtils.loadTexture( '/lib/img/shiny/cross.png' );
+  womb.metaTexture  = THREE.ImageUtils.loadTexture( '/lib/img/shiny/meta.png', THREE.UVMapping , function(){
     console.log('META' );   
   });
 
-  womb.moonTexture  = THREE.ImageUtils.loadTexture( '/wombs/lib/img/moon_1024.jpg', THREE.UVMapping  , function(){
+  womb.moonTexture  = THREE.ImageUtils.loadTexture( '/lib/img/moon_1024.jpg', THREE.UVMapping  , function(){
     console.log('MOON' );
   });
 
