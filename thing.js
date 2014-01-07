@@ -99,8 +99,6 @@ define(function(require, exports, module) {
       "offset *= noiseSize;",
 
       "vec2 absUV =  abs( uv - .5 );",
-      "vec2 audioUV = audioUV( texture , absUV );",
-
 
       "vec3 audioPosition = absAudioPosition( texture , position );",
 
