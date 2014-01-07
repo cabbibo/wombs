@@ -36,7 +36,7 @@ define(function(require, exports, module) {
   // Communal uniform
   womb.time = { type: "f" , value: 0 };
   
-  var file = '/wombs/lib/audio/tracks/oldEnglish.mp3';
+  var file = '/lib/audio/tracks/oldEnglish.mp3';
   womb.stream = womb.audioController.createStream( file );
   womb.audioController.gain.gain.value = 1;
 
@@ -49,9 +49,9 @@ define(function(require, exports, module) {
     square: true,
   });
 
-  womb.crewTexture = womb.imageLoader.load('../lib/img/hnrW.png' ); 
+  womb.crewTexture = womb.imageLoader.load('/lib/img/hnrW.png' ); 
 
-   womb.modelLoader.loadFile( 'OBJ' , '../lib/models/tree.obj' , function( object ){
+   womb.modelLoader.loadFile( 'OBJ' , '/lib/models/tree.obj' , function( object ){
 
     if( object[0] instanceof THREE.Mesh ){
     }

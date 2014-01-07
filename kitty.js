@@ -36,7 +36,7 @@ define(function(require, exports, module) {
   // Communal uniform
   womb.time = { type: "f" , value: 0 };
   
-  var file = '/wombs/lib/audio/tracks/mirrorMaru.mp3';
+  var file = '/lib/audio/tracks/mirrorMaru.mp3';
   womb.stream = womb.audioController.createStream( file );
   womb.audioController.gain.gain.value = 1;
 
@@ -49,7 +49,7 @@ define(function(require, exports, module) {
     square: true,
   });
 
-   womb.modelLoader.loadFile( 'OBJ' , '../lib/models/mug_11530_10.obj' , function( object ){
+   womb.modelLoader.loadFile( 'OBJ' , '/lib/models/mug_11530_10.obj' , function( object ){
 
     if( object[0] instanceof THREE.Mesh ){
     }
