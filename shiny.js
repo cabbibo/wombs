@@ -312,7 +312,8 @@ define(function(require, exports, module) {
       transparent:    true,
       fog:            true,
       blending:       THREE.AdditiveBlending,
-      opacity:        .1
+      opacity:        .1,
+      depthWrite:     false
     });
 
     var recursiveArray = [];
@@ -369,7 +370,9 @@ define(function(require, exports, module) {
       transparent:true,
       fog: true,
       blending: THREE.AdditiveBlending,
-      opacity:.1
+      opacity:.1,
+      depthWrite:     false
+
     });
 
     var numOf = 1;
