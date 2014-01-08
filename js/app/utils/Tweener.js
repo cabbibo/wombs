@@ -30,7 +30,9 @@ define(function(require, exports, module) {
 
     var params = _.defaults( p || {}, {
       easing:   TWEEN.Easing.Exponential.InOut,
-      time:     1
+      time:     1,
+      type: 'position',
+      callback: function(){}
     });
 
     var initial , target;

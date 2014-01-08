@@ -3,15 +3,14 @@ define(function(require, exports, module) {
 
   var Tweener = require( 'app/utils/Tweener' );
 
-  function Scene( world , params ){
+  function Scene( womb , params ){
   
-    this.world = world;
-    this.womb = this.world.womb;
+    this.womb = womb;
 
     this.params = _.defaults( params || {} , {
      
       scene:                    this,
-      transition:         'position',
+      transition:            'scale',
       transitionTime:              1,
       enterStart:       function(){},
       enterFinish:      function(){},
@@ -23,7 +22,7 @@ define(function(require, exports, module) {
 
     /* Assigning in and out target based on the transition type */
     
-    var s = this.world.size;
+    var s = this.womb.size;
 
     if( !this.params.inTarget ){
 
@@ -87,7 +86,7 @@ define(function(require, exports, module) {
       var o = this.params.scene;       // Getting 'this' of scene
       o.active = false;                // No longer update after it has left
       o.params.exitFinish();           // Call the exit functino passed through
-      o.world.scene.remove( o.scene ); // Remove it from our world
+      o.womb.scene.remove( o.scene ); // Remove it from our world
     }
 
     this.transitionOut = this.womb.tweener.createTween({
@@ -107,7 +106,7 @@ define(function(require, exports, module) {
   Scene.prototype.enter = function(){
 
    
-    this.world.scene.add( this.scene );
+    this.womb.scene.add( this.scene );
     this.active = true;
 
     this.params.enterStart();

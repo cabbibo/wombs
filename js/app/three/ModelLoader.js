@@ -28,6 +28,7 @@ define(function(require, exports, module) {
         object.traverse( function ( child ) {
 
           if ( child instanceof THREE.Mesh ) {
+            child.geometry.computeBoundingBox();
             geometries.push( child.geometry);
           }
         
@@ -46,6 +47,8 @@ define(function(require, exports, module) {
         object.traverse( function ( child ) {
 
           if ( child instanceof THREE.Mesh ) {
+            child.geometry.computeBoundingBox();
+
             geometries.push( child.geometry);
           }
         

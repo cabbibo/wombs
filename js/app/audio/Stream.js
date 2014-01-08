@@ -7,10 +7,11 @@ define(function(require, exports, module) {
 
     this.params = _.defaults( params || {}, {
         
-      looping:      false,
+      loop:      false,
       fbc:           1024,
       fadeTime:         1, 
-      texture:       true
+      texture:       true,
+      preload:      false
 
     });
 
@@ -35,9 +36,14 @@ define(function(require, exports, module) {
   Stream.prototype.createAudio  = function(){
     
     this.audio          = new Audio();
-    this.audio.preload  = 'none';
+    
+    if( this.params.preload )
+      this.audio.preload  = 'auto';
+    else
+      this.audio.preload  = 'none';
+
     this.audio.src      = this.file;
-    this.audio.loop     = true;
+    this.audio.loop     = this.params.loop;
 
   }
 

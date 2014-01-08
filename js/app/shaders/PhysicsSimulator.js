@@ -59,7 +59,7 @@ define(function(require, exports, module) {
       },
 
       particleParams:   {
-        size: 20,
+        size: 5,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         transparent: true,
@@ -233,22 +233,9 @@ define(function(require, exports, module) {
        first time around
 
     */
-    this.dtPosition = this.generatePositionTexture();
-    this.dtVelocity = this.generateVelocityTexture();
 
-    this.RT.position1 = this.getRenderTarget();
-    this.RT.position2 = this.getRenderTarget();
-   
-    this.RT.velocity1 = this.getRenderTarget();
-    this.RT.velocity2 = this.getRenderTarget();
-
-    this.renderTexture( this.dtPosition , this.RT.position1 );
-    this.renderTexture( this.dtPosition , this.RT.position2 );
-
-    this.renderTexture( this.dtVelocity  , this.RT.velocity1 );
-    this.renderTexture( this.dtVelocity  , this.RT.velocity2 );
-
-
+    this.createAllTextures();
+ 
     /*
      
        Setting up the particles we will be visualizing
@@ -329,6 +316,39 @@ define(function(require, exports, module) {
   }
 
   PhysicsSimulator.prototype.update = function(){}
+
+
+  PhysicsSimulator.prototype.createAllTextures = function(){
+
+    this.dtPosition = this.generatePositionTexture();
+    this.dtVelocity = this.generateVelocityTexture();
+
+    this.RT.position1 = this.getRenderTarget();
+    this.RT.position2 = this.getRenderTarget();
+   
+    this.RT.velocity1 = this.getRenderTarget();
+    this.RT.velocity2 = this.getRenderTarget();
+
+    this.renderTexture( this.dtPosition , this.RT.position1 );
+    this.renderTexture( this.dtPosition , this.RT.position2 );
+
+    this.renderTexture( this.dtVelocity  , this.RT.velocity1 );
+    this.renderTexture( this.dtVelocity  , this.RT.velocity2 );
+
+  }
+
+  PhysicsSimulator.prototype.resetAllTextures = function(){
+
+    this.dtPosition = this.generatePositionTexture();
+    this.dtVelocity = this.generateVelocityTexture();
+
+    this.renderTexture( this.dtPosition , this.RT.position1 );
+    this.renderTexture( this.dtPosition , this.RT.position2 );
+
+    this.renderTexture( this.dtVelocity  , this.RT.velocity1 );
+    this.renderTexture( this.dtVelocity  , this.RT.velocity2 );
+
+  }
 
   PhysicsSimulator.prototype.createDebugTextures = function(){
 

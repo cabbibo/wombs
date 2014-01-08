@@ -140,6 +140,7 @@ define(function(require, exports, module) {
       transparent:true,
       fog: true,
       blending: THREE.AdditiveBlending,
+      depthWrite: true,
       transparent: true,
       opacity:.1
     });
@@ -205,6 +206,7 @@ define(function(require, exports, module) {
       fog: true,
       blending: THREE.AdditiveBlending,
       transparent: true,
+      depthWrite: false,
       opacity:.1
     });
 

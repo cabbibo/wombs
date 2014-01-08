@@ -67,7 +67,7 @@ define(function(require, exports, module) {
       40 ,
       this.width / this.height ,
       this.size / 100,
-      this.size  * 4
+      this.size  * 40
     );
 
     this.camera.position.z = this.size;

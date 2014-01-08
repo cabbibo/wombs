@@ -22,7 +22,6 @@ define(function(require, exports, module) {
     var self = this;
     var texture = this.loader.loadTexture( file , mapping , function( texture ){
 
-      console.log( self );
       self.womb.loader.loadBarAdd();
       
       if( callback )
