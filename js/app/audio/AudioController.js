@@ -203,16 +203,20 @@ define(function(require, exports, module) {
       this.stream._update();
     }
 
+    if( this.track ){
+      this.track._update();
+    }
+
     if( this.userAudio ){
       this.userAudio._update();
     }
 
-    for( var i = 0; i < this.loops.length; i++ ){
-      this.loops[i]._update();
+    for( var i = 0; i < this.loops.array.length; i++ ){
+      this.loops.array[i]._update();
     }
 
-    for( var i = 0; i < this.notes.length; i++ ){
-      this.notes[i]._update();
+    for( var i = 0; i < this.notes.array.length; i++ ){
+      this.notes.array[i]._update();
     }
 
   }

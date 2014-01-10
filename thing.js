@@ -58,7 +58,6 @@ define(function(require, exports, module) {
     noisePower: { type: "f" , value: .2 },
     audioPower: { type: "f" , value: 0.2 },
 
-
   };
 
 

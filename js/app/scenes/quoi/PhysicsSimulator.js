@@ -35,20 +35,21 @@ define(function(require, exports, module) {
       bounds: params.bounds || womb.size,
       textureWidth:  params.textureWidth ||20,
       velocityShader: params.velocityShader || physicsShaders.velocity.gravity,
-      positionShader:  params.physicsShader || physicsShaders.positionAudio_4,
-      startingVelocityRange:  params.startingVelocityRange ||[ 1000 , 1000 , 1000 ],
+      positionShader:  params.physicsShader || physicsShaders.position,
+      startingVelocityRange:  params.startingVelocityRange ||10,
+      startingPositionRange:  params.startingPositionRange ||1,
       debug: false,
       particleParams:{
 
-        size: 20,
+        size: 5,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         transparent: true,
         fog: true, 
-        map:womb.stream.texture.texture,
-      //THREE.ImageUtils.loadTexture( '../lib/img/quoi/cookieSprite.png' ),
+        map: THREE.ImageUtils.loadTexture( '../lib/img/quoi/cookieSprite.png' ),
         opacity:    .9,
       },
+
       velocityShaderUniforms: params.velocityShaderUniforms || {
           
           speed:                 1.0,

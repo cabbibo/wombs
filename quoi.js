@@ -25,6 +25,7 @@ define(function(require, exports, module) {
   var Ring                = require( 'app/scenes/quoi/Ring' );
   var Random              = require( 'app/scenes/quoi/Random' );
   var Beauty              = require( 'app/scenes/quoi/Beauty' );
+  var FractalCombo        = require( 'app/scenes/quoi/FractalCombo' );
 
 
   /*
@@ -57,8 +58,15 @@ define(function(require, exports, module) {
 
 
   var file = '/lib/audio/tracks/quoi.mp3';
-  womb.stream =   womb.audioController.createStream( file , { autoLoad: true } );
-  womb.audioController.gain.gain.value = 0;
+ // womb.stream =   womb.audioController.createStream( file , { autoLoad: true } );
+
+  womb.stream = womb.audioController.createNote( file );
+  womb.audioController.gain.gain.value = 1;
+
+
+  womb.stream.onLoad = function(){
+      console.log( 'WHOA' );
+  }
 
   womb.moonTexture = womb.imageLoader.load( '../lib/img/moon_1024.jpg' );
   womb.cookieTexture = womb.imageLoader.load( '../lib/img/quoi/cookieSprite.png' );
@@ -99,7 +107,6 @@ define(function(require, exports, module) {
 
   });
 
-
   womb.onTreeLoad = function( geo ){
 
     womb.kitty = new Kitty( womb , {
@@ -133,7 +140,7 @@ define(function(require, exports, module) {
       modelScale: .8,
       radius: womb.size / 7,
       geo:geo,    
-      color: new THREE.Vector3( .9 , .2 , .0 )
+      color: new THREE.Vector3( .6 , .4 , .3 )
     });
 
      womb.treeRing2 = new Ring( womb , {
@@ -141,7 +148,7 @@ define(function(require, exports, module) {
       modelScale: .8,
       radius: womb.size / 6,
       geo:geo,    
-      color: new THREE.Vector3( 1.0 , .1 , .0 )
+      color: new THREE.Vector3( .6 , .1 , .0 )
     });
 
      womb.treeRing3 = new Ring( womb , {
@@ -149,7 +156,7 @@ define(function(require, exports, module) {
       modelScale: .8,
       radius: womb.size / 5,
       geo:geo,    
-      color: new THREE.Vector3( 1.1 , .0 , .0 )
+      color: new THREE.Vector3( .9 , .4 , .0 )
     });
 
      womb.treeRing4 = new Ring( womb , {
@@ -157,8 +164,99 @@ define(function(require, exports, module) {
       modelScale: .8,
       radius: womb.size / 5,
       geo:geo,    
-      color: new THREE.Vector3( 1.1 , .8 , 1.4 )
+      color: new THREE.Vector3( .7 , .4 , .8 )
     });
+
+
+    womb.treeRing.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .006;
+      }
+    }
+
+    womb.treeRing1.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .005;
+      }
+    }
+
+    womb.treeRing2.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .004;
+      }
+    }
+
+    womb.treeRing3.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .003;
+      }
+    }
+
+    womb.treeRing4.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .007;
+      }
+    }
+
+ 
+ 
+   womb.littleStars = new Random( womb , {
+     
+      radius: womb.size ,
+      modelScale: 40,
+      audioPower: -.5,
+      noisePower:  .3,
+      //geo: geo,
+      color: new THREE.Vector3( .4 , .2 , .6 ),
+      
+    });
+
+   womb.littleStars.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .002;
+        this.scene.rotation.x -= .003;
+        this.scene.rotation.z += .005;
+      }
+    }
+
+   womb.littleStars1 = new Random( womb , {
+     
+      radius: womb.size ,
+      modelScale: 40,
+      audioPower: -.5,
+      noisePower:  .3,
+      //geo: geo,
+      color: new THREE.Vector3( .3 , .1 , .7 ),
+      
+    });
+
+   womb.littleStars1.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y -= .005;
+        this.scene.rotation.x += .001;
+        this.scene.rotation.z -= .007;
+      }
+    }
+
+  womb.littleStars2 = new Random( womb , {
+     
+      radius: womb.size ,
+      modelScale: 40,
+      audioPower: -.5,
+      noisePower:  .3,
+      //geo: geo,
+      color: new THREE.Vector3( .2 , .4 , .9 ),
+      
+    });
+
+   womb.littleStars2.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .004;
+        this.scene.rotation.x -= .005;
+        this.scene.rotation.z -= .003;
+      }
+    }
+
 
 
 
@@ -166,17 +264,32 @@ define(function(require, exports, module) {
 
   }
 
+
+
+
   womb.onMugLoad = function( geo ){
 
-     womb.BEAUTYSQUARE = new Beauty( womb , {
-      geo: geo
+    womb.FRACTALCOMBO = new FractalCombo( womb , {
+    //geo: new THREE.IcosahedronGeometry( womb.size / 4.0 , 6 ),
+      geo: geo,
+      modelScale: 15,
+      numOf:8,
+      noisePower: 1,
+      audioPower: 2,
+      lightness:  .3
+    });
+
+
+    womb.BEAUTYSQUARE = new Beauty( womb , {
+      geo: geo,
+      modelScale: 500
     });
 
 
     womb.mainPulse = new Kitty( womb , {
       modelScale: 10,
       noisePower: 3.0,
-      audioPower: 2.0,
+      audioPower: 5.0,
       geo: geo,
       color: new THREE.Vector3( .1 , .0 , .3 )
     });
@@ -184,52 +297,109 @@ define(function(require, exports, module) {
 
     womb.mugRing = new Ring( womb , {
       noisePower: 3.3, 
+      audioPower: 6.0,
+      numOf:      6,
       modelScale: 10,
       radius: womb.size / 2,
       geo:geo 
     });
 
+    womb.mugRing.update = function(){
+
+      if( this.spinning == true ){
+        this.scene.rotation.y += .004;
+      }
+    }
+
+
     womb.mugRing1 = new Ring( womb , {
       noisePower: 3.3, 
       modelScale: 10,
+      audioPower: 5.0,
+      numOf:      8,
       radius: womb.size / 1.6,
       geo:geo ,
       color :new THREE.Vector3( .7 , .5 , 1.3 ),
     });
 
+    womb.mugRing1.update = function(){
+
+      if( this.spinning == true ){
+        this.scene.rotation.y += .001;
+      }
+    }
+
     womb.mugRing2 = new Ring( womb , {
       noisePower: 3.3, 
+      audioPower: 6.0,
+      numOf:      10,
       modelScale: 10,
       radius: womb.size / 1.4,
       geo:geo ,
       color :new THREE.Vector3( .5 , .5 , 1.5 ),
     });
 
+    
+    womb.mugRing2.update = function(){
+
+      if( this.spinning == true ){
+        this.scene.rotation.y += .006;
+      }
+    }
+
     womb.mugRing3 = new Ring( womb , {
       noisePower: 3.3, 
       modelScale: 10,
+      audioPower: 10.0,
+      numOf:      6,
       radius: womb.size / 1.3,
       geo:geo ,
       color :new THREE.Vector3( .9 , .5 , 1.1 ),
     });
 
+    
+    womb.mugRing3.update = function(){
+
+      if( this.spinning == true ){
+        this.scene.rotation.y += .003;
+      }
+    }
+
     womb.mugRing4 = new Ring( womb , {
       noisePower: 3.3,
-      audioPower: 1.0,
+      audioPower: 6.0,
+      numOf:      8,
       modelScale: 10,
       radius: womb.size / 2.3,
       geo:geo ,
       color :new THREE.Vector3( 1.1 , .5 , .9 ),
     });
 
+    
+    womb.mugRing4.update = function(){
+
+      if( this.spinning == true ){
+        this.scene.rotation.y += .002;
+      }
+    }
+
     womb.mugRing5 = new Ring( womb , {
       noisePower: 3.3,
-      audioPower: 2.0,
+      audioPower: 5.0,
+      numOf:      8,
       modelScale: 10,
       radius: womb.size / 2.3,
       geo:geo ,
       color :new THREE.Vector3( 1.7 , .5 , .5 ),
     });
+
+    
+    womb.mugRing5.update = function(){
+
+      if( this.spinning == true ){
+        this.scene.rotation.y += .005;
+      }
+    }
 
 
   }
@@ -262,6 +432,7 @@ define(function(require, exports, module) {
     modelScale: 10
     
   });
+
 
 
   womb.randomCubes = new Random( womb , {
@@ -365,49 +536,82 @@ define(function(require, exports, module) {
   womb.physicsSim = new PhysicsSimulation( womb ,
    
     {
-      bounds: womb.size,
-      textureWidth:70,
-      velocityShader: physicsShaders.velocity.flocking,
-      positionShader: physicsShaders.position,
-      startingVelocityRange: [ 80 , 0 , 0 ] 
+      bounds: 9,
+      textureWidth:50,
     }
   );
-  womb.antiSerp = new AntiSerpenski1( womb ,{
-    spin:.001,
-    color: new THREE.Vector3( .5 , .3 , 1.2 ),
-    radius:14,
-  });
+
+
+
+  var fullGeo = new THREE.Geometry();
+  var size = womb.size / 50;
+  var geo = new THREE.CubeGeometry( size , size, size , 10 , 10 , 10 );
+  var basicMaterial = new THREE.MeshBasicMaterial();
+
+  var recursiveArray = [];
+    
+  recursiveFunctions.antiSerpenski( 
+    recursiveArray,
+    new THREE.Vector3(),
+    womb.size / 5,
+    10,
+    2.4,
+    womb.size / 15
+  );
+
+
+  for( var i  = 0; i < recursiveArray.length; i++ ){
+
+    var mesh = new THREE.Mesh(
+      geo,
+      basicMaterial 
+    );
+
+    mesh.position = recursiveArray[i][0];
+    mesh.scale.multiplyScalar( recursiveArray[i][2] / 10 );
+
+    THREE.GeometryUtils.merge( fullGeo , mesh );
+
+  }
  
   womb.antiSerp1 = new AntiSerpenski2( womb ,{
+    geo: fullGeo,
     spin:.001,
     color: new THREE.Vector3( .5 , .3 , 1.2 ),
     radius:14,
   });
   womb.antiSerp1.scene.position.y = womb.size / 4;
   womb.antiSerp2 = new AntiSerpenski2( womb ,{
+    geo: fullGeo,
     spin:.002, 
     color: new THREE.Vector3( .7 , .3 , 1.1 ),
     radius:12,
   });
   womb.antiSerp2.scene.position.y = womb.size / 8
   womb.antiSerp3 = new AntiSerpenski2( womb ,{
+    geo: fullGeo,
     spin:.003,
     color: new THREE.Vector3( .9 , .3 , 1.0 ),
     radius:10,
   });
   womb.antiSerp3.scene.position.y = womb.size / 100000;
   womb.antiSerp4 = new AntiSerpenski2( womb ,{
+    geo: fullGeo,
     spin:.004, 
     color: new THREE.Vector3( 1.3 , .3 , .9 ),
     radius:8,
   });
   womb.antiSerp4.scene.position.y = - womb.size / 8
   womb.antiSerp5 = new AntiSerpenski2( womb ,{
+    geo: fullGeo,
     spin:.005, 
     color: new THREE.Vector3( 1.4 , .3 , .8 ),
     radius:6,
   });
   womb.antiSerp5.scene.position.y = -womb.size / 4
+
+
+
 
   womb.dropCenter = new Kitty( womb , {
     //modelFile: mug
@@ -427,7 +631,7 @@ define(function(require, exports, module) {
 
   });*/
 
-  womb.loader.loadBarAdd();
+  //womb.loader.loadBarAdd();
   
   womb.update = function(){
     
@@ -437,22 +641,29 @@ define(function(require, exports, module) {
 
     womb.stream.play();
 
+    //womb.mugRing1.enter();
+
+    //womb.FRACTALCOMBO.updateSeed = true;
+    //womb.FRACTALCOMBO.enter();
+    // womb.BEAUTYSQUARE.updateSeed = true;
+    // womb.BEAUTYSQUARE.enter();
     
     
     var offset = -490; 
     //var t1 = setTimeout( function(){ womb.physicsSim.enter(); }, 2000 );
-   
-    timeout = setTimeout( function(){ womb.antiSerp1.enter(); }, 11065+ offset );
-    timeout = setTimeout( function(){ womb.antiSerp2.enter(); }, 9099 + offset );
-    timeout = setTimeout( function(){ womb.antiSerp3.enter(); }, 7130 + offset );
-    timeout = setTimeout( function(){ womb.antiSerp4.enter(); }, 5040 + offset );
-    timeout = setTimeout( function(){ womb.antiSerp5.enter(); }, 3196 + offset );
+    //
+    //
+    //
+    /*
+     INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO
 
+    */
 
-    var firstHit = setTimeout( function(){
+    var firstHit = function(){
       womb.kitty.enter();
       womb.kitty1.enter();
-    }, 492 + offset );
+    }
+
 
     var firstHO = setTimeout( function(){
 
@@ -473,7 +684,15 @@ define(function(require, exports, module) {
     }, 1710 + offset );
 
 
-    var hihatsEnter = setTimeout( function(){
+
+   
+    var intro1 = function(){ womb.antiSerp1.enter(); }
+    var intro2 = function(){ womb.antiSerp2.enter(); }
+    var intro3 = function(){ womb.antiSerp3.enter(); }
+    var intro4 = function(){ womb.antiSerp4.enter(); }
+    var intro5 = function(){ womb.antiSerp5.enter(); }
+   
+    var hihatsEnter = function(){
 
 
       var t = womb.tweener.createTween({
@@ -494,7 +713,7 @@ define(function(require, exports, module) {
       var t1 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp1.scene,
-        target: new THREE.Vector3( .1 , .3 , .5 ),
+        target: new THREE.Vector3( .3 , .3 , .3 ),
         time: 1
       });
       t1.start();
@@ -502,7 +721,7 @@ define(function(require, exports, module) {
       var t2 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp2.scene,
-        target: new THREE.Vector3( .5 , .3 , .1 ),
+        target: new THREE.Vector3( .3 , .3 , .3 ),
         time: 1
       });
       t2.start();
@@ -510,7 +729,7 @@ define(function(require, exports, module) {
       var t3 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp3.scene,
-        target: new THREE.Vector3( .5 , .1 , .3 ),
+        target: new THREE.Vector3( .3 , .3 , .3 ),
         time: 1
       });
       t3.start();
@@ -518,7 +737,7 @@ define(function(require, exports, module) {
       var t4 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp4.scene,
-        target: new THREE.Vector3( .1 , .5 , .3 ),
+        target: new THREE.Vector3( .3 , .3 , .3 ),
         time: 1
       });
       t4.start();
@@ -526,35 +745,39 @@ define(function(require, exports, module) {
       var t5 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp5.scene,
-        target: new THREE.Vector3( .3 , .1 , .3 ),
+        target: new THREE.Vector3( .3 , .3 , .3 ),
         time: 1
       });
       t5.start();
 
 
-    }, 18934 + offset );
+    };
 
-    var timeout = setTimeout( function(){
+
+    var move1 = function(){
 
 
       var t = womb.tweener.createTween({
         type: 'scale',
         object: womb.kitty.scene,
-        target: new THREE.Vector3( 0 , womb.size / 4 , 0.000001 ),
+        target: new THREE.Vector3( .5 , .5 , .5 ),
         time: 30
       });
       t.start();
       var t = womb.tweener.createTween({
         type: 'scale',
         object: womb.kitty1.scene,
-        target: new THREE.Vector3( 0 , womb.size / 4 , 0.000001 ),
+        target: new THREE.Vector3( .5 , .5 , .5 ),
         time: 30
       });
       t.start();
 
-    }, 20000 + offset );
+    }
 
-    var timeout = setTimeout( function(){
+
+
+
+    var move2 = function(){
 
       var t = womb.tweener.createTween({
         object: womb.kitty.scene,
@@ -573,7 +796,7 @@ define(function(require, exports, module) {
       var t1 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp1.scene,
-        target: new THREE.Vector3( 1 , 1 , 1 ),
+        target: new THREE.Vector3( 1.3 , 1.3 , 1.3 ),
         time: 1
       });
       t1.start();
@@ -588,8 +811,8 @@ define(function(require, exports, module) {
 
       var t2 = womb.tweener.createTween({
         type: 'scale',
-        object: womb.antiSerp2.scene,
-        target: new THREE.Vector3( 1 , 1 , 1 ),
+        object: womb.antiSerp1.scene,
+        target: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
         time: 1
       });
       t2.start();
@@ -602,10 +825,19 @@ define(function(require, exports, module) {
       });
       t2.start();
 
+      var t5 = womb.tweener.createTween({
+        type: 'rotation',
+        object: womb.antiSerp2.scene,
+        target: new THREE.Vector3( Math.PI / 2  , 0 , 0 ),
+        time: 2
+      });
+      t5.start();
+
+
       var t3 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp3.scene,
-        target: new THREE.Vector3( 1 , 1 , 1 ),
+        target: new THREE.Vector3( 2.5 , 2.5 , 2.5 ),
         time: 1
       });
       t3.start();
@@ -617,12 +849,19 @@ define(function(require, exports, module) {
         time: 1
       });
       t3.start();
+      var t5 = womb.tweener.createTween({
+        type: 'rotation',
+        object: womb.antiSerp3.scene,
+        target: new THREE.Vector3( Math.PI / 2  , 0 , 0 ),
+        time: 3
+      });
+      t5.start();
 
 
       var t4 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp4.scene,
-        target: new THREE.Vector3( 1 , 1 , 1 ),
+        target: new THREE.Vector3( 3 , 3 , 3 ),
         time: 1
       });
       t4.start();
@@ -634,14 +873,21 @@ define(function(require, exports, module) {
         time: 1
       });
       t4.start();
+      var t5 = womb.tweener.createTween({
+        type: 'rotation',
+        object: womb.antiSerp4.scene,
+        target: new THREE.Vector3( Math.PI / 2  , 0 , 0 ),
+        time: 4
+      });
+      t5.start();
 
       var t5 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp5.scene,
-        target: new THREE.Vector3( 1 , 1 , 1 ),
+        target: new THREE.Vector3( 4 , 4 , 4 ),
         time: 1
       });
-      t4.start();
+      t5.start();
 
       var t5 = womb.tweener.createTween({
         type: 'position',
@@ -651,9 +897,17 @@ define(function(require, exports, module) {
       });
       t5.start();
 
-    }, 26550 + offset );
+      var t5 = womb.tweener.createTween({
+        type: 'rotation',
+        object: womb.antiSerp5.scene,
+        target: new THREE.Vector3( Math.PI / 2  , 0 , 0 ),
+        time: 3
+      });
+      t5.start();
 
-    var timeout = setTimeout( function(){
+    }
+
+    var voiceUp = function(){
      
 
       womb.kitty.exit();
@@ -661,7 +915,14 @@ define(function(require, exports, module) {
 
       womb.randomCubes.enter();
      
-    } , 34671 + offset );
+    }
+
+
+    /*
+     *
+FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP   
+     *
+     */
 
     var firstDrop = function(){
 
@@ -677,12 +938,12 @@ define(function(require, exports, module) {
       womb.antiSerp5.exit();
     }
 
-    var t = setTimeout( firstDrop , 50409 + offset );
-
 
     var afterFirstDrop = function(){
 
       womb.randomCubes.spinning = false;
+
+      womb.treeRing.spinning  = true;
 
       var t = womb.tweener.createTween({
         type: 'scale',
@@ -709,8 +970,6 @@ define(function(require, exports, module) {
       womb.treeRing1.scene.rotation.x = Math.PI / 2;
 
     }
-
-    var t = setTimeout( afterFirstDrop , 66120 + offset );
 
     var afterFirstDrop1 = function(){
 
@@ -757,8 +1016,6 @@ define(function(require, exports, module) {
       womb.treeRing1.exit();
     }
 
-    var t = setTimeout( afterFirstDrop1 , 81866 + offset );
-
     var afterFirstDrop2 = function(){
 
       var t = womb.tweener.createTween({
@@ -795,27 +1052,34 @@ define(function(require, exports, module) {
 
 
       womb.randomCubes2.spinning = false;
+
+      womb.randomCubes.exit();
+      womb.randomCubes1.exit();
+
       womb.randomCubes3.enter();
       womb.randomCubes3.spinning = true;
 
       womb.randomCubes4.enter();
       womb.randomCubes4.spinning = true;
 
-      womb.treeRing2.enter();
-      womb.treeRing2.scene.rotation.x = Math.PI / 2;
+      womb.treeRing3.enter();
+      womb.treeRing3.scene.rotation.x = Math.PI / 2;
 
-      womb.treeRing1.exit();
+      womb.treeRing2.spinning  = true;
+
+      womb.treeRing.exit();
     }
 
-    var t = setTimeout( afterFirstDrop2 , 97612 + offset );
 
+/*
 
+ * SECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROPSECOND DROP
 
-
+ */
     var secondDrop = function(){
 
-      womb.randomCubes.exit();
-      womb.randomCubes1.exit();
+      //womb.randomCubes.exit();
+      //womb.randomCubes1.exit();
       womb.randomCubes2.exit();
       womb.randomCubes3.exit();
       womb.randomCubes4.exit();
@@ -847,12 +1111,13 @@ define(function(require, exports, module) {
       womb.treeRing3.enter();
       womb.treeRing3.scene.rotation.x = Math.PI / 2;
 
+      womb.treeRing3.spinning = true;
+
       womb.treeRing4.enter();
       womb.treeRing4.scene.rotation.x = Math.PI / 2;
     
     }
   
-    var t = setTimeout( secondDrop , 113360 + offset );
 
 
     var afterSecondDrop = function(){
@@ -860,49 +1125,51 @@ define(function(require, exports, module) {
       womb.treeRing.exit();
 
       var t = womb.tweener.createTween({
+        type: 'scale',
         object: womb.treeRing1.scene,
-        target: new THREE.Vector3( - womb.size / 4 , 0 , 0 ),
-        time: 1
+        target: new THREE.Vector3( .5 , .5 , .5 ),
+        time: 4
       });
       t.start();
 
       var t = womb.tweener.createTween({
-        object: womb.treeRing2.scene,
-        target: new THREE.Vector3( 0 , 0 , 0 ),
-        time: 1
+        type: 'scale',
+        object: womb.treeRing1.scene,
+        target: new THREE.Vector3( .7 , .7 , .7 ),
+        time: 2
+
       });
       t.start();
 
       var t = womb.tweener.createTween({
         object: womb.treeRing3.scene,
-        target: new THREE.Vector3( womb.size / 4 , 0 , 0 ),
+        target: new THREE.Vector3( -womb.size / 4 , 0 , 0 ),
         time: 1
       });
       t.start();
 
       var t = womb.tweener.createTween({
         object: womb.treeRing4.scene,
-        target: new THREE.Vector3( womb.size / 2 , 0 , 0 ),
+        target: new THREE.Vector3( womb.size / 4 , 0 , 0 ),
         time: 1
       });
       t.start();
 
       womb.mugRing.enter();
-      womb.mugRing.scene.scale.multiplyScalar( .3 );
+      womb.mugRing.scene.scale.multiplyScalar( .1 );
       womb.mugRing.scene.rotation.x = Math.PI / 2;
 
     }
-
-    var t = setTimeout( afterSecondDrop , 129106 );
 
     var afterSecondDrop1 = function(){
 
       womb.treeRing1.exit();
 
       var t = womb.tweener.createTween({
-        object: womb.treeRing2.scene,
-        target: new THREE.Vector3( 0 , 0 , 0 ),
-        time: 1
+        type: 'scale',
+        object: womb.treeRing1.scene,
+        target: new THREE.Vector3( 1.5 ,1.5 ,1.5 ),
+        time: 2
       });
       t.start();
 
@@ -920,6 +1187,8 @@ define(function(require, exports, module) {
       });
       t.start();
 
+      womb.mugRing.exit();
+
       womb.mugRing1.enter();
       womb.mugRing1.scene.scale.multiplyScalar( .4 );
       womb.mugRing1.scene.rotation.x = Math.PI / 2;
@@ -929,24 +1198,20 @@ define(function(require, exports, module) {
 
     }
 
-
-
-    var t = setTimeout( afterSecondDrop1 , 144852 );
-
     var afterSecondDrop2 = function(){
 
       womb.treeRing2.exit();
 
       var t = womb.tweener.createTween({
         object: womb.treeRing3.scene,
-        target: new THREE.Vector3( 0 ,  womb.size / 2  , 0 ),
+        target: new THREE.Vector3( 0 ,  womb.size / 4  , 0 ),
         time: 1
       });
       t.start();
 
       var t = womb.tweener.createTween({
         object: womb.treeRing4.scene,
-        target: new THREE.Vector3( 0 ,  womb.size / 2  , 0 ),
+        target: new THREE.Vector3( 0 ,  -womb.size / 4  , 0 ),
         time: 1
       });
       t.start();
@@ -955,12 +1220,10 @@ define(function(require, exports, module) {
       womb.mugRing2.enter();
       womb.mugRing2.scene.scale.multiplyScalar( .5 );
       womb.mugRing2.scene.rotation.x = Math.PI / 2;
+      womb.mugRing2.spinning = true;
 
 
     }
-
-
-    var t = setTimeout( afterSecondDrop2 , 160598 );
 
     var afterSecondDrop3 = function(){
 
@@ -982,8 +1245,6 @@ define(function(require, exports, module) {
 
     }
 
-    var t = setTimeout( afterSecondDrop3 , 176344 );
-
     var afterSecondDrop4 = function(){
 
     
@@ -995,14 +1256,12 @@ define(function(require, exports, module) {
 
     }
 
-    var t = setTimeout( afterSecondDrop4 , 192090 );
    
     var afterSecondDrop5 = function(){
     
       womb.mugRing4.exit();
 
 
-      womb.antiSerp.enter();
 
       womb.mugRing.enter();
 
@@ -1013,33 +1272,29 @@ define(function(require, exports, module) {
 
     }
 
-    var t = setTimeout( afterSecondDrop5 , 207836 );
-
-
-
-
-
-
-
-
-
-
-    var PURE = setTimeout( function(){
+    var PURE = function(){
 
       womb.PURE.enter();
 
-    } , 141150 + offset );
+    } 
 
-    var AVALON = setTimeout( function(){
+    var AVALON = function(){
 
       womb.PURE.exit();
       womb.AVALON.enter();
 
-    } , 143240 + offset );
+    }
 
 
+    /*
 
-    var cutout = setTimeout( function(){
+
+       CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT CUTOUT   
+
+    */
+
+
+    var cutout = function(){
 
       womb.mugRing.exit();
       womb.mugRing5.exit();
@@ -1050,19 +1305,26 @@ define(function(require, exports, module) {
 
       womb.mainPulse.enter();
 
-    } , 223524 + offset );
+    }
 
-    var backin = setTimeout( function(){
+    var backIn = function(){
 
       
       womb.mainPulse.exit();
       womb.physicsSim.exit();
 
 
+      womb.littleStars.enter();
+      womb.littleStars1.enter();
+      womb.littleStars2.enter();
+
+      womb.littleStars.spinning = true;
+      womb.littleStars1.spinning = true;
+      womb.littleStars2.spinning = true;
+      
       womb.BEAUTYSQUARE.enter();
 
-    } , 239262 + offset );
-
+    } 
     afterBackIn = function(){
 
       var t = womb.tweener.createTween({
@@ -1072,6 +1334,22 @@ define(function(require, exports, module) {
         time: 1
       });
       t.start();
+
+      var t = womb.tweener.createTween({
+        type: 'scale',
+        object: womb.littleStars.scene,
+        target: new THREE.Vector3( .5 , .5 , .5 ),
+        time: 3
+      });
+      t.start();
+
+      var t = womb.tweener.createTween({
+        object: womb.treeRing3.scene,
+        target: new THREE.Vector3( 0 ,  0 , 0 ),
+        time: 1
+      });
+      t.start();
+
 
       womb.treeRing.enter();
 
@@ -1094,6 +1372,15 @@ define(function(require, exports, module) {
         time: 1
       });
       t.start();
+
+      var t = womb.tweener.createTween({
+        type: 'scale',
+        object: womb.littleStars1.scene,
+        target: new THREE.Vector3( .7 , .7 , .7 ),
+        time: 3
+      });
+      t.start();
+
 
       womb.treeRing1.enter();
 
@@ -1118,6 +1405,15 @@ define(function(require, exports, module) {
       });
       t.start();
 
+      var t = womb.tweener.createTween({
+        type: 'scale',
+        object: womb.littleStars2.scene,
+        target: new THREE.Vector3( .3 , .3 , .3 ),
+        time: 3
+      });
+      t.start();
+
+
       womb.treeRing2.enter();
 
       var t = womb.tweener.createTween({
@@ -1139,6 +1435,7 @@ define(function(require, exports, module) {
 
     afterBackIn3 = function(){
 
+      console.log("BACKIN");
       var t = womb.tweener.createTween({
         type: 'scale',
         object: womb.BEAUTYSQUARE.scene,
@@ -1162,16 +1459,19 @@ define(function(require, exports, module) {
         time: 1
       });
 
-      var t = womb.tweener.createTween({
-        type: 'scale',
-        object: womb.treeRing1.scene,
-        target: new THREE.Vector3( .6 , .6 , .6 ),
-        time: 1
-      });
+      womb.treeRing2.exit();
 
-      womb.randomSquares.enter();
-      womb.randomSquares.spinning = true;
+      console.log( womb.randomSquares );
+      womb.randomCubes.enter();
+      womb.randomCubes.spinning = true;
 
+      womb.littleStars.exit();
+      womb.littleStars1.exit();
+      womb.littleStars2.exit();
+
+      womb.littleStars.spinning = true;
+      womb.littleStars1.spinning = true;
+      womb.littleStars2.spinning = true;
 
       t.start();
 
@@ -1200,23 +1500,19 @@ define(function(require, exports, module) {
         time: 1
       });
 
-      var t = womb.tweener.createTween({
+       var t = womb.tweener.createTween({
         type: 'scale',
-        object: womb.treeRing1.scene,
-        target: new THREE.Vector3( .5 , .5 , .5 ),
-        time: 1
-      });
-
-      var t = womb.tweener.createTween({
-        type: 'scale',
-        object: womb.randomSquares.scene,
+        object: womb.randomCubes.scene,
         target: new THREE.Vector3( .6 , .6 , .6 ),
         time: 1
       });
 
 
-      womb.randomSquares1.enter();
-      womb.randomSquares1.spinning = true;
+      womb.treeRing1.exit();
+      womb.treeRing3.exit();
+      womb.treeRing2.exit();
+      womb.randomCubes1.enter();
+      womb.randomCubes1.spinning = true;
 
 
       t.start();
@@ -1235,22 +1531,25 @@ define(function(require, exports, module) {
 
       var t = womb.tweener.createTween({
         type: 'scale',
-        object: womb.randomSquares.scene,
+        object: womb.randomCubes.scene,
         target: new THREE.Vector3( .4 , .4 , .4 ),
         time: 1
       });
 
       var t = womb.tweener.createTween({
         type: 'scale',
-        object: womb.randomSquares1.scene,
+        object: womb.randomCubes1.scene,
         target: new THREE.Vector3( .6 , .6 , .6 ),
         time: 1
       });
 
+      womb.treeRing2.exit();
+      womb.treeRing.exit();
 
 
-      womb.randomSquares1.enter();
-      womb.randomSquares1.spinning = true;
+      womb.randomCubes2.enter();
+      womb.randomCubes2.spinning = true;
+      womb.treeRing1.spinning  = true;
 
 
       t.start();
@@ -1268,7 +1567,9 @@ define(function(require, exports, module) {
       });
       t.start();
 
+      womb.treeRing3.position = new THREE.Vector3(  0 , 0 , 0 );
       womb.treeRing3.enter();
+      womb.treeRing3.spinning  = true;
 
       var t = womb.tweener.createTween({
         type: 'scale',
@@ -1283,14 +1584,7 @@ define(function(require, exports, module) {
         time: 1
       });
 
-      var t = womb.tweener.createTween({
-        type: 'scale',
-        object: womb.treeRing1.scene,
-        target: new THREE.Vector3( .6 , .6 , .6 ),
-        time: 1
-      });
-
-
+  
       t.start();
 
     }
@@ -1305,7 +1599,9 @@ define(function(require, exports, module) {
       });
       t.start();
 
-      womb.treeRing3.enter();
+      womb.treeRing4.enter();
+
+      womb.treeRing.spinning = true;
 
       var t = womb.tweener.createTween({
         type: 'scale',
@@ -1320,54 +1616,208 @@ define(function(require, exports, module) {
         time: 1
       });
 
-      var t = womb.tweener.createTween({
-        type: 'scale',
-        object: womb.treeRing1.scene,
-        target: new THREE.Vector3( .6 , .6 , .6 ),
-        time: 1
-      });
-
-
       t.start();
 
     }
 
+    
+    
+    /*
+    
+
+    END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END END 
 
 
-
-
-    var t = setTimeout( afterBackIn  , 255008 + offset );
-    var t = setTimeout( afterBackIn1 , 270754 + offset );
-    var t = setTimeout( afterBackIn2 , 286500 + offset );
-    var t = setTimeout( afterBackIn3 , 302246 + offset );
-    var t = setTimeout( afterBackIn4 , 317992 + offset );
-    var t = setTimeout( afterBackIn5 , 333738 + offset );
-    var t = setTimeout( afterBackIn6 , 349484 + offset );
-    var t = setTimeout( afterBackIn7 , 255008 + offset );
-
-
+    */
 
 
 
 
 
-    var cutoutEnd1 = setTimeout( function(){
+    var cutoutEnd1 = function(){
 
-    } , 365163 + offset );
+      console.log('HELLO');
+      womb.FRACTALCOMBO.enter();
+      womb.FRACTALCOMBO.updateSeed = true;
+      womb.FRACTALCOMBO.scene.rotation.y = Math.PI / 2;
+    
+      womb.littleStars.enter();
+      womb.littleStars1.enter();
+      womb.littleStars2.enter();
+      
+      womb.BEAUTYSQUARE.exit();
 
-    var cutoutEnd2 = setTimeout( function(){
+      womb.randomCubes.exit();
+      womb.randomCubes1.exit();
+      womb.randomCubes2.exit();
+      womb.randomCubes3.exit();
 
-    } , 366639 + offset );
+      womb.treeRing.exit();
+      womb.treeRing1.exit();
+      womb.treeRing2.exit();
+      womb.treeRing3.exit();
 
-    var cutoutEnd3 = setTimeout( function(){
 
-    } , 413377 + offset );
+    }
 
 
-    var end  = setTimeout( function(){
+    var cutoutEnd2 = function(){
 
-    } , 427623 + offset );
+      womb.treeRing4.exit();
 
+    } 
+    
+    var cutoutEnd3 = function(){
+    
+      var t = womb.tweener.createTween({
+        type: 'scale',
+        object: womb.littleStars.scene,
+        target: new THREE.Vector3( .01 , .01 , .01 ),
+        time: 10
+      });
+
+      var t = womb.tweener.createTween({
+        type: 'scale',
+        object: womb.littleStars1.scene,
+        target: new THREE.Vector3( .01 , .01 , .01 ),
+        time: 15
+      });
+
+      var t = womb.tweener.createTween({
+        type: 'scale',
+        object: womb.littleStars2.scene,
+        target: new THREE.Vector3( .01 , .01 , .01 ),
+        time: 20
+      });
+
+
+    }
+       
+ 
+    var end = function(){
+
+      womb.littleStars.exit();
+      womb.littleStars1.exit();
+      womb.littleStars2.exit();
+
+      womb.FRACTALCOMBO.exit();
+
+      // TODO:
+      //womb.credits.enter();
+
+    }
+
+    /*
+    
+       TIMING!   TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  TIMING!  
+
+    */
+
+    
+    var t = setTimeout( firstHit          , 492     + offset );
+    var t = setTimeout( firstHO           , 1710    + offset );
+
+    var t = setTimeout( intro1            , 11065   + offset );
+    var t = setTimeout( intro2            , 9099    + offset );
+    var t = setTimeout( intro3            , 7130    + offset );
+    var t = setTimeout( intro4            , 5040    + offset );
+    var t = setTimeout( intro5            , 3196    + offset );
+
+    var t = setTimeout( hihatsEnter       , 18934   + offset );
+
+    var t = setTimeout( move1             , 20000   + offset );
+    var t = setTimeout( move2             , 26550   + offset );
+    var t = setTimeout( voiceUp           , 34671   + offset );
+
+
+    var t = setTimeout( firstDrop         , 50409   + offset );
+
+    var t = setTimeout( afterFirstDrop    , 66120   + offset );
+    var t = setTimeout( afterFirstDrop1   , 81866   + offset );
+    var t = setTimeout( afterFirstDrop2   , 97612   + offset );
+
+    var t = setTimeout( PURE              , 141150  + offset );
+    var t = setTimeout( AVALON            , 143240  + offset );
+
+    var t = setTimeout( secondDrop        , 113360  + offset );
+
+    var t = setTimeout( afterSecondDrop   , 129106  + offset );
+    var t = setTimeout( afterSecondDrop1  , 144852  + offset );
+    var t = setTimeout( afterSecondDrop2  , 160598  + offset );
+    var t = setTimeout( afterSecondDrop3  , 176344  + offset );
+    var t = setTimeout( afterSecondDrop4  , 192090  + offset );
+    var t = setTimeout( afterSecondDrop5  , 207836  + offset );
+
+    var t = setTimeout( cutout            , 223524  + offset );
+    var t = setTimeout( backIn            , 239262  + offset );
+
+    var t = setTimeout( afterBackIn       , 255008  + offset );
+    var t = setTimeout( afterBackIn1      , 270754  + offset );
+    var t = setTimeout( afterBackIn2      , 286500  + offset );
+    var t = setTimeout( afterBackIn3      , 302246  + offset );
+    var t = setTimeout( afterBackIn4      , 317992  + offset );
+    var t = setTimeout( afterBackIn5      , 333738  + offset );
+    var t = setTimeout( afterBackIn6      , 349484  + offset );
+    var t = setTimeout( afterBackIn7      , 255008  + offset );
+
+    var t = setTimeout( cutoutEnd1        , 365163  + offset );
+    var t = setTimeout( cutoutEnd2        , 366639  + offset );
+    var t = setTimeout( cutoutEnd3        , 413377  + offset );
+    var t = setTimeout( end               , 427623  + offset );
+
+
+
+    /* FAST TIMING FOR THE SAKE OF RAPID ITERATION 
+    var t = setTimeout( firstHit          , 492     + offset );
+    var t = setTimeout( firstHO           , 710    + offset );
+
+    var t = setTimeout( intro1            , 1000    + offset );
+    var t = setTimeout( intro2            , 1100    + offset );
+    var t = setTimeout( intro3            , 1200    + offset );
+    var t = setTimeout( intro4            , 1300    + offset );
+    var t = setTimeout( intro5            , 1400    + offset );
+
+    var t = setTimeout( hihatsEnter       , 1500    + offset );
+
+    var t = setTimeout( move1             , 2600    + offset );
+    var t = setTimeout( move2             , 3700    + offset );
+    var t = setTimeout( voiceUp           , 4800    + offset );
+
+
+    var t = setTimeout( firstDrop         , 5800   + offset );
+
+    var t = setTimeout( afterFirstDrop    , 6900   + offset );
+    var t = setTimeout( afterFirstDrop1   , 8000   + offset );
+    var t = setTimeout( afterFirstDrop2   , 9000   + offset );
+
+    var t = setTimeout( PURE              , 9100  + offset );
+    var t = setTimeout( AVALON            , 10100  + offset );
+
+    var t = setTimeout( secondDrop        , 11360  + offset );
+
+    var t = setTimeout( afterSecondDrop   , 12106  + offset );
+    var t = setTimeout( afterSecondDrop1  , 13252  + offset );
+    var t = setTimeout( afterSecondDrop2  , 14598  + offset );
+    var t = setTimeout( afterSecondDrop3  , 15644  + offset );
+    var t = setTimeout( afterSecondDrop4  , 17090  + offset );
+    var t = setTimeout( afterSecondDrop5  , 18106  + offset );
+
+    var t = setTimeout( cutout            , 19200  + offset );
+    var t = setTimeout( backIn            , 20300  + offset );
+
+    var t = setTimeout( afterBackIn       , 21408  + offset );
+    var t = setTimeout( afterBackIn1      , 22504  + offset );
+    var t = setTimeout( afterBackIn2      , 23600  + offset );
+    var t = setTimeout( afterBackIn3      , 27900  + offset );
+    var t = setTimeout( afterBackIn4      , 29000  + offset );
+    var t = setTimeout( afterBackIn5      , 30000  + offset );
+    var t = setTimeout( afterBackIn6      , 31000  + offset );
+    var t = setTimeout( afterBackIn7      , 32000  + offset );
+
+    var t = setTimeout( cutoutEnd1        , 33000  + offset );
+    var t = setTimeout( cutoutEnd2        , 34000  + offset );
+    var t = setTimeout( cutoutEnd3        , 35000  + offset );
+    var t = setTimeout( end               , 36000  + offset );*/
 
 
 

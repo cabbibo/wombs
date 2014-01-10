@@ -157,6 +157,27 @@ define(function(require, exports, module) {
       "}",
     ].join("\n"),
 
+    kali_5: [
+       // v : vertex
+       // s : seed
+       // p : precesion
+      "vec3 kali( vec3 v , vec3 s ){",
+        "float m = 0.0;",
+        "for( int i = 0; i < 5 ; i ++){",
+          "v.x = abs(v.x);",
+          "v.y = abs(v.y);", 
+          "v.z = abs(v.z);",
+          "m = v.x * v.x + v.y * v.y + v.z * v.z;",
+          "v.x = v.x / m + s.x;",
+          "v.y = v.y / m + s.y;",
+          "v.z = v.z / m + s.z;",
+        "}",
+        "return v;",
+      "}",
+    ].join("\n"),
+
+
+
 
     createPhysicsTextureLoop: function(){
 
@@ -221,6 +242,23 @@ define(function(require, exports, module) {
       "float rand(vec2 co){",
         "return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);",
       "}",
+    ].join("\n"),
+
+    noise3D_3:[
+
+      this.noise3D, 
+
+      "vec3 snoise_3( vec3 x ){",
+
+        "vec3 s  = snoise(vec3( x ));",
+        "vec3 s1 = snoise(vec3( x.y - 19.1 , x.z + 33.4 , x.x + 47.2 ));",
+        "vec3 s2 = snoise(vec3( x.z + 74.2 , x.x - 124.5 , x.y + 99.4 ));",
+        "vec3 c = vec3( s , s1 , s2 );",
+        "return c;",
+
+      "}"
+
+
     ].join("\n"),
 
     noise3D: [
@@ -300,6 +338,96 @@ define(function(require, exports, module) {
         '}'
     ].join('\n'),
 
+
+    noise4D:[
+        'vec4 mod289(vec4 x) {',
+        '\treturn x - floor(x * (1.0 / 289.0)) * 289.0; }',
+        '',
+        'float mod289(float x) {',
+            '\treturn x - floor(x * (1.0 / 289.0)) * 289.0; }',
+        '',
+        'vec4 permute(vec4 x) {',
+            '\treturn mod289(((x*34.0)+1.0)*x);',
+        '}',
+        '',
+        'float permute(float x) {',
+            '\treturn mod289(((x*34.0)+1.0)*x);',
+        '}',
+        '',
+        'vec4 taylorInvSqrt(vec4 r) {',
+            '\treturn 1.79284291400159 - 0.85373472095314 * r;',
+        '}',
+        '',
+        'float taylorInvSqrt(float r) {',
+            '\treturn 1.79284291400159 - 0.85373472095314 * r;',
+        '}',
+        '',
+        'vec4 grad4(float j, vec4 ip) {',
+            '\tconst vec4 ones = vec4(1.0, 1.0, 1.0, -1.0);',
+            '\tvec4 p,s;',
+            '',
+            '\tp.xyz = floor( fract (vec3(j) * ip.xyz) * 7.0) * ip.z - 1.0;',
+            '\tp.w = 1.5 - dot(abs(p.xyz), ones.xyz);',
+            '\ts = vec4(lessThan(p, vec4(0.0)));',
+            '\tp.xyz = p.xyz + (s.xyz*2.0 - 1.0) * s.www;',
+            '',
+            '\treturn p;',
+        '}',
+        '',
+        '#define F4 0.309016994374947451',
+        '',
+        'float snoise(vec4 v) {',
+            '\tconst vec4  C = vec4( 0.138196601125011, 0.276393202250021, 0.414589803375032, -0.447213595499958);',
+            '',
+            '\tvec4 i  = floor(v + dot(v, vec4(F4)) );',
+            '\t\tvec4 x0 = v -   i + dot(i, C.xxxx);',
+            '',
+            '\tvec4 i0;',
+            '\tvec3 isX = step( x0.yzw, x0.xxx );',
+            '\tvec3 isYZ = step( x0.zww, x0.yyz );',
+            '',
+            '\ti0.x = isX.x + isX.y + isX.z;',
+            '\ti0.yzw = 1.0 - isX;',
+            '\ti0.y += isYZ.x + isYZ.y;',
+            '\ti0.zw += 1.0 - isYZ.xy;',
+            '\ti0.z += isYZ.z;',
+            '\ti0.w += 1.0 - isYZ.z;',
+            '',
+            '\tvec4 i3 = clamp( i0, 0.0, 1.0 );',
+            '\tvec4 i2 = clamp( i0-1.0, 0.0, 1.0 );',
+            '\tvec4 i1 = clamp( i0-2.0, 0.0, 1.0 );',
+            '',
+            '\tvec4 x1 = x0 - i1 + C.xxxx;',
+            '\tvec4 x2 = x0 - i2 + C.yyyy;',
+            '\tvec4 x3 = x0 - i3 + C.zzzz;',
+            '\tvec4 x4 = x0 + C.wwww;',
+            '',
+            '\ti = mod289(i);',
+            '\tfloat j0 = permute( permute( permute( permute(i.w) + i.z) + i.y) + i.x);',
+            '\tvec4 j1 = permute( permute( permute( permute (i.w + vec4(i1.w, i2.w, i3.w, 1.0 )) + i.z + vec4(i1.z, i2.z, i3.z, 1.0 )) + i.y + vec4(i1.y, i2.y, i3.y, 1.0 )) + i.x + vec4(i1.x, i2.x, i3.x, 1.0 ));',
+            '',
+            '\tvec4 ip = vec4(1.0/294.0, 1.0/49.0, 1.0/7.0, 0.0);',
+            '',
+            '\tvec4 p0 = grad4(j0,   ip);',
+            '\tvec4 p1 = grad4(j1.x, ip);',
+            '\tvec4 p2 = grad4(j1.y, ip);',
+            '\tvec4 p3 = grad4(j1.z, ip);',
+            '\tvec4 p4 = grad4(j1.w, ip);',
+            '',
+            '\tvec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));',
+            '\tp0 *= norm.x;',
+            '\tp1 *= norm.y;',
+            '\tp2 *= norm.z;',
+            '\tp3 *= norm.w;',
+            '\tp4 *= taylorInvSqrt(dot(p4,p4));',
+            '',
+            '\tvec3 m0 = max(0.6 - vec3(dot(x0,x0), dot(x1,x1), dot(x2,x2)), 0.0);',
+            '\tvec2 m1 = max(0.6 - vec2(dot(x3,x3), dot(x4,x4)            ), 0.0);',
+            '\tm0 = m0 * m0;',
+            '\tm1 = m1 * m1;',
+            '\treturn 49.0 * (dot(m0*m0, vec3(dot(p0, x0), dot(p1, x1), dot(p2, x2))) + dot(m1*m1, vec2(dot(p3, x3), dot(p4, x4))));',
+        '}'
+    ].join('\n'),
 
     bindUsingVelocity:[
       "vec3 bindUsingVelocity( vec2 bounds , vec3 position , vec3 velocity ){",

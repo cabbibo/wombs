@@ -18,7 +18,7 @@ define(function(require, exports, module) {
   var physicsShaders      = require( 'app/shaders/physicsShaders'     );
 
 
-  function Random( womb , params ){
+  function FractalCombo( womb , params ){
 
     this.womb = womb;
 
@@ -28,8 +28,13 @@ define(function(require, exports, module) {
     this.params = _.defaults( params || {} , {
 
       spin: .001,
-      color: new THREE.Vector3( .3 , .5 , 1.9 ),
+      color: new THREE.Vector3( 0.5 , 0.1 , 0.0 ),
       seed: new THREE.Vector3( -0.1 , -0.1 ,  -0.9),
+      seed1: new THREE.Vector3( -0.2 , -0.4 ,  -0.5),
+      seed2: new THREE.Vector3( -0.5 , -0.2 ,  -0.6),
+      seed3: new THREE.Vector3( -0.1 , -0.6 ,  -0.3),
+      seed4: new THREE.Vector3( -0.6 , -0.3 ,  -0.2),
+      lightness: 1,
       radius: 10,
       modelScale: 1,
       audioPower: 0.1,
@@ -37,7 +42,7 @@ define(function(require, exports, module) {
       texture: self.womb.stream.texture.texture,
      // geo: new THREE.CubeGeometry( 1 , 1 , 1 , 20 , 20 ,20 ),
       geo: new THREE.IcosahedronGeometry( 1 , 5 ),
-      numOf: 6,
+      numOf: 1,
 
     });
     
@@ -54,7 +59,12 @@ define(function(require, exports, module) {
     this.uniforms = {
 
       color:      { type: "v3", value: this.params.color },
+      lightness:  { type: "f", value: this.params.lightness  },
       seed:       { type: "v3", value: this.params.seed  },
+      seed1:      { type: "v3", value: this.params.seed1  },
+      seed2:      { type: "v3", value: this.params.seed2  },
+      seed3:      { type: "v3", value: this.params.seed3  },
+      seed4:      { type: "v3", value: this.params.seed4  },
       texture:    { type: "t" , value: womb.stream.texture.texture },
       time:       womb.time,
       noiseSize:  { type: "f" , value: 1 },
@@ -122,6 +132,11 @@ define(function(require, exports, module) {
 
       "uniform vec3 color;",
       "uniform vec3 seed;",
+      "uniform vec3 seed1;",
+      "uniform vec3 seed2;",
+      "uniform vec3 seed3;",
+      "uniform vec3 seed4;",
+      "uniform float lightness;",
       "uniform float loop;",
       "uniform float noisePower;",
       "varying vec2 vUv;",
@@ -135,10 +150,17 @@ define(function(require, exports, module) {
       "void main( void ){",
         "vec3 nPos = normalize( vPos );",
 
-        //"vec3 c = kali( nPos , seed );",
+        "vec3 c = kali( nPos , seed );",
 
-        //"vec3 cN = normalize( normalize( c )  );",
-        "gl_FragColor = vec4( color * ( ( displacement -.5 ) / ( noisePower * 2.0 ) ) , .05 );",
+        "vec3 c1 = kali( nPos , seed1 );",
+        "vec3 c2 = kali( nPos , seed2 );",
+        //"vec3 c3 = kali( nPos , seed3 );",
+        //"vec3 c4 = kali( nPos , seed4 );",
+
+        "vec3 cT = normalize( c + c1 + c2 );",
+
+        "vec3 cN = normalize( normalize( cT ) + color );",
+        "gl_FragColor = vec4( lightness * vec3(cN.x , cN.y * .4 , .1 ) , cN.z+.5 );",
       "}"
 
     ].join( "\n" );
@@ -154,7 +176,7 @@ define(function(require, exports, module) {
       side            : THREE.DoubleSide,
       blending        : THREE.AdditiveBlending,
       transparent     : true,
-      opacity         :.3 
+      //opacity         :.3 
       //wireframe       : true
     
     });
@@ -167,10 +189,7 @@ define(function(require, exports, module) {
     for(var i = 0;  i < this.params.numOf; i++ ){
     this.mesh = new THREE.Mesh( this.geo , this.material );
     this.mesh.scale.multiplyScalar( this.params.modelScale );
-    //this.mesh.scale.y *= .2;
-    this.mesh.scale.z *= .4;
-    this.mesh.position.z += this.size * 5.0;
-    this.mesh.rotation.z = 2 * Math.PI * i / this.params.numOf;
+    this.mesh.rotation.x = 2 * Math.PI * i / this.params.numOf;
     //this.mesh.scale.multiplyScalar( this.modelScale );
     this.scene.add( this.mesh );
 
@@ -192,9 +211,26 @@ define(function(require, exports, module) {
 
       if( self.updateSeed ==  true ){
       
-        self.uniforms.seed.value.x = ( Math.sin( self.uniforms.time.value / 9.0 ) -1.0 ) / 2;
-        self.uniforms.seed.value.y = ( Math.cos( self.uniforms.time.value / 7.0 ) -1.0 ) / 2;
-        self.uniforms.seed.value.z = ( Math.cos( self.uniforms.time.value / 2.0 ) -1.0 ) / 2;
+        self.uniforms.seed.value.x = ( Math.sin( self.uniforms.time.value / 10.0 ) -1.0 ) / 2;
+        self.uniforms.seed.value.y = ( Math.cos( self.uniforms.time.value / 10.0 ) -1.0 ) / 2;
+        self.uniforms.seed.value.z = ( Math.cos( self.uniforms.time.value / 30.0 ) -1.0 ) / 2;
+
+        self.uniforms.seed1.value.x = ( Math.sin( self.uniforms.time.value / 12.0 ) -1.0 ) / 2;
+        self.uniforms.seed1.value.y = ( Math.cos( self.uniforms.time.value / 15.0 ) -1.0 ) / 2;
+        self.uniforms.seed1.value.z = ( Math.cos( self.uniforms.time.value / 10.0 ) -1.0 ) / 2;
+
+        self.uniforms.seed2.value.x = ( Math.sin( self.uniforms.time.value / 12.0 ) -1.0 ) / 2;
+        self.uniforms.seed2.value.y = ( Math.cos( self.uniforms.time.value / 30.0 ) -1.0 ) / 2;
+        self.uniforms.seed2.value.z = ( Math.cos( self.uniforms.time.value / 15.0 ) -1.0 ) / 2;
+
+        self.uniforms.seed3.value.x = ( Math.sin( self.uniforms.time.value / 35.0 ) -1.0 ) / 2;
+        self.uniforms.seed3.value.y = ( Math.cos( self.uniforms.time.value / 30.0 ) -1.0 ) / 2;
+        self.uniforms.seed3.value.z = ( Math.cos( self.uniforms.time.value / 25.0 ) -1.0 ) / 2;
+
+        self.uniforms.seed4.value.x = ( Math.sin( self.uniforms.time.value / 13.0 ) -1.0 ) / 2;
+        self.uniforms.seed4.value.y = ( Math.cos( self.uniforms.time.value / 8.0 ) -1.0 ) / 2;
+        self.uniforms.seed4.value.z = ( Math.cos( self.uniforms.time.value / 15.0 ) -1.0 ) / 2;
+
 
 
       }
@@ -205,17 +241,17 @@ define(function(require, exports, module) {
 
   }
 
-  Random.prototype.update = function(){
+  FractalCombo.prototype.update = function(){
 
   }
-  Random.prototype.enter = function(){
+  FractalCombo.prototype.enter = function(){
     this.world.enter();
   }
 
-  Random.prototype.exit = function(){
+  FractalCombo.prototype.exit = function(){
     this.world.exit();
   }
 
-  module.exports = Random;
+  module.exports = FractalCombo;
 
 });

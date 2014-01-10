@@ -112,6 +112,31 @@ define(function(require, exports, module) {
 
     ].join("\n"),
 
+     positionSimplex:[
+
+      "uniform vec2 resolution;",
+      "uniform float time;",
+      "// uniform float delta;",
+      "uniform sampler2D textureVelocity;",
+      "uniform sampler2D texturePosition;",
+      "uniform sampler2D audioTexture;",
+
+      SC.noise4D,
+      "void main(){",
+
+        "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+        "vec3 position = texture2D( texturePosition, uv ).xyz;",
+        "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
+        "position += velocity * normalize(position) *  snoise( vec4( normalize( position) , time / 1.0 ) );",
+        "gl_FragColor=vec4(position  , 1.0 );",
+
+      "}"
+
+    ].join("\n"),
+
+
+
+
 
 
 
@@ -120,14 +145,25 @@ define(function(require, exports, module) {
 
       simplex: [
 
-        "uniform vec2 resolution;",
-        "uniform float time;",
+        SC.physicsUniforms,
+
+        //SC.noise3D,
+        SC.noise3D,
+
+        "void main(){",
+
+          SC.assignUV,
+          "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
+          "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
+          "float mass         = texture2D( textureVelocity , uv ).w;", 
+
+          "float noise = snoise( normalize( selfPosition )  );",
+          "selfVelocity +=  selfVelocity * noise;",
+
+          "gl_FragColor=vec4( selfVelocity * mass, mass );",
 
 
-
-
-
-
+        "}"
       ].join("\n"),
 
       gravity: [

@@ -1,13 +1,17 @@
 
 define(function(require, exports, module) {
 
+  var AudioTexture = require( 'app/utils/AudioTexture' );
+
   function Audio( controller , file , params ){
 
+    this.loader
     this.params = _.defaults( params || {}, {
         
       looping:      false,
       fbc:            128,
       fadeTime:         1,
+      texture:      true,
 
     });
 
@@ -20,6 +24,24 @@ define(function(require, exports, module) {
 
     this.buffer;
 
+    this.filterOn       = false;
+    this.filter         = this.controller.ctx.createBiquadFilter();
+    this.analyser       = this.controller.ctx.createAnalyser();
+    this.analyser.array = new Uint8Array( this.params.fbc );
+    this.gain           = this.controller.ctx.createGain();
+
+
+    this.gain.connect( this.analyser );
+
+    if( this.params.texture ){
+
+      this.texture = new AudioTexture( this );
+
+      console.log('TEXTURESSS');
+      console.log( this.texture );
+    }
+
+
     this.loadFile();
 
   }
@@ -27,7 +49,7 @@ define(function(require, exports, module) {
 
   Audio.prototype.loadFile = function(){
   
-    this.controller.womb.loader.numberToLoad ++;
+    this.controller.womb.loader.addToLoadBar();
 
     var request=new XMLHttpRequest();
 	request.open("GET",this.file,true);
@@ -61,8 +83,10 @@ define(function(require, exports, module) {
 
     this.createSource();
 
-    var self = this;
-    if( this.params.onLoad ) this.params.onLoad( self );
+    this.onLoad( this );
+
+    //var self = this;
+    //if( this.params.onLoad ) this.params.onLoad( self );
 
     this.controller.womb.loader.loadBarAdd();
 
@@ -75,14 +99,7 @@ define(function(require, exports, module) {
     this.source.buffer  = this.buffer;
     this.source.loop    = this.looping;
            
-    this.filterOn       = false;
-    this.filter         = this.controller.ctx.createBiquadFilter();
-    this.analyser       = this.controller.ctx.createAnalyser();
-    this.analyser.array = new Uint8Array( this.params.fbc );
-    this.gain           = this.controller.ctx.createGain();
-
     this.source.connect( this.gain  );
-    this.gain.connect( this.analyser );
 
     this.gain.gain.value = 1;
 
@@ -158,10 +175,19 @@ define(function(require, exports, module) {
 
   };
 
+  Audio.prototype.onLoad = function(){
+
+
+  }
+
 
   Audio.prototype._update = function(){
 
     this.analyser.getByteFrequencyData( this.analyser.array );
+
+    if( this.texture )
+      this.texture.update();
+
     this.update();
 
   }

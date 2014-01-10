@@ -109,7 +109,6 @@ define(function(require, exports, module) {
   Raycaster.prototype._onMeshSwitched = function( newMesh , oldMesh ){
 
     // Moving from one mesh to another
-    console.log( 'New mesh intersected' );
     this.onMeshSwitched( newMesh , oldMesh );
     this.oPrimary = this.primary;
     this.primary  = newMesh;

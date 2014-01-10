@@ -36,13 +36,14 @@ define(function(require, exports, module) {
     // Setting up Params!
     // Make sure particles are 
     this.params = _.defaults( params || {} , {
-      textureWidth:     50.0,
-      bounds:           womb.size,
-      positionShader:   ps.position,
-      velocityShader:   ps.velocity.flocking,
-      debug:            true,
-      startingVelocityRange: 10,
-      particles:        physicsParticles.basic,
+      textureWidth:           50.0,
+      bounds:                 womb.size,
+      positionShader:         ps.position,
+      velocityShader:         ps.velocity.flocking,
+      debug:                  true,
+      startingVelocityRange:  10,
+      startingPositionRange:  1,
+      particles:              physicsParticles.basic,
       
       velocityShaderUniforms:{
           
@@ -59,7 +60,7 @@ define(function(require, exports, module) {
       },
 
       particleParams:   {
-        size: 5,
+        size: 1,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         transparent: true,
@@ -254,7 +255,7 @@ define(function(require, exports, module) {
       blending:     this.params.particleParams.blending,
       transparent:  this.params.particleParams.transparent,
       depthWrite:   this.params.particleParams.depthWrite,
-      fog:          this.params.particleParams.fog
+      fog:          this.params.particleParams.fog,
 
     });
 
@@ -475,9 +476,21 @@ define(function(require, exports, module) {
       z = 2 * Math.random() * this.bounds - this.bounds;
 
       m = .1; 
-      a[ k*4 + 0 ] = x;
-      a[ k*4 + 1 ] = y;
-      a[ k*4 + 2 ] = z;
+      
+      if( this.params.startingVelocityRange.length ){
+
+        a[ k*4 + 0 ] = x * this.params.startingPositionRange[0];
+        a[ k*4 + 1 ] = y * this.params.startingPositionRange[1];
+        a[ k*4 + 2 ] = z * this.params.startingPositionRange[2];
+
+      }else{
+      
+        a[ k*4 + 0 ] = x * this.params.startingPositionRange;
+        a[ k*4 + 1 ] = y * this.params.startingPositionRange;
+        a[ k*4 + 2 ] = z * this.params.startingPositionRange;
+
+      }
+
       a[ k*4 + 3 ] = m;
 
     }
@@ -526,6 +539,7 @@ define(function(require, exports, module) {
         a[ k*4 + 2 ] = z * this.params.startingVelocityRange;
 
       }
+
       a[ k*4 + 3 ] = m;
 
 

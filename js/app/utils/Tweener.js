@@ -65,6 +65,20 @@ define(function(require, exports, module) {
         z: params.target.z,
       }
 
+    }else if( params.type == 'rotation' ){
+
+      initial = {
+        x: params.object.rotation.x,    
+        y: params.object.rotation.y,
+        z: params.object.rotation.z
+      }
+
+      target = {
+        x: params.target.x,
+        y: params.target.y,
+        z: params.target.z,
+      }
+
     }
 
     var tween = new TWEEN.Tween( initial ).to( target , params.time * 1000 );
@@ -90,6 +104,10 @@ define(function(require, exports, module) {
         this.object.scale.x = this.initial.x;
         this.object.scale.y = this.initial.y;
         this.object.scale.z = this.initial.z;
+      }else if( this.type == 'rotation' ){
+        this.object.rotation.x = this.initial.x;
+        this.object.rotation.y = this.initial.y;
+        this.object.rotation.z = this.initial.z;
       }
     
       // Need to look for a dif so that if it is off by a small

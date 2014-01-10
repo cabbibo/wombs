@@ -29,12 +29,17 @@ define(function(require, exports, module) {
 
       spin: .001,
       color: new THREE.Vector3( .3 , .5 , 1.9 ),
-      radius: 10
+      radius: 10,
+      geo: new THREE.CubeGeometry( 1 , 1 , 1 )
 
     });
+
+    this.fullGeo = this.params.geo;
     this.world = this.womb.sceneController.createScene();
 
     this.scene = this.world.scene;
+
+    this.size = this.womb.size / 8.0;
 
 
     this.texture = this.womb.imageLoader.load( '../lib/img/moon_1024.jpg' );
@@ -74,40 +79,8 @@ define(function(require, exports, module) {
     });
 
 
-    this.fullGeo = new THREE.Geometry();
-    this.size = this.womb.size / 50;
-    this.geo = new THREE.CubeGeometry( this.size , this.size , this.size , 10 , 10 , 10 );
-    this.basicMaterial = new THREE.MeshBasicMaterial();
+    numOf = 4;
 
-    var recursiveArray = [];
-    
-    recursiveFunctions.antiSerpenski( 
-      recursiveArray,
-      new THREE.Vector3(),
-      this.womb.size / 5,
-      10,
-      2.4,
-      this.womb.size / 15
-    );
-
-
-    for( var i  = 0; i < recursiveArray.length; i++ ){
-
-      var mesh = new THREE.Mesh(
-        this.geo,
-        this.basicMaterial 
-      );
-
-      mesh.position = recursiveArray[i][0];
-      mesh.scale.multiplyScalar( recursiveArray[i][2] / 10 );
-
-      THREE.GeometryUtils.merge( this.fullGeo , mesh );
-
-    }
-
-    numOf = 2;
-
-    this.fullFullGeo = new THREE.Geometry();
 
     for( var i = 0; i < numOf;  i++ ){
   
@@ -118,7 +91,7 @@ define(function(require, exports, module) {
       mesh.rotation.y = angle;
 
       mesh.position = Math.toCart( this.size * this.params.radius ,  angle , 0 );
-      mesh.scale.multiplyScalar( .3 );
+      mesh.scale.multiplyScalar( .8 );
 
       //THREE.GeometryUtils.merge( this.fullFullGeo , mesh );
       this.scene.add( mesh );
