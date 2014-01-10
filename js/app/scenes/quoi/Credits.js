@@ -108,17 +108,17 @@ define(function(require, exports, module) {
     var l = 'http://cabbibo.com';
     this.CABBIBO = this.createLink( i , t , l);    
 
-    var i =  '../lib/img/icons/TWITTER_1.png';
+    var i =  '../lib/img/icons/twitter_1.png';
     var t = 'TWITTER';
     var l = "http://twitter.com/share?text=@avalon_emerson's%20Quoi,%20Visualized%20by%20@cabbibo&url=http://wom.bs/quoi/";
     this.TWITTER = this.createLink( i , t , l );    
 
-    var i =  '../lib/img/icons/TWITTER_1.png';
+    var i =  '../lib/img/icons/twitter_1.png';
     var t = 'FACEBOOK';
     var l = "http://twitter.com/share?text=@avalon_emerson's%20Quoi,%20Visualized%20by%20@cabbibo&url=http://wom.bs/quoi/";
     this.FACEBOOK = this.createLink( i , t , l );    
 
-    var i =  '../lib/img/icons/TWITTER_1.png';
+    var i =  '../lib/img/icons/twitter_1.png';
     var t = 'SOUNDCLOUD';
     var l = "https://soundcloud.com/avalonemerson";
     this.SOUNDCLOUD = this.createLink( i , t , l );    
