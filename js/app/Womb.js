@@ -72,6 +72,8 @@ define(function(require, exports, module) {
 
     this.camera.position.z = this.size;
 
+    this.mouse = new THREE.Vector2();
+
     var c = this.params.color.replace( "#" , "0x" );
     this.color = new THREE.Color( );
     this.color.setHex( c );
@@ -124,7 +126,9 @@ define(function(require, exports, module) {
 
     window.addEventListener( 'resize', this.onWindowResize.bind( this ), false );
 
-
+    this.container.addEventListener( 'mousemove', this._onMouseMove.bind(  this ), false );
+    this.container.addEventListener( 'mousedown', this._onMouseDown.bind(  this ), false );
+    this.container.addEventListener( 'mouseup'  , this._onMouseUp.bind(    this ), false );
 
     this.interface        = new Interface(        this );
     this.loader           = new Loader(           this );
@@ -156,13 +160,44 @@ define(function(require, exports, module) {
 
   }
 
+   Womb.prototype.start = function(){
+
+  }
+
+
+  Womb.prototype._onMouseMove = function( e ){
+  
+    this.mouse.x = 1 - ( this.width  - e.clientX ) / this.width;
+    this.mouse.y = 1 - ( this.height - e.clientY ) / this.height;
+ 
+    this.onMouseMove(e);
+
+  }
+  Womb.prototype.onMouseMove = function(e){};
+
+
+  Womb.prototype._onMouseDown = function(){
+  
+    this.onMouseDown(e);
+    this.mouseDown = true;
+
+  }
+  Womb.prototype.onMouseDown = function(e){};
+
+  Womb.prototype._onMouseUp = function(e){
+  
+    this.onMouseUp(e);
+    this.mouseDown = false;
+
+
+  }
+  Womb.prototype.onMouseUp = function(e){};
+
+
+
 
   Womb.prototype.console = function(){ 
     console.log( this ); 
-  }
-
-  Womb.prototype.start = function(){
-
   }
 
   Womb.prototype._update = function(){

@@ -12,6 +12,7 @@ define(function(require, exports, module) {
   var vertexShaders       = require( 'app/shaders/vertexShaders'      );
   var shaderChunks        = require( 'app/shaders/shaderChunks'       );
 
+  var PS = require( 'app/scenes/quoi/PhysicsSimulator' );
   /*
    
      Create our womb
@@ -24,6 +25,7 @@ define(function(require, exports, module) {
     cameraController: 'TrackballControls',
     modelLoader:      true,
     textCreator:      true,
+    raycaster:        true,
     title:            'Robbie Tilton - Master Of Disguise',
     link:             link, 
     summary:          info,
@@ -32,6 +34,9 @@ define(function(require, exports, module) {
     stats:            true,
     color:            '#100e30' 
   });
+
+  womb.ps = new PS( womb );
+  womb.ps.enter();
 
 
   // SHARED UNIFORMS

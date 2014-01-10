@@ -9,11 +9,11 @@ define(function(require, exports, module) {
 
       for( var propt in parameters ){
 
-        //if( object[propt] ){
+        if( object[propt] ){
           object[ propt ] = parameters[ propt ];
-        //}else{
+        }else{
        //   console.log( 'No propt for this object' );
-       // }
+        }
   
       }
 
@@ -22,6 +22,7 @@ define(function(require, exports, module) {
     setMaterialUniforms: function( material , parameters ){
 
       for( var propt in parameters ){
+
 
         if( material.uniforms[propt] ){
 

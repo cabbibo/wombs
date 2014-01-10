@@ -17,7 +17,7 @@ define(function(require, exports, module) {
 
     var c = this.womb.container;
 
-    c.addEventListener( 'mousemove', this.onMouseMove.bind( this ), false );
+    c.addEventListener( 'mousemove', this.onMouseMove.bind( this ));
     
   }
 
@@ -25,26 +25,28 @@ define(function(require, exports, module) {
 
     this.rayPosition.x =  ( e.clientX / window.innerWidth  ) * 2 - 1;
     this.rayPosition.y = -( e.clientY / window.innerHeight ) * 2 + 1;
-    this.rayPosition.z = this.camera.near;
+    this.rayPosition.z = 1;
 
   }
 
   Raycaster.prototype.getIntersections = function(){
 
-    var vector = this.rayPosition.clone();
 
-    this.projector.unprojectVector( vector , this.camera );
+    this.vector = this.rayPosition.clone();
 
-    var dir = vector.sub( this.camera.position ).normalize();
+    this.projector.unprojectVector( this.vector , this.camera );
 
-    var r = this.raycaster;
-    r.set( this.camera.position , dir );
+    this.dir = this.vector.sub( this.camera.position ).normalize();
+
+    this.r = this.raycaster;
+    this.r.set( this.camera.position , this.dir );
 
     this.oIntersections = this.intersections;
-    this.intersections  = r.intersectObjects( this.womb.scene.children , true );
+    this.intersections  = this.r.intersectObjects( this.womb.scene.children , true );
 
     //console.log( this.oIntersections );
     //console.log( this.intersections );
+
     if( this.intersections.length !== this.oIntersections.length ){
 
       if( this.intersections.length > 0 ){
@@ -125,6 +127,7 @@ define(function(require, exports, module) {
   // TODO: This will be useful for the leap, but is unnessesary right now.
   Raycaster.prototype._update = function(){
 
+    //console.log( 'CHECKING' );
      this.getIntersections();
 
   }

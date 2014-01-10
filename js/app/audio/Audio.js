@@ -133,9 +133,12 @@ define(function(require, exports, module) {
   
     if( !time  ) time  = this.params.fadeTime;
     if( !value ) value = 1;
-
     console.log( this.gain.gain );
-    this.gain.gain.linearRampToValueAtTime( 1 , this.controller.ctx.currentTime + time );
+
+    var t = this.controller.ctx.currentTime;
+    console.log('WHOA');
+    this.gain.gain.linearRampToValueAtTime( this.gain.gain.value , t );
+    this.gain.gain.linearRampToValueAtTime( 1.0 , t + time );
 
   }
 

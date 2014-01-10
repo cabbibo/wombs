@@ -21,6 +21,7 @@ define(function(require, exports, module) {
   function PhysicsSimulatorScene( womb , params ){
 
 
+    var params = params || {};
     this.womb = womb;
 
     this.womb.loader.addToLoadBar();
@@ -30,11 +31,11 @@ define(function(require, exports, module) {
 
     this.scene = this.world.scene;
 
-    this.physicsSimulation = new PhysicsSimulator( womb , {
+    this.physicsSimulation = new PhysicsSimulator( womb /*, {
 
       bounds: params.bounds || womb.size,
       textureWidth:  params.textureWidth ||20,
-      velocityShader: params.velocityShader || physicsShaders.velocity.gravity,
+      velocityShader: params.velocityShader || physicsShaders.velocity.flockign,
       positionShader:  params.physicsShader || physicsShaders.position,
       startingVelocityRange:  params.startingVelocityRange ||10,
       startingPositionRange:  params.startingPositionRange ||1,
@@ -66,7 +67,7 @@ define(function(require, exports, module) {
 
 
       
-    });
+    }*/);
 
     womb.scene.remove( this.physicsSimulation.particleSystem );
     this.scene.add( this.physicsSimulation.particleSystem );

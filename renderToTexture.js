@@ -51,46 +51,18 @@ define(function(require, exports, module) {
   }
 
   womb.ps = new PhysicsSimulator( womb , {
-
-    bounds: womb.size,
-    textureWidth:70,
-    velocityShader: physicsShaders.velocity.gravity,
-    positionShader: physicsShaders.positionAudio_4,
-    startingVelocityRange: [ 80 , 0 , 0 ]
     
   });
-  womb.scene.remove( womb.ps.particleSystem );
   
-  womb.psClone = womb.ps.particleSystem.clone();
-  womb.psClone.rotation.z = 0; 
-  womb.scene.add( womb.psClone );
-
-
-  womb.psCloneClone = womb.psClone.clone();
-  womb.psCloneClone.rotation = new THREE.Quaternion();
-  womb.psCloneClone.rotation.z = Math.PI ;
-  womb.scene.add( womb.psCloneClone );
+  
 
 
 
-
-
-    womb.interface.addVector( womb.psClone , 'rotation' );
-
-        //womb.
-
- // }
-
-  //console.log( womb.psClone.material.uniforms );
-  //womb.psClone.material.uniforms.psColor.value = new THREE.Color( 0xff0000 );
- // womb.scene.add( womb.psClone );
-
-  //for( var i = 0; i < 
   womb.particleSystem = new THREE.ParticleSystem( 
       new THREE.CubeGeometry( womb.size , womb.size , womb.size , 100 , 100 , 100 ),
       new THREE.ParticleSystemMaterial 
   );
-  //womb.scene.add( womb.particleSystem );
+  womb.scene.add( womb.particleSystem );
 
   //womb.interface.addVector( womb.particleSystem , 'rotation' );
 

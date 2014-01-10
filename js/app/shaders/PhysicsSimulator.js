@@ -39,14 +39,14 @@ define(function(require, exports, module) {
       textureWidth:           50.0,
       bounds:                 womb.size,
       positionShader:         ps.position,
-      velocityShader:         ps.velocity.flocking,
+      velocityShader:         ps.velocity.gravity,
       debug:                  true,
       startingVelocityRange:  10,
       startingPositionRange:  1,
       particles:              physicsParticles.basic,
       
       velocityShaderUniforms:{
-          
+  
           speed:                 1.0,
 
           seperationDistance:   100.0,
@@ -60,7 +60,7 @@ define(function(require, exports, module) {
       },
 
       particleParams:   {
-        size: 1,
+        size: 10,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         transparent: true,
@@ -71,6 +71,7 @@ define(function(require, exports, module) {
     });
 
 
+    console.log( this.params );
     this.particles  = this.params.particles;
     this.bounds     = this.params.bounds;
 
@@ -236,6 +237,7 @@ define(function(require, exports, module) {
     */
 
     this.createAllTextures();
+    this.resetAllTextures();
  
     /*
      
@@ -299,7 +301,7 @@ define(function(require, exports, module) {
       if( this.particleMaterial.uniforms )
         this.particleMaterial.uniforms.lookup.value = this.RT.position2;
 
-    } else {
+    }else {
 
       this.renderVelocity( this.RT.position2 , this.RT.velocity2 , this.RT.velocity1 );
       this.renderPosition( this.RT.position2 , this.RT.velocity1 , this.RT.position1 );
@@ -624,8 +626,10 @@ define(function(require, exports, module) {
   PhysicsSimulator.prototype.renderPosition = function( position , velocity , output ) {
     
     this.textureMesh.material = this.positionShader;
+
     this.positionShader.uniforms.texturePosition.value = position;
     this.positionShader.uniforms.textureVelocity.value = velocity;
+    //this.positionShader.uniforms.time.value = performance.now();
     this.womb.renderer.render( this.scene , this.camera , output );
     this.output = output;
   

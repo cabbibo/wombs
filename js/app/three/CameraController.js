@@ -5,6 +5,7 @@ define(function(require, exports, module) {
   var MomentumOrbitControls = require( 'controls/MomentumOrbitControls' );
   var OrbitControls         = require( 'controls/OrbitControls'         );
   var TrackballControls     = require( 'controls/TrackballControls'     );
+  var MouseMoveControls     = require( 'controls/MouseMoveControls'     );
   var MomentumFlyControls   = require( 'controls/MomentumFlyControls'   );
   var FlyControls           = require( 'controls/FlyControls'           );
   var LeapPaddleControls    = require( 'controls/LeapPaddleControls'    );
@@ -37,6 +38,10 @@ define(function(require, exports, module) {
     }else if( type == 'MomentumFlyControls' ){
     
       this.controls = new MomentumFlyControls( this.womb.camera, this.womb.renderer.domElement  , params );
+    
+    }else if( type == 'MouseMoveControls' ){
+    
+      this.controls = new MouseMoveControls( this.womb.camera, this.womb.renderer.domElement  , params );
     
     }else if( type == 'LeapPaddleControls' ){
 

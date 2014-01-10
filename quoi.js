@@ -19,13 +19,15 @@ define(function(require, exports, module) {
 
   // Scenes
   var PhysicsSimulation   = require( 'app/scenes/quoi/PhysicsSimulator' );
-  var AntiSerpenski1      = require( 'app/scenes/quoi/AntiSerpenski1' );
-  var AntiSerpenski2      = require( 'app/scenes/quoi/AntiSerpenski2' );
-  var Kitty               = require( 'app/scenes/quoi/Kitty' );
-  var Ring                = require( 'app/scenes/quoi/Ring' );
-  var Random              = require( 'app/scenes/quoi/Random' );
-  var Beauty              = require( 'app/scenes/quoi/Beauty' );
-  var FractalCombo        = require( 'app/scenes/quoi/FractalCombo' );
+  var AntiSerpenski1      = require( 'app/scenes/quoi/AntiSerpenski1'   );
+  var AntiSerpenski2      = require( 'app/scenes/quoi/AntiSerpenski2'   );
+  var Kitty               = require( 'app/scenes/quoi/Kitty'            );
+  var Ring                = require( 'app/scenes/quoi/Ring'             );
+  var Random              = require( 'app/scenes/quoi/Random'           );
+  var Beauty              = require( 'app/scenes/quoi/Beauty'           );
+  var FractalCombo        = require( 'app/scenes/quoi/FractalCombo'     );
+  var Credits             = require( 'app/scenes/quoi/Credits'          );
+  var Begin               = require( 'app/scenes/quoi/Begin'            );
 
 
   /*
@@ -42,16 +44,16 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    cameraController: 'TrackballControls',
+    cameraController: 'MouseMoveControls',
     modelLoader:      true,
     textCreator:      true,
     raycaster:        true,
-    title:            'Quoi - Avalon Emerson',
-    link:             link, 
-    summary:          info,
-    gui:              true,
+    //title:            'Quoi - Avalon Emerson',
+    //link:             link, 
+    //summary:          info,
+    //gui:              true,
     imageLoader:      true,
-    stats:            true,
+    //stats:            true,
     color:            '#0f0020',
     size: 400
   });
@@ -60,8 +62,10 @@ define(function(require, exports, module) {
  // womb.stream =   womb.audioController.createStream( file , { autoLoad: true } );
 
   womb.stream = womb.audioController.createNote( file );
-  womb.audioController.gain.gain.value = 1;
+  //womb.audioController.gain.gain.value = 0;
 
+
+  womb.camera.near = 1;
 
   womb.stream.onLoad = function(){
       console.log( 'WHOA' );
@@ -407,7 +411,7 @@ define(function(require, exports, module) {
 
   //womb.BEAUTYCUBE = new Beauty( womb );
 
-  womb.PURE_texture = womb.textCreator.createTexture( 'PURE' , { 
+  womb.PURE_texture = womb.textCreator.createTexture( 'DEAR' , { 
     square: true,
   });
 
@@ -532,20 +536,26 @@ define(function(require, exports, module) {
 
 
 
-  womb.physicsSim = new PhysicsSimulation( womb ,
+ // womb.physicsSim = new PhysicsSimulation( womb //,
    
-    {
-      bounds: 9,
+   /* {
       textureWidth:50,
-    }
-  );
+    }*/
+ // );
 
 
+ // womb.physicsSim.enter();
 
   var fullGeo = new THREE.Geometry();
   var size = womb.size / 50;
   var geo = new THREE.CubeGeometry( size , size, size , 10 , 10 , 10 );
   var basicMaterial = new THREE.MeshBasicMaterial();
+
+
+  var g = geo.clone();
+  var m = new THREE.Mesh( g , basicMaterial );
+  m.scale.multiplyScalar( 10 );
+  THREE.GeometryUtils.merge( fullGeo , m );
 
   var recursiveArray = [];
     
@@ -572,6 +582,10 @@ define(function(require, exports, module) {
     THREE.GeometryUtils.merge( fullGeo , mesh );
 
   }
+
+  womb.credits = new Credits( womb , {
+    geo: fullGeo
+  });
  
   womb.antiSerp1 = new AntiSerpenski2( womb ,{
     geo: fullGeo,
@@ -630,6 +644,7 @@ define(function(require, exports, module) {
 
   });*/
 
+  womb.begin = new Begin( womb );
   womb.loader.loadBarAdd();
   
   womb.update = function(){
@@ -638,7 +653,8 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
-    womb.stream.play();
+    document.body.style.cursor = 'none';
+    //womb.stream.play();
 
     //womb.mugRing1.enter();
 
@@ -648,7 +664,25 @@ define(function(require, exports, module) {
     // womb.BEAUTYSQUARE.enter();
     
     
-    var offset = -490; 
+    var offset = -490;
+
+    var begin = function(){
+
+      womb.begin.enter();
+
+
+    }
+
+    var leave = function(){
+      womb.begin.exit();
+    }
+
+
+
+    var start = function(){
+      womb.begin.exit();
+      womb.stream.play();
+    }
     //var t1 = setTimeout( function(){ womb.physicsSim.enter(); }, 2000 );
     //
     //
@@ -664,7 +698,7 @@ define(function(require, exports, module) {
     }
 
 
-    var firstHO = setTimeout( function(){
+    var firstHO = function(){
 
       var t = womb.tweener.createTween({
         object: womb.kitty.scene,
@@ -680,7 +714,7 @@ define(function(require, exports, module) {
       });
       t.start();
 
-    }, 1710 + offset );
+    };
 
 
 
@@ -1300,7 +1334,8 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
       womb.treeRing4.exit();
 
-      womb.physicsSim.enter();
+     // womb.physicsSim.enter();
+
 
       womb.mainPulse.enter();
 
@@ -1310,7 +1345,7 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
       
       womb.mainPulse.exit();
-      womb.physicsSim.exit();
+     // womb.physicsSim.exit();
 
 
       womb.littleStars.enter();
@@ -1703,7 +1738,13 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
       // TODO:
       //womb.credits.enter();
+    }
 
+
+    var credits = function(){
+     
+      document.body.style.cursor = 'auto';
+      womb.credits.enter();
     }
 
     /*
@@ -1712,7 +1753,12 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
     */
 
-    
+    //credits();
+
+    var offset = 6000;
+    var t = setTimeout( begin             , 0                );
+    var t = setTimeout( leave             , -1000   + offset );
+    var t = setTimeout( start             , 492     + offset );
     var t = setTimeout( firstHit          , 492     + offset );
     var t = setTimeout( firstHO           , 1710    + offset );
 
@@ -1763,10 +1809,14 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
     var t = setTimeout( cutoutEnd2        , 366639  + offset );
     var t = setTimeout( cutoutEnd3        , 413377  + offset );
     var t = setTimeout( end               , 427623  + offset );
+    var t = setTimeout( credits           , 430623  + offset );
 
 
 
     /* FAST TIMING FOR THE SAKE OF RAPID ITERATION 
+    var t = setTimeout( begin             , 0                );
+    var t = setTimeout( leave             , -1000   + offset );
+    var t = setTimeout( start             , 492     + offset );
     var t = setTimeout( firstHit          , 492     + offset );
     var t = setTimeout( firstHO           , 710    + offset );
 
@@ -1802,6 +1852,10 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
     var t = setTimeout( afterSecondDrop5  , 18106  + offset );
 
     var t = setTimeout( cutout            , 19200  + offset );
+
+    offset = 10000000;
+
+
     var t = setTimeout( backIn            , 20300  + offset );
 
     var t = setTimeout( afterBackIn       , 21408  + offset );
@@ -1816,7 +1870,8 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
     var t = setTimeout( cutoutEnd1        , 33000  + offset );
     var t = setTimeout( cutoutEnd2        , 34000  + offset );
     var t = setTimeout( cutoutEnd3        , 35000  + offset );
-    var t = setTimeout( end               , 36000  + offset );*/
+    var t = setTimeout( end               , 36000  + offset );
+    var t = setTimeout( credits           , 37000  + offset );*/
 
 
 
@@ -1833,11 +1888,85 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
   }
 
-  womb.raycaster.onMeshHoveredOver = function(){
+  womb.update = function(){
+  
+    womb.kitty.scene.rotation.x += womb.mouse.x * .2;
+    womb.kitty1.scene.rotation.x += womb.mouse.x * .2;
+   
+
+
+    womb.antiSerp1.material.uniforms.pow_noise.value = .01 + .1 * (womb.mouse.x-.5);
+    womb.antiSerp1.material.uniforms.pow_audio.value = .01 + .1 * (womb.mouse.y-.5);
+    womb.antiSerp2.material.uniforms.pow_noise.value = .01 + .1 * (womb.mouse.x-.5);
+    womb.antiSerp2.material.uniforms.pow_audio.value = .01 + .1 * (womb.mouse.y-.5);
+    womb.antiSerp3.material.uniforms.pow_noise.value = .01 + .1 * (womb.mouse.x-.5);
+    womb.antiSerp3.material.uniforms.pow_audio.value = .01 + .1 * (womb.mouse.y-.5);
+    womb.antiSerp4.material.uniforms.pow_noise.value = .01 + .1 * (womb.mouse.x-.5);
+    womb.antiSerp4.material.uniforms.pow_audio.value = .01 + .1 * (womb.mouse.y-.5);
+
+    womb.randomCubes.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.randomCubes.material.uniforms.color.value.y   = .3 * womb.mouse.y;
+
+    womb.randomCubes1.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.randomCubes1.material.uniforms.color.value.y   = .3 * womb.mouse.y;
+    womb.randomCubes2.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.randomCubes2.material.uniforms.color.value.y   = .3 * womb.mouse.y;
+
+    womb.randomCubes3.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.randomCubes3.material.uniforms.color.value.y   = .3 * womb.mouse.y;
+    womb.randomCubes4.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.randomCubes4.material.uniforms.color.value.y   = .3 * womb.mouse.y;
+
+
+    womb.treeRing.scene.rotation.y  += ( womb.mouse.x -.5) * .04;
+    womb.treeRing1.scene.rotation.y += -( womb.mouse.x -.5) * .02;
+    womb.treeRing2.scene.rotation.y += ( womb.mouse.x -.5) * .06;
+    womb.treeRing3.scene.rotation.y += -( womb.mouse.x -.5) * .07;
+    womb.treeRing4.scene.rotation.y += ( womb.mouse.x -.5) * .09;
+
+
+    womb.mugRing.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.mugRing.material.uniforms.color.value.z   = 1-womb.mouse.y;
+
+    womb.mugRing1.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.mugRing1.material.uniforms.color.value.z   = 1-womb.mouse.y;
+
+    womb.mugRing2.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.mugRing2.material.uniforms.color.value.z   = 1-womb.mouse.y;
+
+    womb.mugRing3.material.uniforms.color.value.x   = womb.mouse.x;
+    womb.mugRing3.material.uniforms.color.value.z   = 1-womb.mouse.y;
+
+    womb.mugRing4.material.uniforms.color.value.x   =  womb.mouse.x;
+    womb.mugRing4.material.uniforms.color.value.z   = 2* (1-womb.mouse.y);
+
+
+    womb.mugRing5.material.uniforms.color.value.x   = 2 * womb.mouse.x;
+    womb.mugRing5.material.uniforms.color.value.z   = 1-womb.mouse.y;
+
+    womb.BEAUTYSQUARE.material.uniforms.color.value.x = .7 * womb.mouse.x;
+    womb.BEAUTYSQUARE.material.uniforms.color.value.z = 2 * (1.9-womb.mouse.y);
+
+
+    womb.mainPulse.material.uniforms.pow_noise.value = 10*(womb.mouse.x - .5);
+    womb.mainPulse.material.uniforms.pow_audio.value = 10* (womb.mouse.y - .5);
+    
 
   }
 
-  womb.raycaster.onMeshHoveredOut = function(){
+/*  womb.update = function(){
+
+
+  }*/
+  womb.raycaster.onMeshHoveredOver = function( object ){
+
+    womb.credits.onMeshHoveredOver(object);
+
+  }
+
+  womb.raycaster.onMeshHoveredOut = function( object ){
+
+    womb.credits.onMeshHoveredOut(object);
 
   }
 
