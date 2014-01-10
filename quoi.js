@@ -56,7 +56,6 @@ define(function(require, exports, module) {
     size: 400
   });
 
-
   var file = '/lib/audio/tracks/quoi.mp3';
  // womb.stream =   womb.audioController.createStream( file , { autoLoad: true } );
 
@@ -631,7 +630,7 @@ define(function(require, exports, module) {
 
   });*/
 
-  //womb.loader.loadBarAdd();
+  womb.loader.loadBarAdd();
   
   womb.update = function(){
     
@@ -796,7 +795,7 @@ define(function(require, exports, module) {
       var t1 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp1.scene,
-        target: new THREE.Vector3( 1.3 , 1.3 , 1.3 ),
+        target: new THREE.Vector3( .5,  .5 , .5 ),
         time: 1
       });
       t1.start();
@@ -812,7 +811,7 @@ define(function(require, exports, module) {
       var t2 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp1.scene,
-        target: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
+        target: new THREE.Vector3( .5 ,.5 , .5 ),
         time: 1
       });
       t2.start();
@@ -837,7 +836,7 @@ define(function(require, exports, module) {
       var t3 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp3.scene,
-        target: new THREE.Vector3( 2.5 , 2.5 , 2.5 ),
+        target: new THREE.Vector3(.5, .5 , .5),
         time: 1
       });
       t3.start();
@@ -861,7 +860,7 @@ define(function(require, exports, module) {
       var t4 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp4.scene,
-        target: new THREE.Vector3( 3 , 3 , 3 ),
+        target: new THREE.Vector3( .5, .5 , .5),
         time: 1
       });
       t4.start();
@@ -884,7 +883,7 @@ define(function(require, exports, module) {
       var t5 = womb.tweener.createTween({
         type: 'scale',
         object: womb.antiSerp5.scene,
-        target: new THREE.Vector3( 4 , 4 , 4 ),
+        target: new THREE.Vector3( .5,.5 , .5 ),
         time: 1
       });
       t5.start();
