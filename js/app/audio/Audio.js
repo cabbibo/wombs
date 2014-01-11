@@ -68,7 +68,15 @@ define(function(require, exports, module) {
     var request=new XMLHttpRequest();
 	request.open("GET",this.file,true);
 	request.responseType="arraybuffer";
-    
+   
+    var self = this;
+    request.onerror = function(){
+      alert( 'ERROR LOADING SONG' );
+      //self.womb.loader.addFailue( 'Capability to load song' , 'http://apple.com'
+    }
+
+  
+
     request.onprogress = this._loadProgress.bind( this );
     
     var self = this;
