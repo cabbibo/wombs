@@ -65,7 +65,7 @@ define(function(require, exports, module) {
     }
 
 
-    this.t_CENTER = this.womb.textCreator.createTexture( 'QUOI', {square:true} );
+    this.t_CENTER = this.womb.textCreator.createTexture( 'INFO ORBS' );
 
     this.u_CENTER= THREE.UniformsUtils.merge( [
         THREE.ShaderLib['basic'].uniforms,
@@ -92,13 +92,17 @@ define(function(require, exports, module) {
       this.m_CENTER
     );
 
+    this.CENTER.scale.x = this.t_CENTER.scaledWidth;
+    this.CENTER.scale.y = this.t_CENTER.scaledHeight;
 
-    var i = '../lib/img/icons/cabbibo_1.png';
+    this.scene.add( this.CENTER );
+
+    var i = '../lib/img/icons/avalon_1.png';
     var t = 'AVALON EMERSON';
     var l = 'https://soundcloud.com/avalonemerson';
     this.AVALON = this.createLink( i , t , l);  
 
-     var i = '../lib/img/icons/cabbibo_1.png';
+     var i = '../lib/img/icons/iceeHot_1.png';
     var t = 'ICEE HOT';
     var l = 'http://iceehot.com';
     this.ICEEHOT = this.createLink( i , t , l);    
@@ -110,15 +114,15 @@ define(function(require, exports, module) {
 
     var i =  '../lib/img/icons/twitter_1.png';
     var t = 'TWITTER';
-    var l = "http://twitter.com/share?text=@avalon_emerson's%20Quoi,%20Visualized%20by%20@cabbibo&url=http://wom.bs/quoi/";
+    var l = "http://twitter.com/share?text=@avalon_emerson's%20Quoi,%20Synesthetia%20by%20@cabbibo&url=http://wom.bs/quoi/";
     this.TWITTER = this.createLink( i , t , l );    
 
-    var i =  '../lib/img/icons/twitter_1.png';
+    var i =  '../lib/img/icons/facebook_1.png';
     var t = 'FACEBOOK';
-    var l = "http://twitter.com/share?text=@avalon_emerson's%20Quoi,%20Visualized%20by%20@cabbibo&url=http://wom.bs/quoi/";
+    var l = "http://www.facebook.com/sharer.php?u=http://wom.bs/quoi";
     this.FACEBOOK = this.createLink( i , t , l );    
 
-    var i =  '../lib/img/icons/twitter_1.png';
+    var i =  '../lib/img/icons/soundcloud_1.png';
     var t = 'SOUNDCLOUD';
     var l = "https://soundcloud.com/avalonemerson";
     this.SOUNDCLOUD = this.createLink( i , t , l );    
@@ -229,12 +233,7 @@ define(function(require, exports, module) {
   }
 
 
-    console.log('check');
-
-
   Credits.prototype.mouseDown = function(){
-
-    console.log('CH');
 
     for( var i = 0; i < this.links.length; i++ ){
 
@@ -251,7 +250,6 @@ define(function(require, exports, module) {
 
   Credits.prototype.mouseUp = function(){
 
-    console.log('wha');
     for( var i = 0; i < this.links.length; i++ ){
 
       var l = this.links[i];

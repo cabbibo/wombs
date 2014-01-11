@@ -103,6 +103,56 @@ a:hover{
 }
 
 
+#social{
+
+  pointer-events  : auto;
+
+  position:absolute;
+  right:0px;
+  bottom:5px;
+
+  width:100%;
+
+}
+
+
+.social{
+
+
+  margin: 5px;
+  width:25px;
+  height:25px;
+  display: block;
+
+  opacity:.3;
+  background-size: 100%;
+
+  float:right;
+}
+.social:hover{
+
+  opacity: .7;
+
+}
+
+#facebook{
+
+  margin: 5px;
+  width:25px;
+  height:25px;
+  display: block;
+
+  opacity:.3;
+  background: url("../lib/img/icons/facebook_1.png");
+  background-size: 100%;
+
+}
+
+#facebook:hover{
+  opacity:1;
+}
+
+
 #GUI{
 
   //position:absolute;

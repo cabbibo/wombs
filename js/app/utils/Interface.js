@@ -39,6 +39,12 @@ define( function( require , exports , module ){
 
     }
 
+    if( womb.params.social ){
+
+      this.addSocial();
+
+    }
+
     // If we are using a GUI for altering, create one
     if( womb.params.gui ){
       this.params = {};
@@ -66,6 +72,58 @@ define( function( require , exports , module ){
     this.stats.domElement.id = 'stats';
   
   }
+
+
+  Interface.prototype.addSocial = function(){
+
+    this.social = document.createElement('div');
+    this.social.id = 'social';
+    this.domElement.appendChild( this.social );
+
+    for( var i  = 0; i < this.womb.params.social.length; i ++ ){
+
+      var a = document.createElement('a');
+      a.href = this.womb.params.social[i][1];
+      a.target = '_blank';
+
+      a.style.background = 'url(../lib/img/icons/'+this.womb.params.social[i][0]+')';
+      a.style.backgroundSize = '100%';
+     /* a.style.width = '25px';
+      a.style.height = '25px';
+      a.style.display = 'block';
+      a.style.margin = '5px';
+      a.style.opacity = '.3';*/
+      a.className += 'social';
+
+      this.social.appendChild( a );
+
+    }
+
+  }
+
+  Interface.prototype.addTwitter = function( link){
+
+    this.twitter = document.createElement('a');
+    this.twitter.id = 'twitter';
+    this.twitter.href = link;
+    this.twitter.target = '_blank';
+
+    this.social.appendChild( this.twitter );
+
+  }
+
+  Interface.prototype.addFacebook = function( link){
+
+    this.facebook = document.createElement('a');
+    this.facebook.id = 'facebook';
+    this.facebook.href = link;
+    this.facebook.target = '_blank';
+
+    this.social.appendChild( this.facebook );
+
+  }
+
+
 
   Interface.prototype.addInfo = function(){
 

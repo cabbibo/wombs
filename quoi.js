@@ -42,18 +42,29 @@ define(function(require, exports, module) {
   */
   var link = 'https://soundcloud.com/avalonemerson';
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
-  
+ 
+    var facebook = "http://www.facebook.com/sharer.php?u=http://wom.bs/quoi";
+
+  var socialLinks = [
+
+
+    [ 'facebook_1.png'  , 'http://www.facebook.com/sharer.php?u=http://wom.bs/quoi' ],
+    [ 'twitter_1.png'   , "http://twitter.com/share?text=@avalon_emerson's%20Quoi.%20Synesthetia%20by%20@cabbibo&url=http://wom.bs/quoi/" ],
+    [ 'soundcloud_1.png' , 'http://soundcloud.com/avalonemerson' ],
+    [ 'cabbibo_1.png'   , 'http://twitter.com/cabbibo' ],
+    [ 'avalon_1.png'    , 'http://twitter.com/avalon_emerson' ],
+   // [ 'iceeHot_1.png'   , 'http://iceehot.com'      ]
+
+  ]
+
+
   womb = new Womb({
     cameraController: 'MouseMoveControls',
     modelLoader:      true,
     textCreator:      true,
     raycaster:        true,
-    //title:            'Quoi - Avalon Emerson',
-    //link:             link, 
-    //summary:          info,
-    //gui:              true,
+    social:           socialLinks, 
     imageLoader:      true,
-    //stats:            true,
     color:            '#0f0020',
     size: 400
   });
@@ -68,7 +79,7 @@ define(function(require, exports, module) {
   womb.camera.near = 1;
 
   womb.stream.onLoad = function(){
-      console.log( 'WHOA' );
+  
   }
 
   womb.moonTexture = womb.imageLoader.load( '../lib/img/moon_1024.jpg' );
@@ -1469,7 +1480,6 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
     afterBackIn3 = function(){
 
-      console.log("BACKIN");
       var t = womb.tweener.createTween({
         type: 'scale',
         object: womb.BEAUTYSQUARE.scene,
@@ -1495,7 +1505,6 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
       womb.treeRing2.exit();
 
-      console.log( womb.randomSquares );
       womb.randomCubes.enter();
       womb.randomCubes.spinning = true;
 
@@ -1670,7 +1679,6 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
     var cutoutEnd1 = function(){
 
-      console.log('HELLO');
       womb.FRACTALCOMBO.enter();
       womb.FRACTALCOMBO.updateSeed = true;
       womb.FRACTALCOMBO.scene.rotation.y = Math.PI / 2;

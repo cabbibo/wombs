@@ -36,9 +36,7 @@ define(function(require, exports, module) {
     if( this.params.texture ){
 
       this.texture = new AudioTexture( this );
-
-      console.log('TEXTURESSS');
-      console.log( this.texture );
+    
     }
 
 
@@ -133,10 +131,8 @@ define(function(require, exports, module) {
   
     if( !time  ) time  = this.params.fadeTime;
     if( !value ) value = 1;
-    console.log( this.gain.gain );
 
     var t = this.controller.ctx.currentTime;
-    console.log('WHOA');
     this.gain.gain.linearRampToValueAtTime( this.gain.gain.value , t );
     this.gain.gain.linearRampToValueAtTime( 1.0 , t + time );
 

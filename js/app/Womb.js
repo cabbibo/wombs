@@ -176,7 +176,7 @@ define(function(require, exports, module) {
   Womb.prototype.onMouseMove = function(e){};
 
 
-  Womb.prototype._onMouseDown = function(){
+  Womb.prototype._onMouseDown = function(e){
   
     this.onMouseDown(e);
     this.mouseDown = true;

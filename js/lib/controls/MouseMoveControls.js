@@ -44,15 +44,14 @@ define(function(require, exports, module) {
 
         if( this.mouseDown ){
 
-          this.object.position.z -= Math.abs( Math.abs(this.object.position.z) - this.z ) * this.zoomSpeed;
-
+          this.object.position.z -= ( this.object.position.z  ) * this.zoomSpeed;
 
         }else{
 
-          this.object.position.z += ( Math.abs( this.z - this.object.position.z ) )* this.zoomSpeed;
-
+          this.object.position.z += ( this.z - this.object.position.z  ) * this.zoomSpeed;
 
         }
+
         this.object.lookAt( this.center );
          
       };
