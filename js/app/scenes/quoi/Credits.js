@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
     });
 
-    var loopFile = '/lib/audio/loops/quoi/creditsLoop.wav';
+    var loopFile = '/lib/audio/loops/quoi/creditsLoop.mp3';
     this.audio = womb.audioController.createLoop( loopFile );
     this.world = this.womb.sceneController.createScene();
 

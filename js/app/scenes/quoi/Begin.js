@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
     });
 
-    var loopFile = '/lib/audio/loops/quoi/introLoop.wav';
+    var loopFile = '/lib/audio/loops/quoi/introLoop.mp3';
     this.audio = womb.audioController.createLoop( loopFile );
     this.world = this.womb.sceneController.createScene();
 
@@ -63,8 +63,7 @@ define(function(require, exports, module) {
       pow_noise:  { type: "f" , value: 0.01 },
       pow_audio:  { type: "f" , value: .04 },
     }
-
-
+    
     this.t_CENTER = this.womb.textCreator.createTexture( 'QUOI - AVALON EMERSON' );
 
     this.u_CENTER= THREE.UniformsUtils.merge( [
