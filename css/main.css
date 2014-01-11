@@ -46,8 +46,6 @@ a:hover{
   width         : 0px;
   background    : #fff;
 
-
-
 }
 
 #loadingGif{
@@ -58,6 +56,21 @@ a:hover{
 
 }
 
+#loadInfo{
+
+  position      : absolute;
+  top           : 50%;
+  font-size     : 20px;
+
+  height        : 50px;
+  width         : 100%;
+  margin-top    : 5px;
+  text-align    : center;
+  //background    : #fff;
+
+
+
+}
 #renderingContainer{
 
   position    : absolute;

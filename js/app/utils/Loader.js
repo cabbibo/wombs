@@ -23,6 +23,11 @@ define(function(require, exports, module) {
 
     this.loadBar = document.createElement('div');
     this.loadBar.id = "loadBar";
+
+    this.loadInfo = document.createElement('div');
+    this.loadInfo.id = 'loadInfo';
+
+    this.curtain.appendChild( this.loadInfo );
     
     this.loadBarAddAmount = window.innerWidth / this.numberToLoad;
 
@@ -31,6 +36,8 @@ define(function(require, exports, module) {
     this.loadingGif     = document.createElement( 'img' );
     this.loadingGif.src = this.params.loadGif;
     this.loadingGif.id  = 'loadingGif';
+
+
 
     var curtainTemp = this.curtain;
 
@@ -56,6 +63,12 @@ define(function(require, exports, module) {
   }
 
   Loader.prototype = {
+
+
+    addLoadInfo: function(s){
+
+      this.loadInfo.innerHTML = s;
+    },
 
     addToLoadBar: function(){
 

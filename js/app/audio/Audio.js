@@ -5,7 +5,7 @@ define(function(require, exports, module) {
 
   function Audio( controller , file , params ){
 
-    this.loader
+    this.loader;
     this.params = _.defaults( params || {}, {
         
       looping:      false,
@@ -16,6 +16,8 @@ define(function(require, exports, module) {
     });
 
     this.controller = controller;
+    this.womb = this.controller.womb;
+
     this.file       = file;
 
     this.playing    = false;
@@ -45,6 +47,20 @@ define(function(require, exports, module) {
   }
 
 
+  Audio.prototype._loadProgress = function(e){
+
+    this.loaded =  e.loaded / e.total;
+    
+    this.loadProgress( e );
+
+  }
+
+  Audio.prototype.loadProgress = function(){
+
+
+  }
+
+
   Audio.prototype.loadFile = function(){
   
     this.controller.womb.loader.addToLoadBar();
@@ -52,7 +68,9 @@ define(function(require, exports, module) {
     var request=new XMLHttpRequest();
 	request.open("GET",this.file,true);
 	request.responseType="arraybuffer";
-      
+    
+    request.onprogress = this._loadProgress.bind( this );
+    
     var self = this;
     
     request.onload = function(){

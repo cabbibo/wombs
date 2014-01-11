@@ -73,6 +73,9 @@ define(function(require, exports, module) {
   womb.stream = womb.audioController.createNote( file );
   //womb.audioController.gain.gain.value = 0;
 
+  womb.stream.loadProgress = function( e ){
+    this.womb.loader.addLoadInfo( 'Loading Song: '+Math.floor( this.loaded * 100 ) +"%");
+  }
 
   womb.camera.near = 1;
 
