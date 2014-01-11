@@ -48,12 +48,17 @@ define(function(require, exports, module) {
 
   womb.ps = new PhysicsSimulator( womb , {
 
+    textureWidth: 300,
+    debug: false,
     velocityShader: physicsShaders.velocity.curl,
-    bounds: 10
+    velocityStartingRange:.0001,
+    positionShader: physicsShaders.position,
+    bounds: 100,
+    speed: .3
     
   })
 
-  womb.interface.addAllUniforms( womb.ps.velocityShader.uniforms );
+  //womb.interface.addAllUniforms( womb.ps.velocityShader.uniforms );
 
 
   womb.loader.loadBarAdd();

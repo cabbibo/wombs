@@ -43,12 +43,13 @@ define(function(require, exports, module) {
       debug:                  true,
       startingVelocityRange:  10,
       startingPositionRange:  1,
+
       particles:              physicsParticles.basic,
       
+      speed:                  1.0,
+
       velocityShaderUniforms:{
   
-          speed:                 1.0,
-
           seperationDistance:   100.0,
           alignmentDistance:    150.0,
           cohesionDistance:     100.0,
@@ -59,13 +60,20 @@ define(function(require, exports, module) {
         
       },
 
+      particleShaderUniforms:{
+  
+          speed:                 1.0,
+        
+      },
+
+
       particleParams:   {
-        size: 10,
+        size: 20,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         transparent: true,
         fog: true, 
-        map: THREE.ImageUtils.loadTexture( '../lib/img/hnrW.png' ),
+        map: THREE.ImageUtils.loadTexture( '../lib/img/particles/lensFlare.png' ),
         opacity:    .9,
       }
     });
@@ -177,6 +185,8 @@ define(function(require, exports, module) {
 
       uniforms: {
           time: this.womb.time ,
+          delta: { type: "f", value: this.womb.delta },
+          speed: { type: "f", value: this.params.speed }, 
           resolution: { type: "v2", value: new THREE.Vector2(  this.TW , this.TW ) },
           texturePosition: { type: "t", value: null },
           textureVelocity: { type: "t", value: null },
@@ -297,6 +307,7 @@ define(function(require, exports, module) {
 
   PhysicsSimulator.prototype._update = function(){
 
+    this.positionShader.uniforms.delta.value = this.womb.delta;
     if( this.flipflop ){
 
       this.renderVelocity( this.RT.position1 , this.RT.velocity1 , this.RT.velocity2 );

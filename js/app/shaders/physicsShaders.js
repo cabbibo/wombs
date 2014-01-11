@@ -8,7 +8,8 @@ define(function(require, exports, module) {
 
       "uniform vec2 resolution;",
       "uniform float time;",
-      "// uniform float delta;",
+      "uniform float speed;",
+      "uniform float delta;",
       "uniform sampler2D textureVelocity;",
       "uniform sampler2D texturePosition;",
 
@@ -18,7 +19,7 @@ define(function(require, exports, module) {
         "vec3 position = texture2D( texturePosition, uv ).xyz;",
         "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
         "float mass = texture2D( texturePosition, uv ).w;",
-        "gl_FragColor=vec4(position + velocity , mass );",
+        "gl_FragColor=vec4(position + velocity * speed * delta, mass );",
 
       "}"
 
@@ -28,7 +29,8 @@ define(function(require, exports, module) {
 
       "uniform vec2 resolution;",
       "uniform float time;",
-      "// uniform float delta;",
+      "uniform float speed;",
+      "uniform float delta;",
       "uniform sampler2D textureVelocity;",
       "uniform sampler2D texturePosition;",
       "uniform sampler2D audioTexture;",
@@ -39,7 +41,7 @@ define(function(require, exports, module) {
         "vec3 position = texture2D( texturePosition, uv ).xyz;",
         "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
         "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
-        "gl_FragColor=vec4(position + velocity *  audio  , 1.0 );",
+        "gl_FragColor=vec4(position + velocity *  audio  * speed * delta , 1.0 );",
 
       "}"
 
@@ -48,7 +50,8 @@ define(function(require, exports, module) {
 
       "uniform vec2 resolution;",
       "uniform float time;",
-      "// uniform float delta;",
+      "uniform float speed;",
+      "uniform float delta;",
       "uniform sampler2D textureVelocity;",
       "uniform sampler2D texturePosition;",
       "uniform sampler2D audioTexture;",
@@ -59,7 +62,7 @@ define(function(require, exports, module) {
         "vec3 position = texture2D( texturePosition, uv ).xyz;",
         "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
         "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
-        "gl_FragColor=vec4(position + velocity *  audio  * audio  , 1.0 );",
+        "gl_FragColor=vec4(position + velocity *  audio  * audio  * speed * delta, 1.0 );",
 
       "}"
 
@@ -69,7 +72,8 @@ define(function(require, exports, module) {
 
       "uniform vec2 resolution;",
       "uniform float time;",
-      "// uniform float delta;",
+      "uniform float speed;",
+      "uniform float delta;",
       "uniform sampler2D textureVelocity;",
       "uniform sampler2D texturePosition;",
       "uniform sampler2D audioTexture;",
@@ -80,7 +84,7 @@ define(function(require, exports, module) {
         "vec3 position = texture2D( texturePosition, uv ).xyz;",
         "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
         "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
-        "gl_FragColor=vec4(position + velocity *  audio * audio * audio , 1.0 );",
+        "gl_FragColor=vec4(position + velocity *  audio * audio * audio * speed* delta, 1.0 );",
 
       "}"
 
@@ -95,7 +99,8 @@ define(function(require, exports, module) {
 
       "uniform vec2 resolution;",
       "uniform float time;",
-      "// uniform float delta;",
+      "uniform float speed;",
+      "uniform float delta;",
       "uniform sampler2D textureVelocity;",
       "uniform sampler2D texturePosition;",
       "uniform sampler2D audioTexture;",
@@ -106,7 +111,7 @@ define(function(require, exports, module) {
         "vec3 position = texture2D( texturePosition, uv ).xyz;",
         "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
         "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
-        "gl_FragColor=vec4(position + velocity *  audio * audio * audio * audio , 1.0 );",
+        "gl_FragColor=vec4(position + velocity *  audio * audio * audio * audio  * speed * delta, 1.0 );",
 
       "}"
 
@@ -116,7 +121,8 @@ define(function(require, exports, module) {
 
       "uniform vec2 resolution;",
       "uniform float time;",
-      "// uniform float delta;",
+      "uniform float speed;",
+      "uniform float delta;",
       "uniform sampler2D textureVelocity;",
       "uniform sampler2D texturePosition;",
       "uniform sampler2D audioTexture;",
@@ -143,6 +149,14 @@ define(function(require, exports, module) {
     velocity:{
 
 
+      rezaCurl:[
+
+
+
+
+      ].join("\n"),
+
+
       curl:[
 
       SC.physicsUniforms,
@@ -159,7 +173,7 @@ define(function(require, exports, module) {
           "vec3 selfVelocity_OG  = texture2D( textureVelocity_OG , uv ).xyz;",
 
           "vec3 potential = curlNoise( normalize(selfPosition) );",
-          "gl_FragColor=vec4( potential , 1.0  );",
+          "gl_FragColor=vec4( selfVelocity + potential , 1.0  );",
 
 
 
