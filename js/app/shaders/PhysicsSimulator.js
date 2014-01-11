@@ -180,6 +180,9 @@ define(function(require, exports, module) {
           resolution: { type: "v2", value: new THREE.Vector2(  this.TW , this.TW ) },
           texturePosition: { type: "t", value: null },
           textureVelocity: { type: "t", value: null },
+          texturePosition_OG: { type: "t", value: null },
+          textureVelocity_OG: { type: "t", value: null },
+
 
           // for use with audio
           audioTexture:    { type: "t" , value: null }
@@ -201,6 +204,8 @@ define(function(require, exports, module) {
 
           texturePosition:    { type: "t" , value: null },
           textureVelocity:    { type: "t" , value: null },
+          texturePosition_OG: { type: "t", value: null },
+          textureVelocity_OG: { type: "t", value: null },
 
           speed:              { type: "f" , value: null },
 
@@ -237,7 +242,6 @@ define(function(require, exports, module) {
     */
 
     this.createAllTextures();
-    this.resetAllTextures();
  
     /*
      
@@ -325,6 +329,14 @@ define(function(require, exports, module) {
 
     this.dtPosition = this.generatePositionTexture();
     this.dtVelocity = this.generateVelocityTexture();
+
+    var p = this.dtPosition;
+    var v = this.dtVelocity;
+    this.positionShader.uniforms.texturePosition_OG.value = p;
+    this.positionShader.uniforms.textureVelocity_OG.value = v;
+
+    this.velocityShader.uniforms.texturePosition_OG.value = p;
+    this.velocityShader.uniforms.textureVelocity_OG.value = v;
 
     this.RT.position1 = this.getRenderTarget();
     this.RT.position2 = this.getRenderTarget();
@@ -477,7 +489,7 @@ define(function(require, exports, module) {
       y = 2 * Math.random() * this.bounds - this.bounds;
       z = 2 * Math.random() * this.bounds - this.bounds;
 
-      m = .1; 
+      m = 1; 
       
       if( this.params.startingVelocityRange.length ){
 
@@ -526,7 +538,7 @@ define(function(require, exports, module) {
       y = Math.random() - 0.5;
       z = Math.random() - 0.5;
 
-      m = .1;
+      m = 1;
 
       if( this.params.startingVelocityRange.length ){
 

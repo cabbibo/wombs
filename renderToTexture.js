@@ -41,32 +41,17 @@ define(function(require, exports, module) {
   });
 
 
-  womb.stream = womb.audioController.createUserAudio();
+  womb.stream = womb.audioController.createLoop('../lib/audio/loops/1.mp3');
 
+  console.log( womb.stream );
   womb.audioController.gain.gain.value = 0;
-  womb.stream.onStreamCreated = function(){
-
-    womb.ps.positionShader.uniforms.audioTexture.value = womb.stream.texture.texture;
-
-  }
 
   womb.ps = new PhysicsSimulator( womb , {
+
+    velocityShader: physicsShaders.velocity.curl,
+    bounds: 10
     
-  });
-  
-  
-
-
-
-  womb.particleSystem = new THREE.ParticleSystem( 
-      new THREE.CubeGeometry( womb.size , womb.size , womb.size , 100 , 100 , 100 ),
-      new THREE.ParticleSystemMaterial 
-  );
-  womb.scene.add( womb.particleSystem );
-
-  //womb.interface.addVector( womb.particleSystem , 'rotation' );
-
-  womb.particleSystem.scale.multiplyScalar( 1 );
+  })
 
   womb.interface.addAllUniforms( womb.ps.velocityShader.uniforms );
 
@@ -83,6 +68,7 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
+    womb.stream.play();
   }
 
   womb.raycaster.onMeshHoveredOver = function(){

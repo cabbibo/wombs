@@ -143,6 +143,32 @@ define(function(require, exports, module) {
     velocity:{
 
 
+      curl:[
+
+      SC.physicsUniforms,
+      SC.physicsUniforms_OG,
+      SC.curlNoise,
+
+      "void main(){",
+
+
+        SC.assignUV,
+
+          "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
+          "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
+          "vec3 selfVelocity_OG  = texture2D( textureVelocity_OG , uv ).xyz;",
+
+          "vec3 potential = curlNoise( normalize(selfPosition) );",
+          "gl_FragColor=vec4( potential , 1.0  );",
+
+
+
+      "}"
+
+
+
+      ].join("\n"),
+
       simplex: [
 
         SC.physicsUniforms,

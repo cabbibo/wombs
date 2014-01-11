@@ -47,7 +47,7 @@ define(function(require, exports, module) {
 
 
     [ 'facebook_1.png'  , 'http://www.facebook.com/sharer.php?u=http://wom.bs/quoi' ],
-    [ 'twitter_1.png'   , "http://twitter.com/share?text=@avalon_emerson's%20Quoi.%20Synesthetia%20by%20@cabbibo&url=http://wom.bs/quoi/" ],
+    [ 'twitter_1.png'   , "http://twitter.com/share?text=@avalon_emerson's%20Quoi.%20Synesthesia%20by%20@cabbibo&url=http://wom.bs/quoi/" ],
     //[ 'soundcloud_1.png' , 'http://soundcloud.com/avalonemerson' ],
     //[ 'cabbibo_1.png'   , 'http://twitter.com/cabbibo' ],
     //[ 'avalon_1.png'    , 'http://twitter.com/avalon_emerson' ],
