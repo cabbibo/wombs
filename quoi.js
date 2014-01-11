@@ -43,8 +43,6 @@ define(function(require, exports, module) {
   var link = 'https://soundcloud.com/avalonemerson';
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
  
-    var facebook = "http://www.facebook.com/sharer.php?u=http://wom.bs/quoi";
-
   var socialLinks = [
 
 
@@ -594,9 +592,11 @@ define(function(require, exports, module) {
 
   }
 
-  womb.credits = new Credits( womb , {
-    geo: fullGeo
-  });
+  var t = setTimeout( function(){
+    womb.credits = new Credits( womb , {
+      geo: fullGeo
+    });
+  } , 1000 );
  
   womb.antiSerp1 = new AntiSerpenski2( womb ,{
     geo: fullGeo,
@@ -638,7 +638,6 @@ define(function(require, exports, module) {
 
 
   womb.dropCenter = new Kitty( womb , {
-    //modelFile: mug
     modelScale: 1,
     noisePower: 2.0,
     audioPower: .9,
@@ -646,16 +645,9 @@ define(function(require, exports, module) {
   });
 
 
-  /*womb.randSquaresMoon = new RandSquares( womb , {
+  // Delay for the sake of text creation
+  var t = setTimeout (function(){ womb.begin = new Begin( womb ); }, 1000 );
 
-    noisePower:1.0,
-    audioPower: .3,
-    color: new THREE.Vector3( .5 , .3 , .3 ),
-    texture: this.womb.imageLoader.load( '../lib/img/moon_1024.jpg' );
-
-  });*/
-
-  womb.begin = new Begin( womb );
   womb.loader.loadBarAdd();
   
   womb.update = function(){
@@ -664,16 +656,7 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
-    document.body.style.cursor = 'none';
-    //womb.stream.play();
-
-    //womb.mugRing1.enter();
-
-    //womb.FRACTALCOMBO.updateSeed = true;
-    //womb.FRACTALCOMBO.enter();
-    // womb.BEAUTYSQUARE.updateSeed = true;
-    // womb.BEAUTYSQUARE.enter();
-    
+    document.body.style.cursor = 'none';    
     
     var offset = -490;
 
@@ -694,12 +677,10 @@ define(function(require, exports, module) {
       womb.begin.exit();
       womb.stream.play();
     }
-    //var t1 = setTimeout( function(){ womb.physicsSim.enter(); }, 2000 );
-    //
-    //
-    //
+
     /*
-     INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO
+     
+       INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO INTRO
 
     */
 

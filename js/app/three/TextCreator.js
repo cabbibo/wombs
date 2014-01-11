@@ -1,5 +1,7 @@
 define(function(require, exports, module) {
 
+  require( 'lib/three.min' );
+
   function TextCreator( world , params ){
 
     this.world  = world;
@@ -7,7 +9,7 @@ define(function(require, exports, module) {
     this.params = _.defaults( params || {}, {
    
       size:                 this.world.size / 10,
-      type:                    "Bold 20px Arial", 
+      type:                    "20pt GeoSans", 
       color:    "rgba( 255 , 255 , 255 , 0.95 )",
       crispness:                              10,
       margin:               this.world.size / 20,  
@@ -16,12 +18,14 @@ define(function(require, exports, module) {
 
     });
 
+    this.font = "GeoSans";
     
   }
 
 
   TextCreator.prototype.createTexture = function( string , params ){
 
+   
     var canvas  = document.createElement('canvas');
     var ctx     = canvas.getContext( '2d' ); 
     var params  = _.defaults( params || {}, {
@@ -29,7 +33,8 @@ define(function(require, exports, module) {
       color:      this.params.color,
       size:       this.params.size,
       crispness:  this.params.crispness,
-      square:     this.params.square  
+      square:     this.params.square,
+      margin:     this.params.size * 2.0
 
     });
 
@@ -53,7 +58,7 @@ define(function(require, exports, module) {
       margin = params.margin;
 
     // Gets how wide the tesxt is
-    ctx.font      = fullSize + "pt Arial";
+    ctx.font      = fullSize + "pt " + this.font;
     var textWidth = ctx.measureText(string).width;
 
     // Can choose to make a square texture if we want to 
@@ -69,7 +74,7 @@ define(function(require, exports, module) {
 
     }
 
-    ctx.font      = fullSize  + "pt Arial";
+    ctx.font      = fullSize  + "pt " + this.font;
 
     // Gives us a background instead of transparent background
     if( params.backgroundColor ) {
