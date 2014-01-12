@@ -127,7 +127,7 @@ define(function(require, exports, module) {
       "varying vec2 vUv;",
       "varying vec3 vPos;",
 
-      shaderChunks.kali_5,
+      shaderChunks.createKali( 5 ),
 
 
       "varying float displacement;",

@@ -118,65 +118,64 @@ define(function(require, exports, module) {
 
   ].join( "\n" ),
 
+  ShaderChunks.audioColor =  [ 
 
-  ShaderChunks.kali_30 = [
-     // v : vertex
-     // s : seed
-     // p : precesion
-    "vec3 kali( vec3 v , vec3 s ){",
-      "float m = 0.0;",
-      "for( int i = 0; i < 30 ; i ++){",
-        "v.x = abs(v.x);",
-        "v.y = abs(v.y);", 
-        "v.z = abs(v.z);",
-        "m = v.x * v.x + v.y * v.y + v.z * v.z;",
-        "v.x = v.x / m + s.x;",
-        "v.y = v.y / m + s.y;",
-        "v.z = v.z / m + s.z;",
+    'vec3 audioColor( sampler2D audio , float sample , vec3 color ){',
+      'float a = texture2D( audio , vec2( sample , 0.0 ) ).a;',
+      'vec3 c = color * a;',
+      'return c;',  
+    '}'
+
+  ].join( "\n" ),
+  
+  ShaderChunks.createAudioColorShader = function( sample ){
+
+    var array = [
+      "uniform sampler2D  texture;",
+      "uniform vec3 color;",
+      "varying vec2 vUv;",
+      ShaderChunks.audioColor,
+      "void main( void ) {",
+        "float s = " + sample + ";",
+
+        "vec3 c = audioColor( texture , s , color );",
+        "gl_FragColor = vec4( c , 1.0 );",
+
+      "}"
+    ].join( "\n" );
+
+    return array;
+
+
+  }
+
+
+  ShaderChunks.createKali = function(precision){
+
+    var shader = [
+
+      "vec3 kali( vec3 v , vec3 s ){",
+        "float m = 0.0;",
+        "for( int i = 0; i < " + precision + "; i ++){",
+          "v.x = abs(v.x);",
+          "v.y = abs(v.y);", 
+          "v.z = abs(v.z);",
+          "m = v.x * v.x + v.y * v.y + v.z * v.z;",
+          "v.x = v.x / m + s.x;",
+          "v.y = v.y / m + s.y;",
+          "v.z = v.z / m + s.z;",
+        "}",
+        "return v;",
       "}",
-      "return v;",
-    "}",
-  ].join("\n");
+    
+    ].join("\n");
 
-  ShaderChunks.kali_10 = [
-     // v : vertex
-     // s : seed
-     // p : precesion
-    "vec3 kali( vec3 v , vec3 s ){",
-      "float m = 0.0;",
-      "for( int i = 0; i < 10 ; i ++){",
-        "v.x = abs(v.x);",
-        "v.y = abs(v.y);", 
-        "v.z = abs(v.z);",
-        "m = v.x * v.x + v.y * v.y + v.z * v.z;",
-        "v.x = v.x / m + s.x;",
-        "v.y = v.y / m + s.y;",
-        "v.z = v.z / m + s.z;",
-      "}",
-      "return v;",
-    "}",
-  ].join("\n");
-
-  ShaderChunks.kali_5 = [
-     // v : vertex
-     // s : seed
-     // p : precesion
-    "vec3 kali( vec3 v , vec3 s ){",
-      "float m = 0.0;",
-      "for( int i = 0; i < 5 ; i ++){",
-        "v.x = abs(v.x);",
-        "v.y = abs(v.y);", 
-        "v.z = abs(v.z);",
-        "m = v.x * v.x + v.y * v.y + v.z * v.z;",
-        "v.x = v.x / m + s.x;",
-        "v.y = v.y / m + s.y;",
-        "v.z = v.z / m + s.z;",
-      "}",
-      "return v;",
-    "}",
-  ].join("\n");
+    return shader;
+  
+  }
 
 
+ 
 
 
   ShaderChunks.createPhysicsTextureLoop = function(){

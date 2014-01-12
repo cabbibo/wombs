@@ -10,6 +10,7 @@ define(function(require, exports, module) {
 
     });
 
+    
     this.womb     = womb;
 
     this.numberLoaded = 0;
@@ -133,12 +134,28 @@ define(function(require, exports, module) {
       this.conditions.push( [ condition , callback ] ); 
     },
 
+    addFailureDialog: function(){
+
+      this.failureDialog = document.createElement('div');
+      this.failureDialog.id = "failure";
+
+      this.curtain.appendChild( this.failureDialog );
+
+      var failureTitle = document.createElement('h1');
+      failureTitle.innerHTML = 'LOADING FAILURE';
+      this.failureDialog.appendChild( failureTitle );
+
+      this.failureDialog = d;
+      alert(d);
+
+    },
 
     addFailure: function( failureName , failureLink ){
 
-      alert( "you don't have" + failureName );
-      alert( "check out" + failureLink );
+      if( !this.failureDialog )
+        this.addFailureDialog();
 
+      //var failureName = 
       this.failures.push( [failureName,failureLink] );
 
     },
@@ -156,6 +173,44 @@ define(function(require, exports, module) {
     onStart: function(){
      
       this.womb._start();
+
+    },
+
+    
+    detectWebGL: function(){
+
+      var webGL = function() { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } };
+
+      var gl = webGL();
+      if( !gl ){
+        this.addFailure("WebGL", [
+          'Get WebGL',
+          'http://get.webgl.org/'
+        ])
+      } 
+
+
+    },
+
+    detectWebAudioAPI: function(){
+
+      try {
+       
+        // Fix up for prefixing
+        window.AudioContext = window.AudioContext||window.webkitAudioContext;
+        //context = new AudioContext();
+
+      }
+      catch(e) {
+
+        this.addFailure( 
+
+          'Web Audio API' ,
+          [ 'List of browsers that support the Web Audio API' , 
+            'http://caniuse.com/audio-api' ]
+        ); 
+
+      }
 
     }
 

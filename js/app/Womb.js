@@ -43,9 +43,20 @@ define(function(require, exports, module) {
       color:         '#000000',
     });
 
+    this.interface        = new Interface(        this );
+    this.loader           = new Loader(           this );
+    this.tweener          = new Tweener(          this );
+
+    this.animator         = new Animator(         this );
+    this.audioController  = new AudioController(  this );
 
     // Time uniform
     this.time = { type: "f", value: 1.0 } ;
+
+
+    // Testing to make sure we can use WebGL in the first place
+    
+    this.loader.detectWebGL();
 
     /*
      *
@@ -130,12 +141,7 @@ define(function(require, exports, module) {
     this.container.addEventListener( 'mousedown', this._onMouseDown.bind(  this ), false );
     this.container.addEventListener( 'mouseup'  , this._onMouseUp.bind(    this ), false );
 
-    this.interface        = new Interface(        this );
-    this.loader           = new Loader(           this );
-    this.tweener          = new Tweener(          this );
 
-    this.animator         = new Animator(         this );
-    this.audioController  = new AudioController(  this );
 
     this.clock            = new THREE.Clock();
 

@@ -86,7 +86,6 @@ define(function(require, exports, module) {
       "uniform float audioPower;",
       "uniform float noiseSize;",
       
-
       shaderChunks.noise3D,
       shaderChunks.absAudioPosition,
       shaderChunks.audioUV,
@@ -142,7 +141,7 @@ define(function(require, exports, module) {
       "varying vec2 vUv;",
       "varying vec3 vPos;",
 
-      shaderChunks.kali_5,
+      shaderChunks.createKali( 5 ),
 
 
       "varying float displacement;",

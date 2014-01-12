@@ -19,19 +19,11 @@ define(function(require, exports, module) {
     /*
         CREATION
     */
-
-    try {
-      // Fix up for prefixing
-      window.AudioContext = window.AudioContext||window.webkitAudioContext;
-      context = new AudioContext();
-    }
-    catch(e) {
-      alert('Web Audio API is not supported in this browser');
-    }
-
-    this.ctx      = new AudioContext();
-
     this.womb = womb;
+
+    this.womb.loader.detectWebAudioAPI();
+ 
+    this.ctx      = new AudioContext();
 
     // Start with the filter off
     this.filterOn   = false;

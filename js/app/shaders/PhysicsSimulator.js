@@ -42,8 +42,7 @@ define(function(require, exports, module) {
       velocityShader:         ps.velocity.gravity,
       debug:                  true,
       startingVelocityRange:  10,
-      startingPositionRange:  1,
-
+      startingPositionRange:  1,  
       particles:              physicsParticles.basic1,
       
       speed:                  1.0,
@@ -184,9 +183,6 @@ define(function(require, exports, module) {
           resolution: { type: "v2", value: new THREE.Vector2(  this.TW , this.TW ) },
           texturePosition: { type: "t", value: null },
           textureVelocity: { type: "t", value: null },
-          texturePosition_OG: { type: "t", value: null },
-          textureVelocity_OG: { type: "t", value: null },
-
 
           // for use with audio
           audioTexture:    { type: "t" , value: null }
@@ -337,11 +333,6 @@ define(function(require, exports, module) {
 
     var p = this.dtPosition;
     var v = this.dtVelocity;
-    this.positionShader.uniforms.texturePosition_OG.value = p;
-    this.positionShader.uniforms.textureVelocity_OG.value = v;
-
-    this.velocityShader.uniforms.texturePosition_OG.value = p;
-    this.velocityShader.uniforms.textureVelocity_OG.value = v;
 
     this.RT.position1 = this.getRenderTarget();
     this.RT.position2 = this.getRenderTarget();

@@ -21,113 +21,18 @@ define(function(require, exports, module) {
 
       uv:{
 
-        x:[
-          "uniform sampler2D texture;",
-          "uniform vec3 color;",
-          "varying vec2 vUv;",
-
-          "void main( void ) {",
-            "float audio = texture2D( texture , vec2( vUv.x , 0.0 ) ).a;",
-            "float r = audio * color.r;",
-              "float g = audio * color.g;",
-              "float b = audio * color.b;",
-              "gl_FragColor = vec4( r , g , b , 1.0 );",
-            "}"
-          ].join( "\n" ),
+        x: SC.createAudioColorShader( 'vUv.x' ),
+        y: SC.createAudioColorShader( 'vUv.y' ),
+        xy: SC.createAudioColorShader( '( vUv.x + vUv.y ) / 2.0' ),
+        absX: SC.createAudioColorShader( 'abs(vUv.x - 0.5) * 2.0' ),
+        absY: SC.createAudioColorShader( 'abs(vUv.y - 0.5) * 2.0' ),
+        absXY: SC.createAudioColorShader( 'abs( vUv.y + vUv.x - 1.0 )' ),
+        absDiamond: SC.createAudioColorShader( 
+          'abs( vUv.y - .5) + abs( vUv.x - .5 )' 
+        ),
 
 
-          y:[
-            "uniform sampler2D  texture;",
-            "uniform vec3 color;",
-            "varying vec2 vUv;",
-
-            "void main( void ) {",
-              "float audio = texture2D( texture , vec2( vUv.y , 0.0 ) ).a;",
-              "float r = audio * color.r;",
-              "float g = audio * color.g;",
-              "float b = audio * color.b;",
-              "gl_FragColor = vec4( r , g , b , 1.0 );",
-            "}"
-          ].join( "\n" ),
-
-          xy:[
-            "uniform sampler2D  texture;",
-            "uniform vec3 color;",
-            "varying vec2 vUv;",
-
-            "void main( void ) {",
-              "float audio = texture2D( texture , vec2( ( vUv.x + vUv.y ) / 2.0 , 0.0 ) ).g;",
-              "float r = audio * color.r;",
-              "float g = audio * color.g;",
-              "float b = audio * color.b;",
-              "gl_FragColor = vec4( r , g , b , 1.0 );",
-            "}"
-          ].join( "\n" ),
-
-          absX:[
-            "uniform sampler2D  texture;",
-            "uniform vec3 color;",
-            "varying vec2 vUv;",
-            
-            "void main( void ) {",
-              "float abs = abs(vUv.x - 0.5) * 2.0;",
-              "float audio = texture2D( texture , vec2( abs , 0.0 ) ).a;",
-              "float r = audio * color.r;",
-              "float g = audio * color.g;",
-              "float b = audio * color.b;",
-              "gl_FragColor = vec4( r , g , b , 1.0 );",
-            "}"
-          ].join( "\n" ),
-
-          absY:[
-            "uniform sampler2D  texture;",
-            "uniform vec3 color;",
-            "varying vec2 vUv;",
-            
-            "void main( void ) {",
-              "float abs = abs(vUv.y - 0.5) * 2.0;",
-              "float audio = texture2D( texture , vec2( abs , 0.0 ) ).a;",
-              "float r = audio * color.r;",
-              "float g = audio * color.g;",
-              "float b = audio * color.b;",
-              "gl_FragColor = vec4( r , g , b , 1.0 );",
-            "}"
-          ].join( "\n" ),
-          
-          absXY:[
-            "uniform sampler2D  texture;",
-            "uniform vec3 color;",
-            "varying vec2 vUv;",
-            
-            "void main( void ) {",
-              "float abs = abs( vUv.y + vUv.x - 1.0 );",
-              //"float abs = abs(vUv.y - 0.5) * 2.0;",
-              "float audio = texture2D( texture , vec2( abs , 0.0 ) ).a;",
-              "float r = audio * color.r;",
-              "float g = audio * color.g;",
-              "float b = audio * color.b;",
-              "gl_FragColor = vec4( r , g , b , 1.0 );",
-            "}"
-          ].join( "\n" ),
-
-          absDiamond:[
-            "uniform sampler2D  texture;",
-            "uniform vec3 color;",
-            "varying vec2 vUv;",
-            
-            "void main( void ) {",
-              "vec2 centerUV = vUv - 0.5;",
-              "float abs = abs( centerUV.y )  + abs(centerUV.x );",
-              //"float abs = abs(vUv.y - 0.5) * 2.0;",
-              "float audio = texture2D( texture , vec2( abs , 0.0 ) ).a;",
-              "float r = audio * color.r;",
-              "float g = audio * color.g;",
-              "float b = audio * color.b;",
-              "gl_FragColor = vec4( r , g , b , 1.0 );",
-            "}"
-          ].join( "\n" ),
-
-        },
+      },
 
 
         position:{
