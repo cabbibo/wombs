@@ -44,7 +44,7 @@ define(function(require, exports, module) {
       startingVelocityRange:  10,
       startingPositionRange:  1,
 
-      particles:              physicsParticles.basic,
+      particles:              physicsParticles.basic1,
       
       speed:                  1.0,
 
@@ -60,21 +60,15 @@ define(function(require, exports, module) {
         
       },
 
-      particleShaderUniforms:{
-  
-          speed:                 1.0,
-        
-      },
-
-
       particleParams:   {
-        size: 20,
+        size: 5,
+        sizeAttenuation: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         transparent: true,
         fog: true, 
         map: THREE.ImageUtils.loadTexture( '../lib/img/particles/lensFlare.png' ),
-        opacity:    .9,
+        opacity:    .4,
       }
     });
 
@@ -498,8 +492,9 @@ define(function(require, exports, module) {
 
       x = 2 * Math.random() * this.bounds - this.bounds;
       y = 2 * Math.random() * this.bounds - this.bounds;
-      z = 2 * Math.random() * this.bounds - this.bounds;
+      //z = 2 * Math.random() * this.bounds - this.bounds;
 
+      z = 0;
       m = 1; 
       
       if( this.params.startingVelocityRange.length ){

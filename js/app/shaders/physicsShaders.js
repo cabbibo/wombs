@@ -160,7 +160,9 @@ define(function(require, exports, module) {
       curl:[
 
       SC.physicsUniforms,
-      SC.physicsUniforms_OG,
+      SC.physicsUniforms_bounds,
+      SC.bindUsingVelocity,
+
       SC.curlNoise,
 
       "void main(){",
@@ -170,10 +172,12 @@ define(function(require, exports, module) {
 
           "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
           "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
-          "vec3 selfVelocity_OG  = texture2D( textureVelocity_OG , uv ).xyz;",
 
-          "vec3 potential = curlNoise( normalize(selfPosition) );",
-          "gl_FragColor=vec4( selfVelocity + potential , 1.0  );",
+          "vec3 potential = curlNoise( selfPosition * .01 );",
+
+          //"vec
+
+          "gl_FragColor=vec4( selfVelocity + potential * 1.0 , 1.0  );",
 
 
 
@@ -211,8 +215,6 @@ define(function(require, exports, module) {
 
         SC.physicsUniforms,
 
-        "uniform float speed;",
-
         "uniform float gravityStrength;",
         "uniform float dampening;",
 
@@ -240,7 +242,6 @@ define(function(require, exports, module) {
 
 
 
-          "velocity *= speed;",
           "velocity *= dampening;",
           "gl_FragColor=vec4( velocity * mass, mass );",
           //"if(", 
@@ -261,7 +262,6 @@ define(function(require, exports, module) {
         "uniform float cohesionDistance;", // 200
         "uniform float freedomFactor;",
 
-        "uniform float speed;",
         "uniform float size;",
 
         SC.PI,
@@ -336,7 +336,6 @@ define(function(require, exports, module) {
           "}",
 
 
-          "velocity *= speed;",
           "velocity = bindUsingVelocity( vec2( lowerBounds , upperBounds ) , selfPosition.xyz , velocity );",
 
           //"gl_FragColor = vec4( mass , mass , mass , 1.0 );",

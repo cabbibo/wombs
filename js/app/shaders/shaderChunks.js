@@ -461,7 +461,7 @@ define(function(require, exports, module) {
       ShaderChunks.noise3D_3,
       
       "vec3 curlNoise( vec3 p ){",
-        "const float e = 1e-4;",
+        "const float e = 1e-1;",
         "vec3 dx = vec3( e   , 0.0 , 0.0 );",
 	    "vec3 dy = vec3( 0.0 , e   , 0.0 );",
 	    "vec3 dz = vec3( 0.0 , 0.0 , e   );",
