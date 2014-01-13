@@ -2,11 +2,16 @@ html{
   color:#fff;
   font-family:"GeoSans";
   background-repeat:no-repeat;
+  cursor: url(../lib/img/icons/cursorWhite.png), auto;
+ // cursor: vertical-text;
+
 }
 
 body{
   margin: 0px;
-  overflow: hidden;
+  overflow: hidden
+ /* cursor: url(../lib/img/particles/cabLog25White.png), auto;*/
+  cursor: vertical-text;
 }
 
 @font-face {
