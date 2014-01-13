@@ -203,7 +203,7 @@ define(function(require, exports, module) {
     var material = new THREE.ShaderMaterial( {
       uniforms:       uniforms, 
       vertexShader:   vertexShaders.passThrough,
-      fragmentShader: fragmentShaders.audio.color.image.sample_pos_diamond,
+      fragmentShader: fragmentShaders.audio.color.image.uv_absDiamond_sub,
       transparent:    true,
       fog:            true,
       opacity:        0.1,
