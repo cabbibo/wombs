@@ -237,8 +237,11 @@ define(function(require, exports, module) {
 
     onStart: function(){
      
-      this.womb._start();
-
+      if( !this.failures.length ){
+        this.womb._start();
+      }else{ 
+        console.log(' FAILED ');
+      }
     },
 
     detect: function(){

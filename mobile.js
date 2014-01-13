@@ -66,7 +66,7 @@ define(function(require, exports, module) {
 
       texture:    { type: "t", value: womb.stream.texture.texture },
       image:      { type: "t", value: womb.stream.texture.texture },
-      color:      { type: "v3", value: new THREE.Vector3( .3 , .01 , .1 ) },
+      color:      { type: "v3", value: new THREE.Vector3( .5 , .9 , .7 ) },
       time:       womb.time,
       pow_noise:  { type: "f" , value: 0.2 },
       pow_audio:  { type: "f" , value: .3 },
