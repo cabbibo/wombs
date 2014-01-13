@@ -35,6 +35,7 @@ define(function(require, exports, module) {
     //summary:          info,
     //gui:              true,
     imageLoader:      true,
+    neededTech:       [ 'webGL' , 'audio' ],
     //stats:            true,
     color:            '#000000',
     size: 400
