@@ -114,7 +114,7 @@ define(function(require, exports, module) {
 
     var i =  '../lib/img/icons/twitter_1.png';
     var t = 'TWITTER';
-    var l = "http://twitter.com/share?text=@avalon_emerson's%20Quoi,%20Synesthetia%20by%20@cabbibo&url=http://wom.bs/quoi/";
+    var l = "http://twitter.com/share?text=Watch%20the%20new%20interactive%20video%20for%20%22Quoi%22,%20a%20track%20from%20@avalon_emerson%20on%20@ICEEHOT;%20visualized%20by%20@cabbibo%20&url=http://wom.bs/quoi/";
     this.TWITTER = this.createLink( i , t , l );    
 
     var i =  '../lib/img/icons/facebook_1.png';
