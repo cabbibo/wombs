@@ -220,7 +220,6 @@ define(function(require, exports, module) {
       this.failureDialog.style.left = left + "px";
 
 
-
       console.log( this.failureDialog.clientHeight );
 
     },
@@ -228,20 +227,19 @@ define(function(require, exports, module) {
     onFinishedLoading: function(){
    
       var self = this;
-      
-      $(this.curtain).fadeOut('slow',function(){
-        self.onStart();
-      });
+     
+      if( !this.failures.length ){
+        $(this.curtain).fadeOut('slow',function(){
+          self.onStart();
+        });
+      }
 
     },
 
     onStart: function(){
-     
-      if( !this.failures.length ){
-        this.womb._start();
-      }else{ 
-        console.log(' FAILED ');
-      }
+    
+      this.womb._start();
+      
     },
 
     detect: function(){
