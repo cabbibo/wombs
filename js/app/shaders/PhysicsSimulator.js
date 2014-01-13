@@ -512,6 +512,7 @@ define(function(require, exports, module) {
       x =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
       y =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
 
+      y = 0;
       z = 0;
       m = 1; 
       

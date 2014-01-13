@@ -660,7 +660,7 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
-    document.body.style.cursor = 'none';    
+    //document.body.style.cursor = 'none';    
     
     var offset = -490;
 
@@ -1736,7 +1736,7 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
 
     var credits = function(){
      
-      document.body.style.cursor = 'auto';
+      //document.body.style.cursor = 'auto';
       womb.credits.enter();
     }
 
