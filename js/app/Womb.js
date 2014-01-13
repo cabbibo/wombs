@@ -39,9 +39,14 @@ define(function(require, exports, module) {
       springController: false,
       leapController:   false,
       textCreator:      false,
-      size:               100,
-      color:         '#000000',
+      size:             100,
+      color:            '#000000',
+      neededTech:       [ 'webGL' , 'audio' , 'mobile' ],
+      failureVideo:     78429067    // The Vimeo Video Number !
     });
+
+    this.loaderParams = {};
+    this.loaderParams.neededTech = this.params.neededTech;
 
     this.interface        = new Interface(        this );
     this.loader           = new Loader(           this );
@@ -52,11 +57,6 @@ define(function(require, exports, module) {
 
     // Time uniform
     this.time = { type: "f", value: 1.0 } ;
-
-
-    // Testing to make sure we can use WebGL in the first place
-    
-    this.loader.detectWebGL();
 
     /*
      *

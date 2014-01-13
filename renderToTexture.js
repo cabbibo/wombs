@@ -33,9 +33,9 @@ define(function(require, exports, module) {
     //title:            'Philip Glass - Knee 1 ( Nosaj Thing Remix )',
     //link:             link, 
     //summary:          info,
-    gui:              true,
+    //gui:              true,
     imageLoader:      true,
-    stats:            true,
+    //stats:            true,
     color:            '#000000',
     size: 400
   });
@@ -52,7 +52,7 @@ define(function(require, exports, module) {
     velocityStartingRange:.0000,
     positionStartingRange:.000002,
     positionShader: physicsShaders.positionAudio4,
-    bounds: 1,
+    bounds: 50,
     speed: .1
     
   })
@@ -65,7 +65,7 @@ define(function(require, exports, module) {
 
       texture:    { type: "t", value: womb.stream.texture.texture },
       image:      { type: "t", value: womb.stream.texture.texture },
-      color:      { type: "v3", value: new THREE.Vector3( 1 , .5 , .4 ) },
+      color:      { type: "v3", value: new THREE.Vector3( .3 , .01 , .1 ) },
       time:       womb.time,
       pow_noise:  { type: "f" , value: 0.2 },
       pow_audio:  { type: "f" , value: .3 },
@@ -84,9 +84,12 @@ define(function(require, exports, module) {
 
       uniforms: uniforms,
       vertexShader: vertexShaders.passThrough,
-      fragmentShader: fragmentShaders.audio.color.uv.absDiamond
+      fragmentShader: fragmentShaders.audio.color.uv.absDiamond,
+      blending: THREE.AdditiveBlending,
+      transparent: true,
+      side: THREE.BackSide,
     });
-    var geo = new THREE.CubeGeometry( 100 , 100 , 100 );
+    var geo = new THREE.CubeGeometry( 3000 , 3000 , 3000 );
     var mesh = new THREE.Mesh( geo , mat );
 
     womb.scene.add( mesh );
@@ -117,7 +120,6 @@ define(function(require, exports, module) {
   womb.raycaster.onMeshHoveredOut = function(){
 
   }
-
   
 
 });

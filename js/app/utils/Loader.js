@@ -6,16 +6,19 @@ define(function(require, exports, module) {
 
     this.params = _.defaults( params || {}, {
       numberToLoad:   1,
-      loadGif:        "/lib/img/gifs/loadGif.gif"
-
+      loadGif:        "/lib/img/gifs/loadGif.gif",
+      videoWidth: 500,
+      videoHeight: 281
     });
 
     
     this.womb     = womb;
 
+    this.neededTech = this.womb.params.neededTech;
+
     this.numberLoaded = 0;
     this.numberToLoad = this.params.numberToLoad;
-
+    
     this.curtain = document.createElement('div');
     this.curtain.id = "curtain";
 
@@ -59,6 +62,10 @@ define(function(require, exports, module) {
     // Failures are things that the browser doesn't have.
     // If there are a non 0 number of failures the user will be alerted
     this.failures = [];
+
+
+
+    this.detect();
 
 
   }
@@ -137,26 +144,84 @@ define(function(require, exports, module) {
     addFailureDialog: function(){
 
       this.failureDialog = document.createElement('div');
-      this.failureDialog.id = "failure";
+      this.failureDialog.id = "failureDialog";
 
       this.curtain.appendChild( this.failureDialog );
 
-      var failureTitle = document.createElement('h1');
-      failureTitle.innerHTML = 'LOADING FAILURE';
-      this.failureDialog.appendChild( failureTitle );
+      var failureTitle = document.createElement('h3');
+      failureTitle.id = "failureTitle";
+      failureTitle.innerHTML = "Here's a Video for you";
 
-      this.failureDialog = d;
-      alert(d);
+      var failureReasons = document.createElement('h3');
+      failureTitle.id = "failureReaons";
+      failureReasons.innerHTML = 'Because this project requires the following:';
+
+      /*var failureReasons = document.createElement('p');
+      failureReasons.id = "failureReasons";
+      failureReasons.innerHTML = "Wom.bs requires:";*/
+
+      this.failureList = document.createElement('p');
+      this.failureList.id = "failureList";
+
+
+      this.failureVideo = document.createElement('div');
+
+      var w = window.innerWidth / 1.618;
+      var string = '<iframe src="//player.vimeo.com/video/';
+      string += this.womb.params.failureVideo;
+      string += '" width="'
+      string += w;
+      string += '" height="'
+      string += w * .618;
+      string += '" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+
+      this.failureVideo.innerHTML = string;
+      
+      
+      this.failureDialog.appendChild( failureTitle );
+      this.failureDialog.appendChild( this.failureVideo );
+      this.failureDialog.appendChild( failureReasons );
+      this.failureDialog.appendChild( this.failureList );
+
 
     },
 
     addFailure: function( failureName , failureLink ){
 
+      
       if( !this.failureDialog )
         this.addFailureDialog();
 
+      var failure = document.createElement('a');
+
+      failure.href = failureLink;
+      failure.target = '_blank';
+      failure.innerHTML = "   " + failureName+ "   ";
+
+      this.failureList.appendChild( failure );
+
       //var failureName = 
       this.failures.push( [failureName,failureLink] );
+
+      var xHalf = this.failureDialog.clientWidth / 2;
+      var yHalf = this.failureDialog.clientHeight / 2 ;
+
+      var wHalf = window.innerWidth / 2;
+      var hHalf = window.innerHeight / 2;
+
+      var top = hHalf - yHalf;
+      var left = wHalf - xHalf;
+
+      console.log( top );
+      if( top < 5 ) top = 5;
+      if( left < 5 ) left = 5;
+
+      this.failureDialog.style.top  = top + "px";
+      this.failureDialog.style.left = left + "px";
+
+
+
+      console.log( this.failureDialog.clientHeight );
 
     },
 
@@ -176,41 +241,66 @@ define(function(require, exports, module) {
 
     },
 
+    detect: function(){
+
+
+      for(var i = 0 ; i < this.neededTech.length; i++ ){
+
+        var tech = this.neededTech[i];
+        if( tech == 'webGL' )
+          this.detectWebGL();
+        else if( tech == 'audio' )
+          this.detectWebAudioAPI();
+        else if( tech == 'mobile' )
+          this.detectMobile();
+
+      }
+
+
+    },
     
     detectWebGL: function(){
 
       var webGL = function() { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } };
 
       var gl = webGL();
-      if( !gl ){
-        this.addFailure("WebGL", [
-          'Get WebGL',
-          'http://get.webgl.org/'
-        ])
-      } 
-
+      
+      if( !gl )
+        this.addFailure( "WebGL" ,'http://get.webgl.org/');
 
     },
 
     detectWebAudioAPI: function(){
 
       try {
-       
-        // Fix up for prefixing
         window.AudioContext = window.AudioContext||window.webkitAudioContext;
-        //context = new AudioContext();
-
+      }catch(e) {
+        this.addFailure( 'Web Audio API' ,'http://caniuse.com/audio-api' ); 
       }
-      catch(e) {
 
-        this.addFailure( 
+    },
 
-          'Web Audio API' ,
-          [ 'List of browsers that support the Web Audio API' , 
-            'http://caniuse.com/audio-api' ]
-        ); 
+    detectMobile: function(){
 
+      var detectM = function () { 
+        if( navigator.userAgent.match(/Android/i)
+        || navigator.userAgent.match(/webOS/i)
+        || navigator.userAgent.match(/iPhone/i)
+        || navigator.userAgent.match(/iPad/i)
+        || navigator.userAgent.match(/iPod/i)
+        || navigator.userAgent.match(/BlackBerry/i)
+        || navigator.userAgent.match(/Windows Phone/i)
+        ){
+          return true;
+        } else {
+          return false;
+        }
       }
+
+      var mobile = detectM();
+
+      if( mobile )
+        this.addFailure( "Non Mobile" , "http://cabbibo.tumblr.com" );
 
     }
 
