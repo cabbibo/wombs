@@ -94,9 +94,7 @@ define(function(require, exports, module) {
     var mesh = new THREE.Mesh( geo , mat );
 
     womb.scene.add( mesh );
-  //womb.interface.addAllUniforms( womb.ps.velocityShader.uniforms );
 
-      console.log('HELLO');
   }
 
   womb.loader.loadBarAdd();
