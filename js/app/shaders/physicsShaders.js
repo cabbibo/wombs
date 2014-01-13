@@ -117,6 +117,28 @@ define(function(require, exports, module) {
 
     ].join("\n"),
 
+    positionAudio_TEST:[
+
+      "uniform vec2 resolution;",
+      "uniform float time;",
+      "uniform float speed;",
+      "uniform float delta;",
+      "uniform sampler2D textureVelocity;",
+      "uniform sampler2D texturePosition;",
+      "uniform sampler2D audioTexture;",
+
+      "void main(){",
+
+        "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+        "vec3 position = texture2D( texturePosition, uv ).xyz;",
+        "vec3 velocity = texture2D( textureVelocity, uv ).xyz;",
+        "float audio = texture2D( audioTexture , vec2( uv.x , 0.0 ) ).w;",
+        "gl_FragColor=vec4( audio * 50.0 , 0.0  , 0.0, 1.0 );",
+
+      "}"
+
+    ].join("\n"),
+
      positionSimplex:[
 
       "uniform vec2 resolution;",
@@ -161,6 +183,8 @@ define(function(require, exports, module) {
 
       SC.physicsUniforms,
       SC.physicsUniforms_bounds,
+      "uniform float noiseSize;",
+      "uniform float potentialPower;",
       SC.bindUsingVelocity,
 
       SC.curlNoise,
@@ -173,11 +197,11 @@ define(function(require, exports, module) {
           "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
           "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
 
-          "vec3 potential = curlNoise( selfPosition * .01 );",
+          "vec3 potential = curlNoise( selfPosition * noiseSize );",
 
           //"vec
 
-          "gl_FragColor=vec4( selfVelocity + potential * 1.0 , 1.0  );",
+          "gl_FragColor=vec4( selfVelocity + potential * potentialPower , 1.0  );",
 
 
 

@@ -34,6 +34,11 @@ define(function(require, exports, module) {
       audio: true,
     };
 
+    if( this.params.texture ){
+      this.texture  = new AudioTexture( this ); 
+    }
+
+
     navigator.getUserMedia( constraints , this.successCallback.bind( this ) , this.errorCallback.bind( this ) );
 
 
@@ -52,10 +57,6 @@ define(function(require, exports, module) {
     this.source.connect(                    this.gain );
     this.gain.connect(                  this.analyser );
     this.analyser.connect( this.controller.compressor );
-
-    if( this.params.texture ){
-      this.texture  = new AudioTexture( this ); 
-    }
 
     this.onStreamCreated();
 

@@ -39,7 +39,7 @@ define(function(require, exports, module) {
       textureWidth:           50.0,
       bounds:                 womb.size,
       positionShader:         ps.position,
-      velocityShader:         ps.velocity.gravity,
+      velocityShader:         ps.velocity.curl,
       debug:                  true,
       startingVelocityRange:  10,
       startingPositionRange:  1,  
@@ -53,6 +53,10 @@ define(function(require, exports, module) {
           alignmentDistance:    150.0,
           cohesionDistance:     100.0,
           freedomFactor:          0.3,
+
+
+          noiseSize:              .001,
+          potentialPower:         5.0,
           
           dampening:             1.0,
           gravityStrength:     5000.0,
@@ -60,16 +64,19 @@ define(function(require, exports, module) {
       },
 
       particleParams:   {
-        size: 5,
+        size: 25,
         sizeAttenuation: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         transparent: true,
         fog: true, 
         map: THREE.ImageUtils.loadTexture( '../lib/img/particles/lensFlare.png' ),
-        opacity:    .4,
+        opacity:    1.0,
       }
     });
+
+    if( this.params.audio )
+      this.audio = this.params.audio
 
 
     console.log( this.params );
@@ -174,6 +181,13 @@ define(function(require, exports, module) {
 
     */
 
+    var audio = null
+    if( this.audio ){
+      console.log( this.audio );
+      audio = this.audio.texture.texture;
+    }
+
+
     this.positionShader = new THREE.ShaderMaterial({
 
       uniforms: {
@@ -185,7 +199,7 @@ define(function(require, exports, module) {
           textureVelocity: { type: "t", value: null },
 
           // for use with audio
-          audioTexture:    { type: "t" , value: null }
+          audioTexture:    { type: "t" , value: audio }
       },
       vertexShader: vertexShaders.passThrough_noMV,
       fragmentShader: this.params.positionShader,
@@ -219,6 +233,10 @@ define(function(require, exports, module) {
 
           dampening:          { type: "f" , value: null },
           gravityStrength:    { type: "f" , value: null },
+
+          noiseSize:          { type: "f" , value: null },
+          potentialPower:     { type: "f" , value: null },
+
       }
 
 
@@ -267,6 +285,9 @@ define(function(require, exports, module) {
 
     helperFunctions.setMaterialUniforms( this.particleMaterial , this.params.particleParams );
 
+    if( this.audio )
+      this.particleMaterial.uniforms.audioTexture.value = this.audio.texture.texture;
+
     this.particleSystem = new THREE.ParticleSystem(
       this.particleGeometry,
       this.particleMaterial
@@ -303,17 +324,20 @@ define(function(require, exports, module) {
       this.renderVelocity( this.RT.position1 , this.RT.velocity1 , this.RT.velocity2 );
       this.renderPosition( this.RT.position1 , this.RT.velocity2 , this.RT.position2 );
 
-      if( this.particleMaterial.uniforms )
+      if( this.particleMaterial.uniforms ){
         this.particleMaterial.uniforms.lookup.value = this.RT.position2;
+ //       this.particleMaterial.uniforms.lookupVel.value = this.RT.velocity2;
+      }
 
     }else {
 
       this.renderVelocity( this.RT.position2 , this.RT.velocity2 , this.RT.velocity1 );
       this.renderPosition( this.RT.position2 , this.RT.velocity1 , this.RT.position1 );
 
-      if( this.particleMaterial.uniforms )
+      if( this.particleMaterial.uniforms ){
         this.particleMaterial.uniforms.lookup.value = this.RT.position1;
-
+ //       this.particleMaterial.uniforms.lookupVel.value = this.RT.velocity1;
+      }
     }
 
     this.flipflop = !this.flipflop;
@@ -484,6 +508,9 @@ define(function(require, exports, module) {
       x = 2 * Math.random() * this.bounds - this.bounds;
       y = 2 * Math.random() * this.bounds - this.bounds;
       //z = 2 * Math.random() * this.bounds - this.bounds;
+
+      x =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
+      y =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
 
       z = 0;
       m = 1; 

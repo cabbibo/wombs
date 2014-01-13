@@ -206,11 +206,16 @@ define( function( require , exports , module ){
     // Getting the proper place to add the uniform
     var f = folder || this.gui;
 
+    console.log( propt );
+    console.log( uniform );
+    console.log( f );
+    
     if( uniform.type == 't' ){
       this.addTextureUniform( propt , uniform , f );
     } else if ( uniform.type == 'v3' ){
       this.addVectorUniform( propt , uniform , f );
     } else if( uniform.type == 'f' ){
+      console.log('WHOA')
       f.add( uniform , 'value', -uniform.value * 2 , uniform.value * 2 ).listen();
     }
 

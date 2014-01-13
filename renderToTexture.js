@@ -15,6 +15,7 @@ define(function(require, exports, module) {
 
   var PhysicsSimulator    = require( 'app/shaders/PhysicsSimulator'   );
   var physicsShaders      = require( 'app/shaders/physicsShaders'     );
+  var physicsParticles    = require( 'app/shaders/physicsParticles'   );
 
 
   /*
@@ -22,7 +23,7 @@ define(function(require, exports, module) {
      Create our womb
 
   */
-  var link = 'http://robbietilton.com';
+  var link = 'http://soundcloud.com/holyother';
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
@@ -30,38 +31,42 @@ define(function(require, exports, module) {
     modelLoader:      true,
     textCreator:      true,
     raycaster:        true,
-    //title:            'Philip Glass - Knee 1 ( Nosaj Thing Remix )',
-    //link:             link, 
-    //summary:          info,
-    //gui:              true,
+    title:            'Holy Other - We Over',
+    link:             link, 
+    summary:          info,
+    gui:              true,
     imageLoader:      true,
-    //stats:            true,
+    stats:            true,
     color:            '#000000',
+    failureVideo:84019684,
     size: 400
   });
 
 
-  womb.stream = womb.audioController.createUserAudio();
-  womb.audioController.gain.gain.value = 0;
+  //womb.stream = womb.audioController.createUserAudio();
+  womb.stream = womb.audioController.createStream( '../lib/audio/tracks/weOver.mp3' );
+  //womb.audioController.gain.gain.value = 0;
 
   womb.ps = new PhysicsSimulator( womb , {
 
-    textureWidth: 500,
+    textureWidth: 300,
     debug: false,
     velocityShader: physicsShaders.velocity.curl,
     velocityStartingRange:.0000,
     positionStartingRange:.000002,
-    positionShader: physicsShaders.positionAudio4,
-    bounds: 50,
-    speed: .1
-    
-  })
+    positionShader: physicsShaders.positionAudio_4,
+    particles:      physicsParticles.basicAudio,
+    bounds: 100,
+    speed: .1,
+   
+    audio: womb.stream
 
-  womb.stream.onStreamCreated =  function(){
-
-    console.log('WHOA');
-
-    womb.u = {
+  });
+  console.log( womb.ps.velocityShader.uniforms );
+  womb.interface.gui.add( womb.ps.velocityShader.uniforms.noiseSize , 'value' , 0 , .01 );
+  womb.interface.gui.add( womb.ps.velocityShader.uniforms.potentialPower , 'value' , 0 , 10.0 );
+  //womb.interface.addUniform( womb.ps.velocityShader.uniforms.noiseSize , 'VelocityShader' );
+  womb.u = {
 
       texture:    { type: "t", value: womb.stream.texture.texture },
       image:      { type: "t", value: womb.stream.texture.texture },
@@ -88,14 +93,15 @@ define(function(require, exports, module) {
       blending: THREE.AdditiveBlending,
       transparent: true,
       side: THREE.BackSide,
+
     });
     var geo = new THREE.CubeGeometry( 3000 , 3000 , 3000 );
     var mesh = new THREE.Mesh( geo , mat );
 
-    womb.scene.add( mesh );
-  //womb.interface.addAllUniforms( womb.ps.velocityShader.uniforms );
+   // womb.scene.add( mesh );
 
-      console.log('HELLO');
+
+  womb.stream.onStreamCreated =  function(){
   }
 
   womb.loader.loadBarAdd();
@@ -110,7 +116,8 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
-   // womb.stream.play();
+    womb.stream.play();
+  
   }
 
   womb.raycaster.onMeshHoveredOver = function(){

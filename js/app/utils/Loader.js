@@ -150,11 +150,11 @@ define(function(require, exports, module) {
 
       var failureTitle = document.createElement('h3');
       failureTitle.id = "failureTitle";
-      failureTitle.innerHTML = "Here's a Video for you";
+      failureTitle.innerHTML = "But you can still watch the video version:";
 
-      var failureReasons = document.createElement('h3');
+      var failureReasons = document.createElement('h2');
       failureTitle.id = "failureReaons";
-      failureReasons.innerHTML = 'Because this project requires the following:';
+      failureReasons.innerHTML = 'Best viewed on Chrome. This project requires:';
 
       /*var failureReasons = document.createElement('p');
       failureReasons.id = "failureReasons";
@@ -177,12 +177,12 @@ define(function(require, exports, module) {
 
       this.failureVideo.innerHTML = string;
       
-      
-      this.failureDialog.appendChild( failureTitle );
-      this.failureDialog.appendChild( this.failureVideo );
       this.failureDialog.appendChild( failureReasons );
       this.failureDialog.appendChild( this.failureList );
 
+      this.failureDialog.appendChild( failureTitle );
+      this.failureDialog.appendChild( this.failureVideo );
+  
 
     },
 

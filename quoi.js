@@ -64,6 +64,7 @@ define(function(require, exports, module) {
     social:           socialLinks, 
     imageLoader:      true,
     color:            '#0f0020',
+    failureVideo:     84019684,
     size: 400
   });
 
