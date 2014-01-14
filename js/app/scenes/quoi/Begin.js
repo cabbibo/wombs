@@ -64,7 +64,7 @@ define(function(require, exports, module) {
       pow_audio:  { type: "f" , value: .04 },
     }
     
-    this.t_CENTER = this.womb.textCreator.createTexture( 'QUOI' );
+    this.t_CENTER = this.womb.textCreator.createTexture( 'QUOI - AVALON EMERSON' );
 
     console.log( this.t_CENTER );
     this.u_CENTER= THREE.UniformsUtils.merge( [

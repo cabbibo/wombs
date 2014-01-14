@@ -11,7 +11,7 @@ define(function(require, exports, module) {
       size:                 this.world.size / 10,
       type:                    "20pt GeoSans", 
       color:    "rgba( 255 , 255 , 255 , 0.95 )",
-      crispness:                              10,
+      crispness:                              5,
       margin:               this.world.size / 20,  
       square:                               false
 
