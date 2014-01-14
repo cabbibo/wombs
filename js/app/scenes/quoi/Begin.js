@@ -110,7 +110,7 @@ define(function(require, exports, module) {
     this.m_CENTER = new THREE.ShaderMaterial( {
       uniforms:       this.u_CENTER, 
       vertexShader:   vertexShaders.audio.noise.position,
-      fragmentShader: fragmentShaders.audio.color.image.uv_absDiamond_sub,
+      fragmentShader: fragmentShaders.audio.color.image.add_uv_absDiamond,
       transparent:    true,
       fog:            true,
       opacity:        0.1,
