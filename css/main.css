@@ -9,9 +9,7 @@ html{
 
 body{
   margin: 0px;
-  overflow: hidden
- /* cursor: url(../lib/img/particles/cabLog25White.png), auto;*/
-  cursor: vertical-text;
+  overflow: hidden;
 }
 
 @font-face {
