@@ -65,6 +65,8 @@ define(function(require, exports, module) {
     imageLoader:      true,
     color:            '#0f0020',
     failureVideo:     84019684,
+    failureTitleText: 'Best viewed on Chrome. This project requires:',
+    failureVideoText: 'But you can still watch the video version:',
     size: 400
   });
 

@@ -150,11 +150,13 @@ define(function(require, exports, module) {
 
       var failureTitle = document.createElement('h3');
       failureTitle.id = "failureTitle";
-      failureTitle.innerHTML = "But you can still watch the video version:";
+      failureTitle.innerHTML = this.womb.params.failureVideoText;
+      //"But you can still watch the video version:";
 
       var failureReasons = document.createElement('h2');
       failureTitle.id = "failureReaons";
-      failureReasons.innerHTML = 'Best viewed on Chrome. This project requires:';
+      failureReasons.innerHTML = this.womb.params.failureTitleText;
+      //'Best viewed on Chrome. This project requires:';
 
       /*var failureReasons = document.createElement('p');
       failureReasons.id = "failureReasons";
