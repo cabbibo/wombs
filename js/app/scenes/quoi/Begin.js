@@ -66,7 +66,7 @@ define(function(require, exports, module) {
     
     this.t_CENTER = this.womb.textCreator.createTexture( 'QUOI' );
 
-    console.log( t_CENTER );
+    console.log( this.t_CENTER );
     this.u_CENTER= THREE.UniformsUtils.merge( [
         THREE.ShaderLib['basic'].uniforms,
         this.u,
