@@ -64,8 +64,9 @@ define(function(require, exports, module) {
       pow_audio:  { type: "f" , value: .04 },
     }
     
-    this.t_CENTER = this.womb.textCreator.createTexture( 'QUOI - AVALON EMERSON' );
+    this.t_CENTER = this.womb.textCreator.createTexture( 'QUOI' );
 
+    console.log( t_CENTER );
     this.u_CENTER= THREE.UniformsUtils.merge( [
         THREE.ShaderLib['basic'].uniforms,
         this.u,
@@ -78,7 +79,7 @@ define(function(require, exports, module) {
     this.m_CENTER = new THREE.ShaderMaterial( {
       uniforms:       this.u_CENTER, 
       vertexShader:   vertexShaders.passThrough,
-      fragmentShader: fragmentShaders.audio.color.image.uv_absDiamond_sub,
+      fragmentShader: fragmentShaders.audio.color.image.add_uv_absDiamond,
       transparent:    true,
       fog:            true,
       opacity:        0.1,
