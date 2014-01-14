@@ -57,13 +57,13 @@ define(function(require, exports, module) {
     "uniform float noiseSize;",
     "uniform vec3  seed;",
 
-    
+   
+    shaderChunks.createKali( 10 ),
 
     shaderChunks.noise3D,
     shaderChunks.absAudioPosition,
     shaderChunks.audioUV,
     shaderChunks.polar,
-    shaderChunks.kali_10,
 
     "void main( void ){",
 
@@ -101,7 +101,7 @@ define(function(require, exports, module) {
     "varying vec3 vPos;",
     "varying vec3 pPos;",
 
-    shaderChunks.kali_10, 
+    shaderChunks.createKali( 10 ), 
     shaderChunks.noise3D,
     shaderChunks.polar,
 
