@@ -42,7 +42,9 @@ define(function(require, exports, module) {
       size:             100,
       color:            '#000000',
       neededTech:       [ 'webGL' , 'audio' , 'mobile' ],
-      failureVideo:     78429067    // The Vimeo Video Number !
+      failureTitleText: "This project requires the following:",
+      failureVideoText: "But here's a video which is probably better anyway",
+      failureVideo:     69517912  // The Vimeo Video Number !
     });
 
     this.loaderParams = {};
