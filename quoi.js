@@ -600,7 +600,7 @@ define(function(require, exports, module) {
     womb.credits = new Credits( womb , {
       geo: fullGeo
     });
-  } , 1000 );
+  } , 3000 );
  
   womb.antiSerp1 = new AntiSerpenski2( womb ,{
     geo: fullGeo,
@@ -650,7 +650,7 @@ define(function(require, exports, module) {
 
 
   // Delay for the sake of text creation
-  var t = setTimeout (function(){ womb.begin = new Begin( womb ); }, 1000 );
+  var t = setTimeout (function(){ womb.begin = new Begin( womb ); }, 3000 );
 
   womb.loader.loadBarAdd();
   
