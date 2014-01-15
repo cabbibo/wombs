@@ -50,13 +50,13 @@ define(function(require, exports, module) {
   womb.ps = new PhysicsSimulator( womb , {
 
     textureWidth: 300,
-    debug: false,
+    debug: true,
     velocityShader: physicsShaders.velocity.curl,
     velocityStartingRange:.0000,
     positionStartingRange:.000002,
     positionShader: physicsShaders.positionAudio_4,
     particles:      physicsParticles.basicAudio,
-    bounds: 100,
+    bounds: 400,
     speed: .1,
    
     audio: womb.stream

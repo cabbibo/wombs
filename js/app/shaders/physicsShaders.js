@@ -260,7 +260,7 @@ define(function(require, exports, module) {
           SC.createPhysicsTextureLoop(
             "vec3 diff = pPos - selfPosition;",
             "float l = length( diff );",
-            "velocity += pMass * mass * mass * diff / ( gravityStrength * l);"
+            "velocity += pMass * diff / ( gravityStrength * l * l * l );"
           ),
 
 

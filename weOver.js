@@ -27,7 +27,7 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    cameraController: 'TrackballControls',
+    cameraController: 'MomentumFlyControls',
     modelLoader:      true,
     textCreator:      true,
     raycaster:        true,

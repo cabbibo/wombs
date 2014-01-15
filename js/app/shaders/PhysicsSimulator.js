@@ -59,7 +59,7 @@ define(function(require, exports, module) {
           potentialPower:         5.0,
           
           dampening:             1.0,
-          gravityStrength:     5000.0,
+          gravityStrength:    .001,
         
       },
 
@@ -507,10 +507,10 @@ define(function(require, exports, module) {
 
       x = 2 * Math.random() * this.bounds - this.bounds;
       y = 2 * Math.random() * this.bounds - this.bounds;
-      //z = 2 * Math.random() * this.bounds - this.bounds;
+      z = 2 * Math.random() * this.bounds - this.bounds;
 
-      x =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
-      y =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
+      //x =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
+      //y =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
 
       y = 0;
       z = 0;
