@@ -4,6 +4,7 @@ define(function(require, exports, module) {
 
   var Ring                = require( 'app/scenes/html5_webGL/Ring'    );
   var Text                = require( 'app/scenes/html5_webGL/Text'    );
+  var Image               = require( 'app/scenes/html5_webGL/Image'   );
 
 
   /*
@@ -73,12 +74,29 @@ define(function(require, exports, module) {
 
   womb.happy = new Text( womb , {
 
-    text: 'HAPPY!',
+    text: 'HAPPY',
     color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
 
   });
 
-  womb.happy.enter();
+
+  womb.wizard = new Image( womb , {
+
+    image: '/lib/img/html5_webGL/wizardHat.png',
+    color: new THREE.Vector3( 1.5 , 1.5 , 3.5 ),
+    geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
+
+  });
+
+  womb.superman = new Image( womb , {
+
+    image: '/lib/img/html5_webGL/supermanLogo.png',
+    color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
+    geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
+
+  });
+
+  womb.superman.enter();
 
   womb.stream.onStreamCreated =  function(){
   
