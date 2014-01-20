@@ -41,7 +41,8 @@ define(function(require, exports, module) {
       vertexAudio:    true,
       geo: new THREE.CubeGeometry( 1 , 1 , 1 , 10 , 10 ,10 ),
       numOf: 50,
-      ratio: 1 
+      ratio: 1,
+      type: 'horizontal'
     });
 
     this.world = this.womb.sceneController.createScene();
@@ -119,6 +120,7 @@ define(function(require, exports, module) {
         this.m_CENTER
       );
 
+      mesh.position.z = -i;
       mesh.scale.x = this.params.ratio;
 
       this.scene.add( mesh );
@@ -141,21 +143,67 @@ define(function(require, exports, module) {
 
   Fan.prototype.fanOut = function(){
 
+    console.log( this );
     var l =  this.meshes.length;
     var s = this.params.size;
-    for(var i = 0; i < this.meshes.length; i++ ){
-      var position = - ( s / 2 ) + s * ( i / l );
-      
-      var t1 = womb.tweener.createTween({
-        type: 'position',
-        object: this.meshes[i],
-        target: new THREE.Vector3( position , 0 , 0 ),
-        time: 1
-      });
 
-      t1.start();
+
+    if( this.params.type == 'horizontal' ){
+      
+      for(var i = 0; i < l; i++ ){
+        var position = - ( s / 2 ) + s * ( i / l );
+       
+        var tempY = this.meshes[i].position.y;
+        var tempZ = this.meshes[i].position.z;
+
+        var t1 = womb.tweener.createTween({
+          type: 'position',
+          object: this.meshes[i],
+          target: new THREE.Vector3( position , tempY , tempZ ),
+          time: 1
+        });
+
+        t1.start();
+      }
+
+    }else if( this.params.type == 'vertical' ){
+      
+      for(var i = 0; i < l; i++ ){
+        var position = - ( s / 2 ) + s * ( i / l );
+       
+        var tempX = this.meshes[i].position.x;
+        var tempZ = this.meshes[i].position.z;
+        var t1 = womb.tweener.createTween({
+          type: 'position',
+          object: this.meshes[i],
+          target: new THREE.Vector3( tempX , position , tempZ ),
+          time: 1
+        });
+
+        t1.start();
+      }
+
+    }else if( this.params.type == 'depth' ){
+      
+      for(var i = 0; i < l; i++ ){
+        var position = - ( s / 2 ) + s * ( i / l );
+        
+        var tempX = this.meshes[i].position.x;
+        var tempY = this.meshes[i].position.y;
+
+        var t1 = womb.tweener.createTween({
+          type: 'position',
+          object: this.meshes[i],
+          target: new THREE.Vector3( tempX , tempY , position ),
+          time: 1
+        });
+
+        t1.start();
+      }
 
     }
+
+
 
 
   }

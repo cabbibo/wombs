@@ -35,6 +35,7 @@ define(function(require, exports, module) {
       modelScale: 1,
       audioPower: 0.5,
       noisePower: 0.1,
+      ratio:      1,
       texture:    womb.stream.texture.texture,
       image: '/lib/img/centerLogoWhite.png',
       fragmentAudio: true,
@@ -114,6 +115,8 @@ define(function(require, exports, module) {
       this.m_CENTER
       //mate
     );
+
+    this.CENTER.scale.x = this.params.ratio;
 
     //this.CENTER.scale.x = this.t_CENTER.scaledWidth;
     //this.CENTER.scale.y = this.t_CENTER.scaledHeight;

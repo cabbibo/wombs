@@ -9,6 +9,9 @@ define(function(require, exports, module) {
   var Random              = require( 'app/scenes/html5_webGL/Random'  );
 
 
+  var Intro               = require( 'app/scenes/html5_webGL/Intro'     );
+  var HardLife            = require( 'app/scenes/html5_webGL/HardLife'  );
+  var Coffee              = require( 'app/scenes/html5_webGL/Coffee'    );
   /*
    
      Create our womb
@@ -39,131 +42,48 @@ define(function(require, exports, module) {
   womb.audioController.gain.gain.value = 0;
 
   
+  womb.scenes = [];
+
   var init = function(){
    
 
-    /*
+    womb.currentScene = 0;
+
+    womb.intro = new Intro( womb );
+    womb.scenes.push( womb.intro );
     
-       INTRO SCENE
+    womb.hardLife = new HardLife( womb );
+    womb.scenes.push( womb.hardLife );
 
-    */
-
-    womb.voicePulser = new Ring( womb , {
-      numOf: 10
-    });
-    womb.voicePulser.scene.rotation.x = Math.PI / 2;
-
-    womb.happy = new Text( womb , {
-
-      text: 'HAPPY',
-      color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
-
-    });
-
-
-    womb.wizard = new Image( womb , {
-
-      image: '/lib/img/html5_webGL/wizardHat.png',
-      color: new THREE.Vector3( 1.5 , 1.5 , 3.5 ),
-      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
-
-    });
-
-    womb.superman = new Image( womb , {
-
-      image: '/lib/img/html5_webGL/supermanLogo.png',
-      color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
-      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
-
-    });
-
-    womb.paintBrush = new Fan( womb , {
-
-      size: womb.size * 1.5,
-      image: '/lib/img/html5_webGL/paintBrush.png',
-      color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
-      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
-      numOf: 10,
-      ratio: .556 
-
-    });
-
-    womb.pop = new Text( womb , {
-
-      font: 'Comic Sans MS',
-      text: 'POP!',
-      color: new THREE.Vector3( 0 , 5 , 0),
-
-    });
-
-    womb.badArt = new Text( womb , {
-
-      //font: 'G,
-      text: 'This is Bad Art!',
-      color: new THREE.Vector3( 1 , 1 , 0),
-
-    });
+    womb.coffee = new Coffee( womb );
+    womb.scenes.push( womb.coffee );
 
 
 
-    /*
+
+
+  }
+
+  $(document).keypress(function(event){
       
-       HARD LIFE SCENE
-     
-     */
+    var whichKey=String.fromCharCode(event.which)
+ 
+    if( whichKey == '1' )
+      womb.nextEvent();
+    
+  });
 
-    womb.lifeParticles1 = new Random( womb , {
+  womb.nextEvent = function(){
 
-      size: womb.size * 1.5,
-      image: '/lib/img/html5_webGL/money.png',
-      color: new THREE.Vector3( .5 , .1 , 1.5 ),
-      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
-      numOf: 20,
-      ratio: .5, 
-      opacity: .1,
-    });
+    var scene = this.scenes[this.currentScene];
 
-    womb.lifeParticles1.update = function(){
-
-      this.scene.rotation.x -= .001;
-      this.scene.rotation.y -= .001;
-      this.scene.rotation.z += .001;
-
-    }
-
-    womb.lifeParticles2 = new Random( womb , {
-
-      size: womb.size * 1.5,
-      image: '/lib/img/html5_webGL/time.png',
-      color: new THREE.Vector3( .5 , 0 , .5 ),
-      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
-      numOf: 50,
-      ratio: .5,
-      opacity: .1,
-
-
-    });
-
-    womb.lifeParticles2.update = function(){
-
-      this.scene.rotation.x += .001;
-      this.scene.rotation.y += .001;
-      this.scene.rotation.z += .001;
-
-    }
-
-    womb.lifeIsHard = new Text( womb , {
-
-      //font: 'G,
-      text: 'Life Is Hard!',
-      color: new THREE.Vector3( 1 , 0 , 3),
-
-    });
+    scene.nextEvent();
   
-    womb.lifeIsHard.enter();
+    if( scene.currentEvent == scene.events.length ){
+    
+      this.currentScene ++; 
 
-
-
+    }
 
 
   }
