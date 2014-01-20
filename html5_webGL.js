@@ -5,6 +5,8 @@ define(function(require, exports, module) {
   var Ring                = require( 'app/scenes/html5_webGL/Ring'    );
   var Text                = require( 'app/scenes/html5_webGL/Text'    );
   var Image               = require( 'app/scenes/html5_webGL/Image'   );
+  var Fan                 = require( 'app/scenes/html5_webGL/Fan'     );
+  var Random              = require( 'app/scenes/html5_webGL/Random'  );
 
 
   /*
@@ -34,69 +36,140 @@ define(function(require, exports, module) {
 
   womb.stream = womb.audioController.createUserAudio();
 
-  womb.modelLoader.loadFile( 'OBJ' , '/lib/models/mug_11530_10.obj' , function( object ){
+  womb.audioController.gain.gain.value = 0;
 
-      if( object[0] instanceof THREE.Geometry ){
+  
+  var init = function(){
+   
 
-        womb.geo = object[0];
-        womb.geo.computeFaceNormals();
-        womb.geo.computeVertexNormals();
-        
-        womb.modelLoader.assignUVs( womb.geo );
-       
-        womb.onMugLoad( womb.geo );
-      }
+    /*
+    
+       INTRO SCENE
 
-  });
+    */
 
-  womb.onMugLoad = function( geo ){
+    womb.voicePulser = new Ring( womb , {
+      numOf: 10
+    });
+    womb.voicePulser.scene.rotation.x = Math.PI / 2;
 
-   /* womb.voicePulser1  = new Ring( womb , {
-      radius: womb.size / 5,
-      geo:geo,    
-      color: new THREE.Vector3( .9 , .4 , .0 ),
-      numOf: 30
-    });*/
+    womb.happy = new Text( womb , {
 
-   // womb.
+      text: 'HAPPY',
+      color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
+
+    });
+
+
+    womb.wizard = new Image( womb , {
+
+      image: '/lib/img/html5_webGL/wizardHat.png',
+      color: new THREE.Vector3( 1.5 , 1.5 , 3.5 ),
+      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
+
+    });
+
+    womb.superman = new Image( womb , {
+
+      image: '/lib/img/html5_webGL/supermanLogo.png',
+      color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
+      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
+
+    });
+
+    womb.paintBrush = new Fan( womb , {
+
+      size: womb.size * 1.5,
+      image: '/lib/img/html5_webGL/paintBrush.png',
+      color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
+      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
+      numOf: 10,
+      ratio: .556 
+
+    });
+
+    womb.pop = new Text( womb , {
+
+      font: 'Comic Sans MS',
+      text: 'POP!',
+      color: new THREE.Vector3( 0 , 5 , 0),
+
+    });
+
+    womb.badArt = new Text( womb , {
+
+      //font: 'G,
+      text: 'This is Bad Art!',
+      color: new THREE.Vector3( 1 , 1 , 0),
+
+    });
+
+
+
+    /*
+      
+       HARD LIFE SCENE
+     
+     */
+
+    womb.lifeParticles1 = new Random( womb , {
+
+      size: womb.size * 1.5,
+      image: '/lib/img/html5_webGL/money.png',
+      color: new THREE.Vector3( .5 , .1 , 1.5 ),
+      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
+      numOf: 20,
+      ratio: .5, 
+      opacity: .1,
+    });
+
+    womb.lifeParticles1.update = function(){
+
+      this.scene.rotation.x -= .001;
+      this.scene.rotation.y -= .001;
+      this.scene.rotation.z += .001;
+
+    }
+
+    womb.lifeParticles2 = new Random( womb , {
+
+      size: womb.size * 1.5,
+      image: '/lib/img/html5_webGL/time.png',
+      color: new THREE.Vector3( .5 , 0 , .5 ),
+      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
+      numOf: 50,
+      ratio: .5,
+      opacity: .1,
+
+
+    });
+
+    womb.lifeParticles2.update = function(){
+
+      this.scene.rotation.x += .001;
+      this.scene.rotation.y += .001;
+      this.scene.rotation.z += .001;
+
+    }
+
+    womb.lifeIsHard = new Text( womb , {
+
+      //font: 'G,
+      text: 'Life Is Hard!',
+      color: new THREE.Vector3( 1 , 0 , 3),
+
+    });
+  
+    womb.lifeIsHard.enter();
+
+
+
+
 
   }
 
-  console.log( womb.size );
-  womb.voicePulser1  = new Ring( womb , {
-    radius: womb.size / 5,
-    //geo:geo,    
-    color: new THREE.Vector3( .9 , .4 , .0 ),
-    numOf: 1,
-    opacity: 1
-
-  });
-
-  womb.happy = new Text( womb , {
-
-    text: 'HAPPY',
-    color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
-
-  });
-
-
-  womb.wizard = new Image( womb , {
-
-    image: '/lib/img/html5_webGL/wizardHat.png',
-    color: new THREE.Vector3( 1.5 , 1.5 , 3.5 ),
-    geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
-
-  });
-
-  womb.superman = new Image( womb , {
-
-    image: '/lib/img/html5_webGL/supermanLogo.png',
-    color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
-    geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
-
-  });
-
-  womb.superman.enter();
+  // Set timeout for text loading
+  var t = setTimeout( init , 1000 );
 
   womb.stream.onStreamCreated =  function(){
   

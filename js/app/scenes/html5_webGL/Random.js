@@ -18,7 +18,7 @@ define(function(require, exports, module) {
   var physicsShaders      = require( 'app/shaders/physicsShaders'     );
 
 
-  function Image( womb , params ){
+  function Random( womb , params ){
 
     this.womb = womb;
 
@@ -31,7 +31,7 @@ define(function(require, exports, module) {
       spin: .001,
       color: new THREE.Vector3( .3 , .5 , 1.9 ),
       radius: 10,
-      size:   .3,
+      size:   womb.size / 5,
       modelScale: 1,
       audioPower: 0.5,
       noisePower: 0.1,
@@ -40,7 +40,8 @@ define(function(require, exports, module) {
       fragmentAudio: true,
       vertexAudio:    true,
       geo: new THREE.CubeGeometry( 1 , 1 , 1 , 10 , 10 ,10 ),
-      numOf: 50
+      numOf: 50,
+      ratio: 1 
 
     });
 
@@ -70,6 +71,8 @@ define(function(require, exports, module) {
     }
     
     this.t_CENTER = womb.imageLoader.load( this.params.image );
+    //console.log( this.t_CENTER );
+
 
     this.u_CENTER= THREE.UniformsUtils.merge( [
         THREE.ShaderLib['basic'].uniforms,
@@ -109,27 +112,77 @@ define(function(require, exports, module) {
       side:           THREE.DoubleSide
     });
 
-    this.CENTER = new THREE.Mesh(
-      this.params.geo,
-      this.m_CENTER
-      //mate
-    );
+    mate = new THREE.MeshNormalMaterial();
+
+    this.meshes = [];
+    for( var i = 0;  i < this.params.numOf; i++ ){
+    
+      var mesh  = new THREE.Mesh(
+        this.params.geo,
+        this.m_CENTER
+      );
+
+      Math.THREE.setRandomPosition( mesh.position , this.params.size );
+      Math.THREE.setRandomRotation( mesh.rotation );
+
+      mesh.ogPos = mesh.position;
+    
+
+      mesh.scale.x = this.params.ratio;
+
+      this.scene.add( mesh );
+
+      this.meshes.push( mesh );
+
+    }
 
     //this.CENTER.scale.x = this.t_CENTER.scaledWidth;
     //this.CENTER.scale.y = this.t_CENTER.scaledHeight;
 
     this.scene.add( this.CENTER );
+
+    var self = this;
+    this.world.update = function(){
+      self.update();
+    }
+   
+
   
     this.womb.loader.loadBarAdd();
+
+
 
     //this.world.update = this.update.bind( this );
 
   }
 
 
-   
+  Random.prototype.fanOut = function(){
 
-  Image.prototype.enter = function(){
+    var l =  this.meshes.length;
+    var s = this.params.size;
+    for(var i = 0; i < this.meshes.length; i++ ){
+      var position = - ( s / 2 ) + s * ( i / l );
+      
+      var t1 = womb.tweener.createTween({
+        type: 'position',
+        object: this.meshes[i],
+        target: new THREE.Vector3( position , 0 , 0 ),
+        time: 1
+      });
+
+      t1.start();
+
+    }
+
+
+  }
+
+  Random.prototype.update = function(){
+
+  }
+
+  Random.prototype.enter = function(){
 
     if( this.audio ){
       this.audio.play();
@@ -140,7 +193,7 @@ define(function(require, exports, module) {
     this.world.enter();
   }
 
-  Image.prototype.exit = function(){
+  Random.prototype.exit = function(){
    
     if( this.audio ){
       this.audio.fadeOut();
@@ -150,6 +203,6 @@ define(function(require, exports, module) {
   
   }
 
-  module.exports = Image;
+  module.exports = Random;
 
 });

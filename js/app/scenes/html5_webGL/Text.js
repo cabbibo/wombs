@@ -18,7 +18,7 @@ define(function(require, exports, module) {
   var physicsShaders      = require( 'app/shaders/physicsShaders'     );
 
 
-  function Credits( womb , params ){
+  function Text( womb , params ){
 
     this.womb = womb;
 
@@ -65,8 +65,19 @@ define(function(require, exports, module) {
       pow_noise:  { type: "f" , value: 0.01 },
       pow_audio:  { type: "f" , value: .04 },
     }
+   
+
+    // Switching fonts if we choose to 
+    var tmpFont = this.womb.textCreator.font;
+
+    if( this.params.font ){
+      tmpFont = this.womb.textCreator.font;
+      this.womb.textCreator.font = this.params.font;
+    }
     
     this.t_CENTER = this.womb.textCreator.createTexture( this.params.text );
+
+    this.womb.textCreator.font = tmpFont;
 
     this.u_CENTER= THREE.UniformsUtils.merge( [
         THREE.ShaderLib['basic'].uniforms,
@@ -108,7 +119,7 @@ define(function(require, exports, module) {
 
    
 
-  Credits.prototype.enter = function(){
+  Text.prototype.enter = function(){
 
     if( this.audio ){
       this.audio.play();
@@ -119,7 +130,7 @@ define(function(require, exports, module) {
     this.world.enter();
   }
 
-  Credits.prototype.exit = function(){
+  Text.prototype.exit = function(){
    
     if( this.audio ){
       this.audio.fadeOut();
@@ -129,6 +140,6 @@ define(function(require, exports, module) {
   
   }
 
-  module.exports = Credits;
+  module.exports = Text;
 
 });
