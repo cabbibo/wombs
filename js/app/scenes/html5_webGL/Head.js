@@ -37,7 +37,7 @@ define(function(require, exports, module) {
       noisePower: 0.1,
       ratio:      1,
       texture:    womb.stream.texture.texture,
-      image: '/lib/img/centerLogoWhite.png',
+      image: '/lib/img/textures/.png',
       fragmentAudio: true,
       vertexAudio:    true,
       geo: new THREE.CubeGeometry( 1 , 1 , 1 , 10 , 10 ,10 ),
@@ -45,7 +45,7 @@ define(function(require, exports, module) {
 
     });
 
-      this.world = this.womb.sceneController.createScene();
+    this.world = this.womb.sceneController.createScene();
 
     this.scene = this.world.scene;
 
@@ -57,10 +57,59 @@ define(function(require, exports, module) {
     var self = this;
 
 
-
-
-
     var mapHeight = THREE.ImageUtils.loadTexture( "/lib/models/leeperrysmith/Infinite-Level_02_Disp_NoSmoothUV-4096.jpg" );
+
+
+     this.u = {
+      texture:    { type: "t", value: womb.stream.texture.texture },
+      image:      { type: "t", value: womb.stream.texture.texture },
+
+      color:      { type: "v3", value: this.params.color },
+      time:       womb.time,
+      pow_noise:  { type: "f" , value: 0.01 },
+      pow_audio:  { type: "f" , value: .04 },
+    }
+    
+    this.t_CENTER = mapHeight;
+
+    this.u_CENTER= THREE.UniformsUtils.merge( [
+        THREE.ShaderLib['basic'].uniforms,
+        this.u,
+    ]);
+
+    this.u_CENTER.time          = this.womb.time;
+    this.u_CENTER.image.value   = this.t_CENTER;
+    this.u_CENTER.texture.value = this.params.texture;
+    
+    if( this.audio )
+      this.u_CENTER.texture.value = this.audio.texture.texture;
+
+    // Have to switch out for the picture if we aren't doing an 
+    // Audio Fragment Shader
+     if( this.params.fragmentAudio ){
+      this.fragmentShader = fragmentShaders.audio.color.image.sample_pos_diamond
+    }else{
+      this.u_CENTER.texture.value = this.u_CENTER.image.value;
+      this.fragmentShader = fragmentShaders.texture;
+    }
+
+    if( this.params.vertexAudio ){
+      this.vertexShader = vertexShaders.audio.noise.position
+    }else{
+      this.vertexShader = vertexShaders.passThrough;
+    }
+
+
+    this.materialAudio = new THREE.ShaderMaterial( {
+      uniforms:       this.u_CENTER, 
+      vertexShader:   this.vertexShader,
+      fragmentShader: this.fragmentShader,
+      transparent:    true,
+      fog:            true,
+      opacity:        0.1,
+      side:           THREE.DoubleSide
+    });
+
 
     mapHeight.anisotropy = 4;
     mapHeight.repeat.set( 0.998, 0.998 );
@@ -68,13 +117,14 @@ define(function(require, exports, module) {
     mapHeight.wrapS = mapHeight.wrapT = THREE.RepeatWrapping;
     mapHeight.format = THREE.RGBFormat;
 
-    self.material = new THREE.MeshPhongMaterial( { ambient: 0x552811, color: 0x552811, specular: 0x333333, shininess: 25, bumpMap: mapHeight, bumpScale: 19, metal: false } );
+    this.material = new THREE.MeshPhongMaterial( { ambient: 0x552811, color: 0x552811, specular: 0x333333, shininess: 25, bumpMap: mapHeight, bumpScale: 19, metal: false } );
 
 
     // LIGHTS
     ambientLight = new THREE.AmbientLight( 0x444444 );
     this.scene.add( ambientLight );
 
+    this.ambientLight = ambientLight;
     //
 
     pointLight = new THREE.PointLight( 0xffffff, 1.5, 1000 );
@@ -82,6 +132,8 @@ define(function(require, exports, module) {
     pointLight.position.set( 0, 0, 600 );
 
     this.scene.add( pointLight );
+
+    this.pointLight = pointLight;
 
     // shadow for PointLight
 
@@ -106,6 +158,8 @@ define(function(require, exports, module) {
 
     spotLight.shadowBias = -0.005;
     spotLight.shadowDarkness = 0.35;
+
+    this.spotLight = spotLight;
 
     //
 
@@ -133,12 +187,16 @@ define(function(require, exports, module) {
     directionalLight.shadowBias = -0.005;
     directionalLight.shadowDarkness = 0.35;
 
+    this.directionalLight = directionalLight;
+
     //
 
     directionalLight2 = new THREE.DirectionalLight( 0xffffff, 1.2 );
     directionalLight2.position.set( 1, -0.5, -1 );
     directionalLight2.color.setHSL( 0.08, 1, 0.825 );
     this.scene.add( directionalLight2 );
+
+    this.directionalLight2 = directionalLight2;
 
     loader = new THREE.JSONLoader( true );
    // document.body.appendChild( loader.statusDomElement );
@@ -147,6 +205,7 @@ define(function(require, exports, module) {
 
     this.createScene = function( geometry ){
 
+      this.material.color.setHSL( 250 , .9 , .5 );
       console.log( 'HEAD THIS' );
       console.log( this );
       mesh = new THREE.Mesh( geometry, this.material );
@@ -159,6 +218,8 @@ define(function(require, exports, module) {
 
       this.scene.add( mesh );
 
+      this.head = mesh;
+
 
     }
 
@@ -166,6 +227,24 @@ define(function(require, exports, module) {
     loader.load( "/lib/models/leeperrysmith/LeePerrySmith.js", function( geometry ) { self.createScene( geometry ) } );
 
 
+    var self;
+    this.world.update = function(){
+
+      var f = this.womb.leapController.frame();
+
+      if( f.hands[0] ){
+
+        var r = f.hands[0].palmNormal;
+
+        self.materialAudio.uniforms.color.value.x = Math.abs(r[0]) * 2;
+        self.materialAudio.uniforms.color.value.y = Math.abs(r[1]) * 2;
+        self.materialAudio.uniforms.color.value.z = Math.abs(r[2]) * 2;
+
+      }
+        
+
+
+    }
 
     this.womb.loader.loadBarAdd();
 

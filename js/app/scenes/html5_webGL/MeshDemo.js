@@ -18,7 +18,7 @@ define(function(require, exports, module) {
   var physicsShaders      = require( 'app/shaders/physicsShaders'     );
 
 
-  function Text( womb , params ){
+  function Image( womb , params ){
 
     this.womb = womb;
 
@@ -35,8 +35,12 @@ define(function(require, exports, module) {
       modelScale: 1,
       audioPower: 0.5,
       noisePower: 0.1,
-      texture: self.womb.stream.texture.texture,
-      geo: new THREE.PlaneGeometry( 30 , 30 , 100 , 100 ),
+      ratio:      1,
+      texture:    womb.stream.texture.texture,
+      image: '/lib/img/centerLogoWhite.png',
+      fragmentAudio: true,
+      vertexAudio:    true,
+      geo: new THREE.CubeGeometry( 1 , 1 , 1 , 10 , 10 ,10 ),
       numOf: 50
 
     });
@@ -65,19 +69,8 @@ define(function(require, exports, module) {
       pow_noise:  { type: "f" , value: 0.01 },
       pow_audio:  { type: "f" , value: .04 },
     }
-   
-
-    // Switching fonts if we choose to 
-    var tmpFont = this.womb.textCreator.font;
-
-    if( this.params.font ){
-      tmpFont = this.womb.textCreator.font;
-      this.womb.textCreator.font = this.params.font;
-    }
     
-    this.t_CENTER = this.womb.textCreator.createTexture( this.params.text );
-
-    this.womb.textCreator.font = tmpFont;
+    this.t_CENTER = womb.imageLoader.load( this.params.image );
 
     this.u_CENTER= THREE.UniformsUtils.merge( [
         THREE.ShaderLib['basic'].uniforms,
@@ -90,36 +83,112 @@ define(function(require, exports, module) {
     
     if( this.audio )
       this.u_CENTER.texture.value = this.audio.texture.texture;
- 
+
+    // Have to switch out for the picture if we aren't doing an 
+    // Audio Fragment Shader
+     if( this.params.fragmentAudio ){
+      this.fragmentShader = fragmentShaders.audio.color.image.sample_pos_diamond
+    }else{
+      this.u_CENTER.texture.value = this.u_CENTER.image.value;
+      this.fragmentShader = fragmentShaders.texture;
+    }
+
+    if( this.params.vertexAudio ){
+      this.vertexShader = vertexShaders.audio.noise.position
+    }else{
+      this.vertexShader = vertexShaders.passThrough;
+    }
+
+  
+
     this.m_CENTER = new THREE.ShaderMaterial( {
       uniforms:       this.u_CENTER, 
-      vertexShader:   vertexShaders.audio.noise.position,
-      fragmentShader: fragmentShaders.audio.color.image.sample_pos_diamond,
+      vertexShader:   this.vertexShader,
+      fragmentShader: this.fragmentShader,
       transparent:    true,
       fog:            true,
       opacity:        0.1,
       side:           THREE.DoubleSide
     });
 
-    this.CENTER = new THREE.Mesh(
+    
+    this.imageMaterial = this.m_CENTER;
+
+    this.particleMaterial = new THREE.ParticleSystemMaterial({
+     
+      size: 5
+      
+    });
+
+    this.particles = new THREE.ParticleSystem(
       this.params.geo,
-      this.m_CENTER
+      this.particleMaterial
     );
 
-    this.CENTER.scale.x = this.t_CENTER.scaledWidth;
-    this.CENTER.scale.y = this.t_CENTER.scaledHeight;
-    this.scene.add( this.CENTER );
-  
+
+    //var material = new THREE.MeshNormalMaterial
+    this.mesh = new THREE.Mesh(
+      this.params.geo.clone(),
+      new THREE.MeshNormalMaterial()
+    );
+
+    //this.CENTER.scale.x = this.t_CENTER.scaledWidth;
+    //this.CENTER.scale.y = this.t_CENTER.scaledHeight;
+
     this.womb.loader.loadBarAdd();
 
     //this.world.update = this.update.bind( this );
 
   }
 
+  Image.prototype.addParticles = function(){
+
+    this.scene.add( this.particles );
+
+  }
+
+  Image.prototype.addMesh = function(){
+
+    this.scene.add( this.mesh );
+
+  }
+
+
+  Image.prototype.showImageMaterial  = function(){
+
+    console.log( 'WHOA' );
+    this.mesh.material = this.imageMaterial;
+    this.mesh.materialNeedsUpdate = true;
+
+  }
+
+  Image.prototype.showAudioMaterial = function(){
+
+    this.mesh.material = this.audioMaterial;
+    this.mesh.materialNeedsUpdate = true;
+
+  }
+
+  Image.prototype.showFractalMaterial = function(){
+
+    this.mesh.material = this.fractalMaterial;
+    this.mesh.materialNeedsUpdate = true;
+
+  }
+
+
+  Image.prototype.showFractalMaterial2 = function(){
+
+    this.mesh.material = this.fractalMaterial2;
+    this.mesh.materialNeedsUpdate = true;
+
+  }
+
+
 
    
 
-  Text.prototype.enter = function(){
+  Image.prototype.enter = function(){
 
     if( this.audio ){
       this.audio.play();
@@ -130,7 +199,7 @@ define(function(require, exports, module) {
     this.world.enter();
   }
 
-  Text.prototype.exit = function(){
+  Image.prototype.exit = function(){
    
     if( this.audio ){
       this.audio.fadeOut();
@@ -140,6 +209,6 @@ define(function(require, exports, module) {
   
   }
 
-  module.exports = Text;
+  module.exports = Image;
 
 });
