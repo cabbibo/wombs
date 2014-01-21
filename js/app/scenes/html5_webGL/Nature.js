@@ -26,7 +26,7 @@ define(function(require, exports, module) {
 
     this.rayleigh = new Image( womb , {
 
-      image: '/lib/img/html5_webGL/rayleighBernard.png',
+      image: '/lib/img/html5_webGL/rayleighBenard.png',
       color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
       geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
 
@@ -36,7 +36,7 @@ define(function(require, exports, module) {
 
       image: '/lib/img/html5_webGL/ashtonKutcher.jpg',
       color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
-      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
+      geo: new THREE.PlaneGeometry( 200 , 200 , 50 , 50 ),
 
     });  
 
@@ -48,7 +48,7 @@ define(function(require, exports, module) {
 
     });
 
-    this.mountain.scene.position.x = -50;
+    this.mountain.scene.position.x = -150;
 
     this.river = new Image( womb , {
 
@@ -65,16 +65,17 @@ define(function(require, exports, module) {
       geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
 
     });   
-    this.sunset.scene.position.x = 50;
+    this.sunset.scene.position.x = 150;
 
 
-    this.sunset = new Image( womb , {
+    this.awesome = new Text( womb , {
 
-      image: '/lib/img/html5_webGL/sunset.jpg',
+      text: 'AWESOME',
       color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
-      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
 
     });
+
+    this.awesome.scene.position.z = 20;
 
 
     this.bonsai = new Image( womb , {
@@ -118,54 +119,77 @@ define(function(require, exports, module) {
 
       function(){
 
-        this.pattern1.exit();
-        this.dropByDrop.enter();
+        this.ashtonKutcher.exit();
 
       },
 
       function(){
 
-        this.dropByDrop.fanOut();
+        this.mountain.enter();
 
       },
 
       function(){
-  
-        this.space.enter();
-        this.dropByDrop.exit();
 
-      },
-
-     
-      function(){
-  
-        this.space.exit();
-        this.singleMoment.enter();
+        this.river.enter();
 
       },
 
 
       function(){
-  
-        //this.space.enter();
-        this.branching.enter();
+
+        this.sunset.enter();
+
+      },
+
+
+
+      function(){
+
+        this.mountain.exit();
+        var self = this;
+
+        var t = setTimeout( function(){
+          self.river.exit();
+        }, 250 );
+
+        var t = setTimeout( function(){
+          self.sunset.exit();
+        }, 500 );
+
+
+        this.awesome.enter();
+
+      },
+
+
+      function(){
+
+        this.awesome.exit();
+
+        this.bonsai.enter();
 
       },
 
       function(){
-  
-        this.branching.fanOut();
+
+        this.bonsai.exit();
+
+        this.turtledBark.enter();
 
       },
+
 
       function(){
-  
-        this.singleMoment.exit();
-        this.branching.exit();
 
-      },
+        this.turtledBark.exit();
+
+      }
 
 
+
+
+       
 
       
     ]

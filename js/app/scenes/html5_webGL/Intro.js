@@ -131,13 +131,6 @@ define(function(require, exports, module) {
         this.pop.exit();
 
       }, 
-
-      function(){
-
-        this.voicePulser.exit();
-
-      }
-
       
     ]
 

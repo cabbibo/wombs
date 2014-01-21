@@ -15,12 +15,17 @@ define(function(require, exports, module) {
   ImageLoader.prototype.load = function( file , callback , mapping ){
 
 
+   
+    var texture;
+    
 
+    // One for THREE load, and other for DOM load
+    this.womb.loader.addToLoadBar();
     this.womb.loader.addToLoadBar();
 
     if( !mapping ) mapping = THREE.UVMapping;
     var self = this;
-    var texture = this.loader.loadTexture( file , mapping , function( texture ){
+    texture = this.loader.loadTexture( file , mapping , function( texture ){
 
       self.womb.loader.loadBarAdd();
       
@@ -28,6 +33,23 @@ define(function(require, exports, module) {
         callback( texture );
 
     });
+
+    // Assigns a width and height scaled textures
+    // Console log a ratio for easy computing!
+    var img = document.createElement( 'img' );
+    img.src = file;
+    img.onload = function(){
+      
+      self.womb.loader.loadBarAdd();
+
+      texture.width = this.width;
+      texture.height = this.height;
+
+      texture.ratio = this.width/this.height;
+
+      //console.log( texture.ratio )
+    }
+
 
     return texture;
 
