@@ -232,8 +232,11 @@ define(function(require, exports, module) {
 
       var f = this.womb.leapController.frame();
 
+      console.log( f.hands );
+      
       if( f.hands[0] ){
 
+     
         var r = f.hands[0].palmNormal;
 
         self.materialAudio.uniforms.color.value.x = Math.abs(r[0]) * 2;

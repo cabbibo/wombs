@@ -54,9 +54,9 @@ define(function(require, exports, module) {
     this.source = this.controller.ctx.createMediaStreamSource( stream );
 
     this.filterOn = false;
-    this.source.connect(                    this.gain );
-    this.gain.connect(                  this.analyser );
-    this.analyser.connect( this.controller.compressor );
+    this.source.connect(                   this.analyser );
+    this.analyser.connect(                     this.gain );
+    this.gain.connect(        this.controller.compressor );
 
     this.onStreamCreated();
 

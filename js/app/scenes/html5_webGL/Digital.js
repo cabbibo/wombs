@@ -26,7 +26,9 @@ define(function(require, exports, module) {
       geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
       ratio: 200/307
 
-    }); 
+    });
+
+    this.ferns.scene.position.x = -80;
 
     this.flowers = new Image( womb , {
 
@@ -35,7 +37,9 @@ define(function(require, exports, module) {
       geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
       ratio:60/45
 
-    });   
+    });
+
+    this.flowers.scene.position.x = 80;
 
 
     /*this.recursive = new AntiSerpenski( womb , {

@@ -30,6 +30,11 @@ define(function(require, exports, module) {
 
     this.womb = womb;
 
+    this.world = this.womb.sceneController.createScene();
+
+    this.scene = this.world.scene;
+
+
     // Getting the context
     this.gl = womb.renderer.getContext();
 
@@ -75,11 +80,11 @@ define(function(require, exports, module) {
       }
     });
 
+    
     if( this.params.audio )
       this.audio = this.params.audio
 
 
-    console.log( this.params );
     this.particles  = this.params.particles;
     this.bounds     = this.params.bounds;
 
@@ -92,9 +97,9 @@ define(function(require, exports, module) {
     this.velocityShader = this.params.velocityShader;
 
 
-    // Camera and scene for renderering physics texture
+    // Camera and renderScene for renderering physics texture
     this.camera = new THREE.Camera();
-    this.scene  = new THREE.Scene();
+    this.renderScene  = new THREE.Scene();
     this.camera.position.z = 1;
 
     this.textureWidth   = this.params.textureWidth;
@@ -170,7 +175,7 @@ define(function(require, exports, module) {
     this.textureGeometry = new THREE.PlaneGeometry( 2 , 2  );
     this.textureMesh = new THREE.Mesh( this.textureGeometry , this.textureMaterial );
 
-    this.scene.add( this.textureMesh );
+    this.renderScene.add( this.textureMesh );
 
 
 
@@ -293,13 +298,18 @@ define(function(require, exports, module) {
       this.particleMaterial
     );
  
-    this.womb.scene.add( this.particleSystem );
+    this.scene.add( this.particleSystem );
 
 
     if( this.params.debug ){
 
       this.createDebugTextures();
 
+    }
+
+    var self = this;
+    this.world.update = function(){
+      self._update();
     }
 
   }
@@ -348,6 +358,18 @@ define(function(require, exports, module) {
   }
 
   PhysicsSimulator.prototype.update = function(){}
+
+  PhysicsSimulator.prototype.enter = function(){
+
+    this.world.enter();
+
+  }
+
+  PhysicsSimulator.prototype.exit = function(){
+
+    this.world.exit();
+
+  }
 
 
   PhysicsSimulator.prototype.createAllTextures = function(){
@@ -473,7 +495,7 @@ define(function(require, exports, module) {
 
     this.debugScene.add( mesh );
 
-    this.womb.scene.add( this.debugScene );
+    this.scene.add( this.debugScene );
 
   }
 
@@ -509,14 +531,10 @@ define(function(require, exports, module) {
       y = 2 * Math.random() * this.bounds - this.bounds;
       z = 2 * Math.random() * this.bounds - this.bounds;
 
-      //x =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
-      //y =(  2 * this.bounds * k/this.numberOfParticles ) - this.bounds;
-
-      y = 0;
-      z = 0;
       m = 1; 
+
       
-      if( this.params.startingVelocityRange.length ){
+      if( this.params.startingPositionRange[0] ){
 
         a[ k*4 + 0 ] = x * this.params.startingPositionRange[0];
         a[ k*4 + 1 ] = y * this.params.startingPositionRange[1];
@@ -655,7 +673,7 @@ define(function(require, exports, module) {
   // Renderst a texture to the material, giving the desired output
   PhysicsSimulator.prototype.renderTexture = function( input , output ) {
     this.textureUniforms.texture.value = input;
-    this.womb.renderer.render( this.scene, this.camera, output );
+    this.womb.renderer.render( this.renderScene, this.camera, output );
     this.output = output;
   }
 
@@ -667,7 +685,7 @@ define(function(require, exports, module) {
     this.positionShader.uniforms.texturePosition.value = position;
     this.positionShader.uniforms.textureVelocity.value = velocity;
     //this.positionShader.uniforms.time.value = performance.now();
-    this.womb.renderer.render( this.scene , this.camera , output );
+    this.womb.renderer.render( this.renderScene , this.camera , output );
     this.output = output;
   
   }
@@ -680,7 +698,7 @@ define(function(require, exports, module) {
     this.velocityShader.uniforms.textureVelocity.value = velocity;
     this.velocityShader.uniforms.time.value = performance.now();
     
-    this.womb.renderer.render( this.scene, this.camera, output);
+    this.womb.renderer.render( this.renderScene, this.camera, output);
     this.output = output;
 
   }

@@ -53,12 +53,21 @@ define(function(require, exports, module) {
     debug: false,
     velocityShader: physicsShaders.velocity.curl,
     velocityStartingRange:.0000,
-    positionStartingRange:.000002,
+    startingPositionRange:[1 , .000002, 0 ],
     positionShader: physicsShaders.positionAudio_4,
     particles:      physicsParticles.basicAudio,
     bounds: 100,
     speed: .1,
-   
+    particleParams:   {
+        size: 25,
+        sizeAttenuation: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        transparent: true,
+        fog: true, 
+        map: THREE.ImageUtils.loadTexture( '../lib/img/particles/lensFlare.png' ),
+        opacity:    1,
+      }, 
     audio: womb.stream
 
   });

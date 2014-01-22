@@ -19,6 +19,11 @@ define(function(require, exports, module) {
   var Variables           = require( 'app/scenes/html5_webGL/Variables' );
   var WebGL               = require( 'app/scenes/html5_webGL/WebGL'     );
 
+  var Turbulence          = require( 'app/scenes/html5_webGL/Turbulence');
+  var End                 = require( 'app/scenes/html5_webGL/End'       );
+
+
+
   /*
    
      Create our womb
@@ -47,7 +52,7 @@ define(function(require, exports, module) {
 
   womb.stream = womb.audioController.createUserAudio();
 
-  womb.audioController.gain.gain.value = 0;
+  womb.audioController.userAudio.gain.gain.value = 0;
 
   
   womb.scenes = [];
@@ -85,13 +90,17 @@ define(function(require, exports, module) {
     womb.scenes.push( womb.webGL );
 
     /*womb.fboExplanation = new FBOExplanation( womb );
-    womb.scenes.push( womb.fboExplanation  );
+    womb.scenes.push( womb.fboExplanation  );*/
+
 
     womb.turbulence = new Turbulence( womb );
     womb.scenes.push( womb.turbulence  );
 
-    womb.weOver = new WeOver( womb );
-    womb.scenes.push( womb.weOver );*/
+    womb.end = new End( womb );
+    womb.scenes.push( womb.end );
+
+
+
 
 
 
