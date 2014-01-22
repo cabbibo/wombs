@@ -232,8 +232,6 @@ define(function(require, exports, module) {
 
       var f = this.womb.leapController.frame();
 
-      console.log( f.hands );
-      
       if( f.hands[0] ){
 
      
@@ -272,14 +270,25 @@ define(function(require, exports, module) {
     this.womb.renderer.gammaOutput = true;
 
 
+    this.scene.add( this.directionalLight );
+    this.scene.add( this.directionalLight2 );
+    this.scene.add( this.pointLight );
+    this.scene.add( this.spotLight );
+
     this.world.enter();
+
+    this.scene.add( this.directionalLight );
+    this.scene.add( this.directionalLight2 );
+    this.scene.add( this.pointLight );
+    this.scene.add( this.spotLight );
+
   }
 
   Image.prototype.exit = function(){
   
-    this.womb.renderer.antialias = true;
 
-    this.womb.renderer.shadowMapEnabled = false;
+
+  /*  this.womb.renderer.shadowMapEnabled = false;
 	this.womb.renderer.shadowMapCullFace = THREE.CullFaceBack;
 
 				//
@@ -287,7 +296,7 @@ define(function(require, exports, module) {
     this.womb.renderer.gammaInput = false;
     this.womb.renderer.gammaOutput =  false;
    
-    this.womb.renderer.antialias = true;
+    this.womb.renderer.antialias = true;*/
 
     this.world.exit();
   

@@ -100,12 +100,11 @@ define(function(require, exports, module) {
     womb.scenes.push( womb.end );
 
 
-
-
-
-
-
   }
+
+
+  womb.light = new THREE.DirectionalLight( 0xffffff , 1 );
+  womb.light.position.set( .2 , 0 , 1 );
 
   $(document).keypress(function(event){
       
