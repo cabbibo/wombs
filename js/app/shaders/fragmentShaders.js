@@ -8,13 +8,25 @@ define(function(require, exports, module) {
       "uniform vec2 resolution;",
       "uniform float time;",
       "uniform sampler2D texture;",
+
       SC.main,
         "vec2 uv = gl_FragCoord.xy / resolution.xy;",
-        "vec3 color = texture2D( texture, uv ).xyz;",
-        "gl_FragColor=vec4(color, 1.0);",
+        "vec4 color = texture2D( texture, uv );",
+        "gl_FragColor=vec4( color );",
       SC.end
     ].join( "\n" ),
 
+    image:[
+      "uniform vec2 resolution;",
+      "uniform float time;",
+      "uniform sampler2D image;",
+      "varying vec2 vUv;",
+      SC.main,
+        "vec2 uv = gl_FragCoord.xy / resolution.xy;",
+        "vec4 color = texture2D( image, vUv );",
+        "gl_FragColor=vec4( color );",
+      SC.end
+    ].join( "\n" ),
     //straightColor:
     audio:{
       color:{

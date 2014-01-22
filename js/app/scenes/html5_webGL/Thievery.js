@@ -20,16 +20,16 @@ define(function(require, exports, module) {
 
     this.scenes = [];
 
-    this.threeCommits = new Image( womb , {
 
-      image: '/lib/img/html5_webGL/threejsCommits.png',
-      color: new THREE.Vector3( 2.5 , 0.5 , 1.5 ),
-      geo: new THREE.PlaneGeometry( 40 , 40 , 50 , 50 ),
-       ratio: 900/360 
+    this.threejs = new Text( womb , {
 
-    }); 
+      text: 'THREE.JS',
+      geo: new THREE.PlaneGeometry( 150 , 150 , 50 , 50 ),
 
-    this.threeCommits.scene.position.z = 10;
+
+    })
+
+    this.threejs.scene.position.z = 10;
 
     var width = 70;
     var height = 60;
@@ -130,13 +130,13 @@ define(function(require, exports, module) {
     
       function(){
 
-        this.threeCommits.enter();
+        this.threejs.enter();
 
       },
 
       function(){
 
-        this.threeCommits.exit();
+        this.threejs.exit();
         this.mrDoobCommits.enter();
 
       },

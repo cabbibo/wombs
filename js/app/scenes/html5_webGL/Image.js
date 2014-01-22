@@ -38,7 +38,7 @@ define(function(require, exports, module) {
       ratio:      1,
       texture:    womb.stream.texture.texture,
       image: '/lib/img/centerLogoWhite.png',
-      fragmentAudio: true,
+      fragmentAudio: false,
       vertexAudio:    true,
       geo: new THREE.CubeGeometry( 1 , 1 , 1 , 10 , 10 ,10 ),
       numOf: 50
@@ -89,8 +89,8 @@ define(function(require, exports, module) {
      if( this.params.fragmentAudio ){
       this.fragmentShader = fragmentShaders.audio.color.image.sample_pos_diamond
     }else{
-      this.u_CENTER.texture.value = this.u_CENTER.image.value;
-      this.fragmentShader = fragmentShaders.texture;
+    //  this.u_CENTER.texture.value = this.u_CENTER.image.value;
+      this.fragmentShader = fragmentShaders.image;
     }
 
     if( this.params.vertexAudio ){

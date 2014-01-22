@@ -138,9 +138,14 @@ define(function(require, exports, module) {
       },
 
       function(){
+
+        this.dropByDrop.exit();
+
+      },
+
+      function(){
   
         this.space.enter();
-        this.dropByDrop.exit();
 
       },
 

@@ -94,20 +94,11 @@ define(function(require, exports, module) {
       function(){
 
         this.happy.exit();
-        this.wizard.enter();
 
       },
 
       function(){
 
-        this.wizard.exit();
-        this.superman.enter();
-
-      },
-
-      function(){
-
-        this.superman.exit();
         this.paintBrush.enter();
 
       },
