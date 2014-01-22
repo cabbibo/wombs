@@ -72,6 +72,8 @@ define(function(require, exports, module) {
 
       font: 'Comic Sans MS',
       text: 'POP!',
+      geo: new THREE.PlaneGeometry( 150 , 150 , 50 , 50 ),
+
       color: new THREE.Vector3( 0 , 5 , 0),
 
     });

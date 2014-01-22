@@ -13,7 +13,10 @@ define(function(require, exports, module) {
   var Stars               = require( 'app/scenes/html5_webGL/Stars'         );
   var MeshDemo            = require( 'app/scenes/html5_webGL/MeshDemo'      );
   var Thing               = require( 'app/scenes/html5_webGL/Thing'         );
+  var PictureParticles    = require( 'app/scenes/html5_webGL/PictureParticles' );
 
+  var physicsParticles     = require( 'app/shaders/physicsParticles'     );
+  
 
   function Digital( womb, params ){
 
@@ -27,6 +30,26 @@ define(function(require, exports, module) {
     this.currentEvent = 0;
 
     this.head = this.womb.digital.alteredQualia;
+
+    /*this.mountainParticles = new PictureParticles( womb , {
+      image:'/lib/img/html5_webGL/mountain.jpg',
+    });*/
+
+    
+
+    this.sunsetParticles = new PictureParticles( womb , {
+      image:'/lib/img/html5_webGL/sunset.jpg',
+      particles: physicsParticles.basicPicture,
+
+    });
+
+    this.particles = new PictureParticles( womb , {
+      particles: physicsParticles.basicData
+    });
+
+
+    //this.mountainParticles = new PictureParticles( womb , {});
+    //this.flowerParticles = new PictureParticles( womb , {});
 
     this.webGL = new Text( womb , {
 
@@ -80,6 +103,8 @@ define(function(require, exports, module) {
 
     this.events.push( function(){
 
+      this.sunsetParticles.enter();
+      this.particles.enter();
       this.webGL.enter();
     
     });
