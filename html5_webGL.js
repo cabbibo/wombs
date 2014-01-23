@@ -66,10 +66,10 @@ define(function(require, exports, module) {
     womb.currentScene = 0;
 
     womb.intro = new Intro( womb );
-    womb.scenes.push( womb.intro );
+    ///womb.scenes.push( womb.intro );
     
     womb.hardLife = new HardLife( womb );
-    womb.scenes.push( womb.hardLife );
+    //womb.scenes.push( womb.hardLife );
 
     womb.coffee = new Coffee( womb );
     womb.scenes.push( womb.coffee );

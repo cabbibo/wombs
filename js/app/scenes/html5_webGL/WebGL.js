@@ -61,7 +61,7 @@ define(function(require, exports, module) {
     this.debugParticles = new PhysicsSimulator( womb , {
 
       textureWidth: 50,
-      debug: true,
+      debug: false,
       velocityShader: physicsShaders.velocity.gravity,
       startingVelocityRange:1,
       startingPostionRange:[ 1 , 1 , 1 ],

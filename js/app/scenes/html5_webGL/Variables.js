@@ -11,6 +11,7 @@ define(function(require, exports, module) {
   var Head                = require( 'app/scenes/html5_webGL/Head'    );
   var World               = require( 'app/scenes/html5_webGL/World'   );
   var Stars               = require( 'app/scenes/html5_webGL/Stars'   );
+  var Model               = require( 'app/scenes/html5_webGL/Model'   );
 
   function Digital( womb, params ){
 
@@ -25,10 +26,14 @@ define(function(require, exports, module) {
 
     this.head = this.womb.digital.alteredQualia;
 
+    this.model = new Model( womb , {} );
+
     this.webAudio = new Text( womb , {
 
       text: 'Web Audio API',
       color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
+      geo: new THREE.PlaneGeometry( 30 ,30 , 50 , 50 ),
+
 
     });
 
@@ -39,6 +44,8 @@ define(function(require, exports, module) {
 
       text: 'Leap Motion',
       color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
+       geo: new THREE.PlaneGeometry( 30 ,30 , 50 , 50 ),
+
 
     });
 
@@ -97,6 +104,21 @@ define(function(require, exports, module) {
       this.leapMotion.exit();
 
     });
+
+
+    this.events.push( function(){
+
+      this.model.enter();
+
+    });
+
+    this.events.push( function(){
+
+      this.model.exit();
+
+    });
+
+
 
         
 

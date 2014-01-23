@@ -33,6 +33,73 @@ define(function(require, exports, module) {
 
     this.head = this.womb.digital.alteredQualia;
 
+    var geo = new THREE.CubeGeometry( 10 , 10 , 10 , 50 , 50 , 50);
+    this.littleStars = new Random( womb , {
+     
+      radius: womb.size * 10 ,
+      size: womb.size * 2,
+      modelScale: 40,
+      audioPower: -2.5,
+      noisePower:  .3,
+      geo: geo ,
+      image: '/lib/img/moon_1024.jpg',
+      color: new THREE.Vector3( 1.9, .9 , 1.5 ),
+      
+    });
+
+   this.littleStars.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .002;
+        this.scene.rotation.x -= .003;
+        this.scene.rotation.z += .005;
+      }
+    }
+
+   this.littleStars1 = new Random( womb , {
+     
+      radius: womb.size * 10 ,
+        size: womb.size * 2,
+
+     image: '/lib/img/moon_1024.jpg',
+      modelScale: 40,
+      audioPower: -2.5,
+      noisePower:  .5,
+      geo: geo ,
+      color: new THREE.Vector3( .9, 1.9 , 1.9  ),
+      
+    });
+
+   this.littleStars1.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y -= .005;
+        this.scene.rotation.x += .001;
+        this.scene.rotation.z -= .007;
+      }
+    }
+
+    this.littleStars2 = new Random( womb , {
+     
+      image: '/lib/img/moon_1024.jpg',
+      radius: womb.size * 10 ,
+      size: womb.size * 2,
+      modelScale: 40,
+      audioPower: -2.5,
+      noisePower:  .5,
+      geo: geo ,
+      color: new THREE.Vector3(1.5, .9 , 1.9 ),
+      
+    });
+
+    this.littleStars2.update = function(){
+      if( this.spinning == true ){
+        this.scene.rotation.y += .004;
+        this.scene.rotation.x -= .005;
+        this.scene.rotation.z -= .003;
+      }
+    }
+
+
+
     this.curlNoise = new Image( womb , {
 
       image: '/lib/img/html5_webGL/curlNoise.png',
@@ -138,12 +205,40 @@ define(function(require, exports, module) {
 
     });
 
-     this.events.push( function(){
+    this.events.push( function(){
 
-      this.voicePulser.enter();
+
       this.firstSystem.exit();
 
     });
+
+    this.events.push( function(){
+
+      this.voicePulser.enter();
+
+    });
+
+    this.events.push( function(){
+
+      this.littleStars.enter();
+      this.littleStars1.enter();
+      this.littleStars2.enter();
+
+      this.littleStars.spinning = true;
+      this.littleStars1.spinning = true;
+      this.littleStars2.spinning = true;
+
+    });
+
+    this.events.push( function(){
+
+      this.littleStars.exit();
+      this.littleStars1.exit();
+      this.littleStars2.exit();
+
+    });
+
+
 
     this.womb.loader.loadBarAdd();
 

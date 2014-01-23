@@ -16,6 +16,40 @@ define(function(require, exports, module) {
 
     this.scenes = [];
 
+    this.wizard = new Image( womb , {
+
+      image: '/lib/img/html5_webGL/wizardHat.png',
+      color: new THREE.Vector3( 1.5 , 1.5 , 3.5 ),
+      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 )
+
+    });
+    this.scenes.push( this.wizard );
+
+    this.paintBrush = new Fan( womb , {
+
+      size: this.womb.size * 1.5,
+      image: '/lib/img/html5_webGL/paintBrush.png',
+      color: new THREE.Vector3( 1.5 , 1.5 , 1.5 ),
+      geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
+      numOf: 10,
+      ratio: .556 
+
+    });
+    this.paintBrush.scene.position.z = - 30;
+    this.scenes.push( this.paintBrush );
+
+
+    this.pop = new Text( womb , {
+
+      font: 'Comic Sans MS',
+      text: 'POP!',
+      geo: new THREE.PlaneGeometry( 150 , 150 , 50 , 50 ),
+
+      color: new THREE.Vector3( 0 , 5 , 0),
+
+    });
+    this.scenes.push( this.pop );
+
     this.atomic = new Image( womb , {
 
       image: '/lib/img/html5_webGL/atoms.jpeg',
@@ -96,7 +130,38 @@ define(function(require, exports, module) {
 
     this.currentEvent = 0;
     this.events = [
-     
+    
+      function(){
+
+        this.paintBrush.enter();
+
+      },
+
+      function(){
+
+        this.paintBrush.fanOut();
+
+      },
+
+      function(){
+
+        this.paintBrush.exit();
+        this.wizard.enter();
+      },
+
+      function(){
+
+        this.wizard.exit();
+        this.pop.enter();
+
+      },
+
+      function(){
+
+        this.pop.exit();
+
+      },
+
       function(){
 
         this.atomic.enter();

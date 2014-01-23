@@ -103,6 +103,12 @@ define(function(require, exports, module) {
 
     this.currentEvent = 0;
     this.events = [
+
+      function(){
+
+        this.womb.intro.voicePulser.enter();
+
+      },
      
       function(){
 

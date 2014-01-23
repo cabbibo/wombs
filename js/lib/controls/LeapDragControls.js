@@ -27,9 +27,9 @@ define(function(require, exports, module) {
 
     this.size = this.controller.size;
 
-    this.speed = .1;
+    this.speed = .01;
   
-    this.returnSpeed = .1;
+    this.returnSpeed = .01;
 
     this.lookAtTarget = new THREE.Vector3();
     this.returnTarget = new THREE.Vector3( 0 , 0 , this.size );

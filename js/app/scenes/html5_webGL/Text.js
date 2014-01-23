@@ -29,14 +29,14 @@ define(function(require, exports, module) {
 
       text: 'HELLO',
       spin: .001,
-      color: new THREE.Vector3( .3 , .5 , 1.9 ),
+      color: new THREE.Vector3( 1.1 , .9 , 1.9 ),
       radius: 10,
       size:   .3,
       modelScale: 1,
       audioPower: 0.5,
       noisePower: 0.1,
       texture: self.womb.stream.texture.texture,
-      geo: new THREE.PlaneGeometry( 30 , 30 , 100 , 100 ),
+      geo: new THREE.PlaneGeometry( 100 , 100 , 100 , 100 ),
       numOf: 50
 
     });
