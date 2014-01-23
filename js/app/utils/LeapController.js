@@ -73,6 +73,7 @@ define( function( require , exports , module ){
       z += this.offset.z;
 
     }
+
     return new THREE.Vector3( x , y , z );
 
   }

@@ -15,8 +15,19 @@ define(function(require, exports, module) {
   var Thing               = require( 'app/scenes/html5_webGL/Thing'         );
   var PictureParticles    = require( 'app/scenes/html5_webGL/PictureParticles' );
 
-  var physicsParticles     = require( 'app/shaders/physicsParticles'     );
+  var PhysicsSimulator    = require( 'app/shaders/PhysicsSimulator'     );
+ 
+  var SC                = require( 'app/shaders/shaderChunks'       );
+  var fragmentShaders   = require( 'app/shaders/fragmentShaders'    );
+  var vertexShaders     = require( 'app/shaders/vertexShaders'      );
+  var tempParticles     = require( 'app/shaders/tempParticles'      );
   
+  // Visual part of system
+  var physicsParticles  = require( 'app/shaders/physicsParticles'   );
+
+  var physicsShaders    = require( 'app/shaders/physicsShaders'     );
+
+  var helperFunctions   = require( 'app/utils/helperFunctions'      );
 
   function Digital( womb, params ){
 
@@ -46,6 +57,49 @@ define(function(require, exports, module) {
     this.particles = new PictureParticles( womb , {
       particles: physicsParticles.basicData
     });
+
+    this.debugParticles = new PhysicsSimulator( womb , {
+
+      textureWidth: 50,
+      debug: true,
+      velocityShader: physicsShaders.velocity.gravity,
+      startingVelocityRange:1,
+      startingPostionRange:[ 1 , 1 , 1 ],
+      positionShader: physicsShaders.position,
+      particles:      physicsParticles.basic1,
+      bounds: 100,
+      speed: .1,
+     
+      velocityShaderUniforms:{
+  
+          seperationDistance:   100.0,
+          alignmentDistance:    150.0,
+          cohesionDistance:     100.0,
+          freedomFactor:          0.3,
+
+
+          noiseSize:              .005,
+          potentialPower:         5.0,
+          
+          dampening:             1.0,
+          gravityStrength:    .001,
+        
+      },
+      particleParams:   {
+          size: 25,
+          sizeAttenuation: true,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          transparent: true,
+          fog: true, 
+          map: THREE.ImageUtils.loadTexture( '../lib/img/particles/lensFlare.png' ),
+          opacity:    1,
+        } 
+      
+      
+    }); 
+
+
 
 
     //this.mountainParticles = new PictureParticles( womb , {});
@@ -103,8 +157,6 @@ define(function(require, exports, module) {
 
     this.events.push( function(){
 
-      this.sunsetParticles.enter();
-      this.particles.enter();
       this.webGL.enter();
     
     });
@@ -241,6 +293,38 @@ define(function(require, exports, module) {
       this.thing.exit();
 
     });
+
+    this.events.push( function(){
+
+      this.sunsetParticles.enter();
+
+    });
+
+    this.events.push( function(){
+
+      this.sunsetParticles.exit();
+      this.particles.enter();
+
+    });
+
+    this.events.push( function(){
+
+      this.particles.exit();
+      this.debugParticles.enter();
+
+    });
+
+    this.events.push( function(){
+
+      this.debugParticles.exit();
+
+    });
+
+
+
+
+
+
 
     this.womb.loader.loadBarAdd();
 

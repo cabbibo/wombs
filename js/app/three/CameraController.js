@@ -11,6 +11,7 @@ define(function(require, exports, module) {
   var LeapPaddleControls    = require( 'controls/LeapPaddleControls'    );
   var LeapSpringControls    = require( 'controls/LeapSpringControls'    );
   var LeapFlyControls       = require( 'controls/LeapFlyControls'       );
+  var LeapDragControls      = require( 'controls/LeapDragControls'      );
 
   var LeapController = require('app/utils/LeapController'    );
 
@@ -51,6 +52,15 @@ define(function(require, exports, module) {
       }
 
       this.controls = new LeapPaddleControls( this.womb.camera , this.womb.leapController , params );
+
+    }else if( type == 'LeapDragControls' ){
+
+      if( !this.womb.leapController ){
+        this.womb.leapController       = LeapController;
+        this.womb.leapController.size  = this.womb.size;
+      }
+
+      this.controls = new LeapDragControls( this.womb.camera , this.womb.leapController , params );
 
     }else if( type == 'LeapSpringControls' ){
 

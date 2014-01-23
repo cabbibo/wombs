@@ -143,7 +143,6 @@ define(function(require, exports, module) {
 
   Fan.prototype.fanOut = function(){
 
-    console.log( this );
     var l =  this.meshes.length;
     var s = this.params.size;
 

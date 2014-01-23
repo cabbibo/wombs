@@ -39,13 +39,13 @@ define(function(require, exports, module) {
       noisePower: 0.1,
       ratio:      1,
       texture:    womb.stream.texture.texture,
-     // image: '/lib/img/html5_webGL/mountain.jpg',
       fragmentAudio: false,
       vertexAudio:    true,
       geo: new THREE.CubeGeometry( 1 , 1 , 1 , 10 , 10 ,10 ),
       numOf: 50,
 
       particles: physicsParticles.basicPicture,
+      
       particleParams:   {
         size: 25,
         sizeAttenuation: true,
@@ -186,8 +186,6 @@ define(function(require, exports, module) {
 
     var positions = geometry.attributes.position.array;
 
-    console.log( 'POSITIONS' );
-    console.log( positions );
     var colors = geometry.attributes.color.array;
 
     var color = new THREE.Color();

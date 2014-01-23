@@ -188,7 +188,6 @@ define(function(require, exports, module) {
 
     var audio = null
     if( this.audio ){
-      console.log( this.audio );
       audio = this.audio.texture.texture;
     }
 

@@ -33,7 +33,7 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    cameraController: 'TrackballControls',
+    cameraController: 'LeapDragControls',
     leapController:   true,
     modelLoader:      true,
     textCreator:      true,
@@ -54,6 +54,9 @@ define(function(require, exports, module) {
 
   womb.audioController.userAudio.gain.gain.value = 0;
 
+  console.log( womb.cameraController.controls );
+  console.log( womb );
+  womb.leapController.size = womb.size * 3;
   
   womb.scenes = [];
 
@@ -109,9 +112,13 @@ define(function(require, exports, module) {
   $(document).keypress(function(event){
       
     var whichKey=String.fromCharCode(event.which)
- 
+
     if( whichKey == '1' )
       womb.nextEvent();
+    else if( event.which == 13 )
+      womb.nextEvent();
+
+
     
   });
 

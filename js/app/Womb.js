@@ -107,8 +107,10 @@ define(function(require, exports, module) {
     this.renderer.domElement.style.background = this.params.color;
     this.container.appendChild( this.renderer.domElement );
 
-    if( this.params.leapController )
+    if( this.params.leapController ){
       this.leapController = LeapController;
+      this.leapController.size = this.size;
+    }
 
     if( this.params.cameraController )
       this.cameraController = new CameraController( this , this.params.cameraController );

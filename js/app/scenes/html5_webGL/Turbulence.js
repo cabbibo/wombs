@@ -68,11 +68,11 @@ define(function(require, exports, module) {
       debug: false,
       velocityShader: physicsShaders.velocity.curl,
       startingVelocityRange:.0,
-      startingPostionRange:[ 1 , 1 , 0 ],
+      startingPositionRange:[ 1 , 1 , 0 ],
       positionShader: physicsShaders.position,
       particles:      physicsParticles.basic,
       bounds: 100,
-      speed: .1,
+      speed: .01,
      
       velocityShaderUniforms:{
   
@@ -82,7 +82,7 @@ define(function(require, exports, module) {
           freedomFactor:          0.3,
 
 
-          noiseSize:              .005,
+          noiseSize:              .02,
           potentialPower:         5.0,
           
           dampening:             1.0,
@@ -104,9 +104,6 @@ define(function(require, exports, module) {
     }); 
 
     this.voicePulser = this.womb.intro.voicePulser;
-    console.log('BBC RADIO 1');
-    console.log( this.voicePulser );
-
 
     this.events.push( function(){
 

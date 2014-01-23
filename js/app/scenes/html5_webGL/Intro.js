@@ -19,7 +19,7 @@ define(function(require, exports, module) {
     this.voicePulser = new Ring( womb , {
       numOf: 10,
       //img: null,
-      //geo: new THREE.CubeGeometry( 50 , 50 , 50 )
+      geo: new THREE.CubeGeometry( 450 , 5 , 450 , 10 , 10 , 10 )
     });
     this.voicePulser.scene.rotation.x = Math.PI / 2;
     this.voicePulser.scene.position.z = -100;
@@ -84,8 +84,6 @@ define(function(require, exports, module) {
     this.events = [
 
       function(){
-        console.log( this );
-        console.log( this.voicePulser );
         this.voicePulser.enter();
       },
 

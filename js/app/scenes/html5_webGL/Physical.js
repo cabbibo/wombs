@@ -29,7 +29,7 @@ define(function(require, exports, module) {
       image: '/lib/img/html5_webGL/dragonfly.png',
       color: new THREE.Vector3( 2.5 , 0.5 , 1.5 ),
       geo: new THREE.PlaneGeometry( 100 , 100 , 50 , 50 ),
-      ratio: 2
+      ratio: 1788 / 1146
     });   
 
 
@@ -73,8 +73,6 @@ define(function(require, exports, module) {
       color: new THREE.Vector3( 2.5 , 0.5 , 1.5 ),
 
     });
-
-    console.log( this.space );
 
     this.currentEvent = 0;
     this.events = [

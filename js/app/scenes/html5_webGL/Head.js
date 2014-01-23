@@ -206,8 +206,6 @@ define(function(require, exports, module) {
     this.createScene = function( geometry ){
 
       this.material.color.setHSL( 250 , .9 , .5 );
-      console.log( 'HEAD THIS' );
-      console.log( this );
       mesh = new THREE.Mesh( geometry, this.material );
 
       mesh.position.y = - 50;
@@ -288,7 +286,7 @@ define(function(require, exports, module) {
   
 
 
-  /*  this.womb.renderer.shadowMapEnabled = false;
+    /*this.womb.renderer.shadowMapEnabled = false;
 	this.womb.renderer.shadowMapCullFace = THREE.CullFaceBack;
 
 				//
