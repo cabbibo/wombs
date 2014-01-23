@@ -49,6 +49,10 @@ define(function(require, exports, module) {
 
     this.scene = this.world.scene;
 
+
+    // Adding slight uncertainy for sake of z-fighting
+    this.scene.position.z = Math.random() * 2;
+
     this.texture = this.params.texture;
 
     if( this.params.audio )
