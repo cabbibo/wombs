@@ -53,10 +53,52 @@ define(function(require, exports, module) {
 
       text: 'Holy Other - We Over',
       color: new THREE.Vector3( 1.0 , .6 , 1.9 ),
+      geo: new THREE.PlaneGeometry( 30 , 30 , 50 , 50 )
 
     }); 
 
- 
+    this.threejs = new Text( womb , {
+
+      text: 'threejs.org',
+      color: new THREE.Vector3( 1.0 , .6 , 1.9 ),
+      geo: new THREE.PlaneGeometry( 30 , 30 , 50 , 50 )
+
+    }); 
+
+    this.threejs.scene.position.y = 80;
+
+    this.jsleap = new Text( womb , {
+
+      text: 'js.leapmotion.com',
+      color: new THREE.Vector3( 1.0 , .6 , 1.9 ),
+      geo: new THREE.PlaneGeometry( 30 , 30 , 50 , 50 )
+
+    }); 
+    this.jsleap.scene.position.y = 40;
+
+
+    this.webAudio = new Text( womb , {
+
+      text: 'Web Audio API',
+      color: new THREE.Vector3( 1.0 , .6 , 1.9 ),
+      geo: new THREE.PlaneGeometry( 30 , 30 , 50 , 50 )
+
+    }); 
+    this.webAudio.scene.position.y = 0;
+
+
+    this.cabbibo = new Text( womb , {
+
+      text: '@cabbibo',
+      color: new THREE.Vector3( 1.0 , .6 , 1.9 ),
+      geo: new THREE.PlaneGeometry( 30 , 30 , 50 , 50 )
+
+    }); 
+
+    this.cabbibo.scene.position.y = -70;
+
+
+
     this.events.push( function(){
 
       this.womb.intro.voicePulser.exit();
@@ -88,8 +130,15 @@ define(function(require, exports, module) {
     this.events.push( function(){
  
       this.weOver.exit();
+
+      this.threejs.enter();
+      this.jsleap.enter();
+      this.webAudio.enter();
+      this.cabbibo.enter();
     
     });
+
+
 
   
     this.womb.loader.loadBarAdd();
