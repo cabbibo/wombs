@@ -5,6 +5,7 @@ define(function(require, exports, module) {
 
   var MomentumFlyControls   = require( 'controls/MomentumFlyControls'   );
   var LeapFlyControls     = require( 'controls/LeapFlyControls'       );
+  var LeapDragControls     = require( 'controls/LeapDragControls'       );
   var Text                = require( 'app/scenes/html5_webGL/Text'    );
   var PhysicsSimulator    = require( 'app/shaders/PhysicsSimulator'   );
   var physicsShaders      = require( 'app/shaders/physicsShaders'     );
@@ -135,7 +136,15 @@ define(function(require, exports, module) {
       this.jsleap.enter();
       this.webAudio.enter();
       this.cabbibo.enter();
-    
+   
+      this.womb.cameraController.controls = new LeapDragControls(
+
+        this.womb.camera, 
+        this.womb.leapController  
+       // {}
+      );
+
+
     });
 
 
