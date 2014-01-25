@@ -28,12 +28,12 @@ define(function(require, exports, module) {
     this.params = _.defaults( params || {} , {
 
       spin: .001,
-      color: new THREE.Vector3( 0.5 , 0.1 , 0.0 ),
-      seed: new THREE.Vector3( -0.1 , -0.1 ,  -0.9),
-      seed1: new THREE.Vector3( -0.2 , -0.4 ,  -0.5),
-      seed2: new THREE.Vector3( -0.5 , -0.2 ,  -0.6),
-      seed3: new THREE.Vector3( -0.1 , -0.6 ,  -0.3),
-      seed4: new THREE.Vector3( -0.6 , -0.3 ,  -0.2),
+      color:  new THREE.Vector3( 0.5 , 0.1 , 0.0 ),
+      seed:   new THREE.Vector3( -0.1 , -0.1 ,  -0.9),
+      seed1:  new THREE.Vector3( -0.2 , -0.4 ,  -0.5),
+      seed2:  new THREE.Vector3( -0.5 , -0.2 ,  -0.6),
+      seed3:  new THREE.Vector3( -0.1 , -0.6 ,  -0.3),
+      seed4:  new THREE.Vector3( -0.6 , -0.3 ,  -0.2),
       lightness: 1,
       radius: 10,
       modelScale: 1,

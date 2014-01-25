@@ -3,6 +3,11 @@
  * MUCH THANKS TO: 
  * http://jabtunes.com/labs/3d/gpuflocking/webgl_gpgpu_flocking3.html
  *
+ * Some things to think about:
+ * If audio position shader is passed in , or audio particles are passed in, 
+ * should it automatically attach an audio?
+ *
+ *
  *
  */
 define(function(require, exports, module) {
@@ -38,8 +43,11 @@ define(function(require, exports, module) {
     // Getting the context
     this.gl = womb.renderer.getContext();
 
-    // Setting up Params!
-    // Make sure particles are 
+    /*
+     
+       PARAMS
+     
+    */
     this.params = _.defaults( params || {} , {
       textureWidth:           50.0,
       bounds:                 womb.size,
@@ -58,8 +66,7 @@ define(function(require, exports, module) {
           alignmentDistance:    150.0,
           cohesionDistance:     100.0,
           freedomFactor:          0.3,
-
-
+          
           noiseSize:              .001,
           potentialPower:         5.0,
           
@@ -78,9 +85,11 @@ define(function(require, exports, module) {
         map: THREE.ImageUtils.loadTexture( '../lib/img/particles/lensFlare.png' ),
         opacity:    1.0,
       }
+
     });
 
-    
+   
+    // Setting up audio
     if( this.params.audio )
       this.audio = this.params.audio
 
@@ -264,7 +273,14 @@ define(function(require, exports, module) {
     */
 
     this.createAllTextures();
- 
+
+
+
+
+
+
+
+
     /*
      
        Setting up the particles we will be visualizing
@@ -275,7 +291,7 @@ define(function(require, exports, module) {
 
     this.particleMaterial = new THREE.ShaderMaterial({
 
-      uniforms: this.particles.uniforms,
+      uniforms: THREE.UniformsUtils.clone( this.particles.uniforms ),
       vertexShader: this.particles.vertexShader,
       fragmentShader: this.particles.fragmentShader,
 

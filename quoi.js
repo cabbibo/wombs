@@ -610,6 +610,8 @@ define(function(require, exports, module) {
     color: new THREE.Vector3( .5 , .3 , 1.2 ),
     radius:14,
   });
+
+
   womb.antiSerp1.scene.position.y = womb.size / 4;
   womb.antiSerp2 = new AntiSerpenski2( womb ,{
     geo: fullGeo,

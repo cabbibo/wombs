@@ -18,6 +18,12 @@
 // TODO NOTES:
 
 
+  PRE ALPHA:
+
+  - figure out physics simulation particles
+  - Clean up code
+  - Figure out make and make build!
+
 
   - loader conditions
   - loader.failure() to be called on errors
