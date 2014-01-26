@@ -313,7 +313,7 @@ define(function(require, exports, module) {
 
     helperFunctions.setMaterialUniforms( this.particleMaterial , this.params.particleParams );
 
-    if( this.audio )
+    if( this.particleMaterial.uniforms.audioTexture )
       this.particleMaterial.uniforms.audioTexture.value = this.audio.texture.texture;
 
     this.particleSystem = new THREE.ParticleSystem(
@@ -359,7 +359,9 @@ define(function(require, exports, module) {
 
       if( this.particleMaterial.uniforms ){
         this.particleMaterial.uniforms.lookup.value = this.RT.position2;
- //       this.particleMaterial.uniforms.lookupVel.value = this.RT.velocity2;
+
+        if( this.particleMaterial.uniforms.lookupVel )
+          this.particleMaterial.uniforms.lookupVel.value = this.RT.velocity2;
       }
 
     }else {
@@ -369,7 +371,10 @@ define(function(require, exports, module) {
 
       if( this.particleMaterial.uniforms ){
         this.particleMaterial.uniforms.lookup.value = this.RT.position1;
- //       this.particleMaterial.uniforms.lookupVel.value = this.RT.velocity1;
+
+        if( this.particleMaterial.uniforms.lookupVel )
+          this.particleMaterial.uniforms.lookupVel.value = this.RT.velocity1;
+
       }
     }
 

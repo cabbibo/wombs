@@ -14,6 +14,8 @@ define(function(require, exports, module) {
 
   var VideoTexture        = require( 'wombs/three/VideoTexture'         );
 
+  var physicsShaders      = require( 'wombs/shaders/physicsShaders'     );
+  var PhysicsSimulator    = require( 'wombs/shaders/PhysicsSimulator'   );
   var physicsParticles    = require( 'wombs/shaders/physicsParticles'   );
 
   var helperFunctions     = require( 'wombs/utils/helperFunctions'      );
@@ -42,7 +44,7 @@ define(function(require, exports, module) {
     size: 400
   });
 
-  womb.texture = new VideoTexture( womb , {
+  /*womb.texture = new VideoTexture( womb , {
 
     file:'/lib/videos/demoReel.mp4'
 
@@ -69,7 +71,7 @@ define(function(require, exports, module) {
 
 
 
-  womb.particleUniforms = physicsParticles.uniforms.basic;
+  womb.particleUniforms = THREE.UniformsUtils.clone( physicsParticles.uniforms.basic );
   womb.particleVertShader = physicsParticles.vertexShaders.lookup;
   womb.particleFragShader = physicsParticles.fragmentShaders.position;
 
@@ -101,7 +103,6 @@ define(function(require, exports, module) {
   womb.geometry = new THREE.PlaneGeometry( 1 , 1 , 100 , 100 );
 
   helperFunctions.setMaterialUniforms( womb.particleMaterial , womb.particleParams );
-  
 
   womb.particleSystem = new THREE.ParticleSystem(
     womb.geometry,
@@ -114,38 +115,68 @@ define(function(require, exports, module) {
   womb.scene.add( womb.particleSystem );
 
 
-
-
-
-
-
-
   womb.material = new THREE.MeshLambertMaterial({
     map: womb.texture.texture
   });
 
   //var material = new THREE.MeshNormalMaterial();
-  womb.geo = new THREE.CubeGeometry( 10 , 10 , 10 , 10 , 10 , 10 );
+  womb.geo = new THREE.CubeGeometry( 100 , 100 , 100 , 10 , 10 , 10 );
 
   womb.mesh = new THREE.Mesh( womb.geo , womb.material );
 
-  womb.scene.add( womb.mesh );
+  womb.scene.add( womb.mesh );*/
+
+
+  womb.stream = womb.audioController.createStream( '../lib/audio/tracks/weOver.mp3' );
+
+
+  womb.ps = new PhysicsSimulator( womb , {
+   
+    debug:false,
+    audio: womb.stream,
+    textureWidth: 300,
+    positionShader:         physicsShaders.positionAudio_4,
+    particlesUniforms:      physicsParticles.uniforms.audio,
+    particlesVertexShader:  physicsParticles.vertexShaders.audio,
+    particlesFragmentShader:physicsParticles.fragmentShaders.audio,
+
+    velocityStartingRange:.0000,
+    startingPositionRange:[1 , .000002, 0 ],
+    bounds: 100,
+    speed: .1,
+    particleParams:   {
+        size: 25,
+        sizeAttenuation: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        transparent: true,
+        fog: true, 
+        map: THREE.ImageUtils.loadTexture( '../lib/img/particles/lensFlare.png' ),
+        opacity:    1,
+      }, 
+  });
+  //womb.ps.scene.position.z = -100;
+
 
   womb.loader.loadBarAdd();
-  
+ 
+
+
   womb.update = function(){
 
 
-    womb.texture._update();
+    //womb.texture._update();
     //console.log('HOW');
-    womb.mesh.material.textureNeedsUpdate = true;
+    //womb.mesh.material.textureNeedsUpdate = true;
     //render();
     
   }
 
   womb.start = function(){
 
+    womb.stream.play();
     console.log('CHECK' );
+    womb.ps.enter();
   
   }
 

@@ -143,7 +143,7 @@ define(function(require, exports, module) {
 
           
           "lookupuv = position.xy + vec2( 0.5 / 32.0 , 0.5 / 32.0 );",
-          "vec3 pos = texture2D( lookup, lookupuv );",
+          "pos = texture2D( lookup, lookupuv );",
 
           // position
           "vec4 mvPosition = modelViewMatrix * vec4( pos.xyz , 1.0 );",
