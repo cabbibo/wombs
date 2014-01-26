@@ -15,17 +15,17 @@ define(function(require, exports, module) {
   require( 'lib/three.min'                );
   require( 'lib/underscore'               );
 
-  var SC                = require( 'app/shaders/shaderChunks'       );
-  var fragmentShaders   = require( 'app/shaders/fragmentShaders'    );
-  var vertexShaders     = require( 'app/shaders/vertexShaders'      );
-  var tempParticles     = require( 'app/shaders/tempParticles'      );
+  var SC                = require( 'wombs/shaders/shaderChunks'       );
+  var fragmentShaders   = require( 'wombs/shaders/fragmentShaders'    );
+  var vertexShaders     = require( 'wombs/shaders/vertexShaders'      );
+  var tempParticles     = require( 'wombs/shaders/tempParticles'      );
   
   // Visual part of system
-  var physicsParticles  = require( 'app/shaders/physicsParticles'   );
+  var physicsParticles  = require( 'wombs/shaders/physicsParticles'   );
 
-  var physicsShaders    = require( 'app/shaders/physicsShaders'     );
+  var physicsShaders    = require( 'wombs/shaders/physicsShaders'     );
 
-  var helperFunctions   = require( 'app/utils/helperFunctions'      );
+  var helperFunctions   = require( 'wombs/utils/helperFunctions'      );
   
   
   var ps                = physicsShaders;
@@ -520,8 +520,8 @@ define(function(require, exports, module) {
   PhysicsSimulator.prototype.getRenderTarget = function(){
 
     var renderTarget = new THREE.WebGLRenderTarget( this.TW , this.TW , {
-        wrapS: THREE.RepeatWrapping,
-        wrapT: THREE.RepeatWrapping,
+        wrapS: THREE.RepeatWrwombsing,
+        wrapT: THREE.RepeatWrwombsing,
         minFilter: THREE.NearestFilter,
         magFilter: THREE.NearestFilter,
         format: THREE.RGBAFormat,

@@ -1,7 +1,7 @@
 
 define(function(require, exports, module) {
 
-  var AudioTexture = require( 'app/utils/AudioTexture' );
+  var AudioTexture = require( 'wombs/utils/AudioTexture' );
 
   function Stream( controller , file , params ){
 

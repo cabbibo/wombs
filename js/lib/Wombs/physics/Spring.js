@@ -74,7 +74,7 @@ define(function(require, exports, module) {
     
     this.geometry.verticesNeedUpdate = true;
     
-    this.applyForce();
+    this.wombslyForce();
 
     // If Dudes need to be flattened,
     // flatten them!
@@ -125,7 +125,7 @@ define(function(require, exports, module) {
   };
 
   // Hooke's law !
-  Spring.prototype.applyForce = function(){
+  Spring.prototype.wombslyForce = function(){
 
     var F = this.getForce();
 

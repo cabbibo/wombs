@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var Mass = require( 'app/physics/Mass' );
+  var Mass = require( 'wombs/physics/Mass' );
 
   function MassController( womb , params  ){
 

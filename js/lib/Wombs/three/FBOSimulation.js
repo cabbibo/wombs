@@ -3,19 +3,19 @@ define(function(require, exports, module) {
 
   require( 'lib/three.min' );
 
-  var fboUtils          = ( 'app/three/FBOUtils' );
+  var fboUtils          = ( 'wombs/three/FBOUtils' );
   
-  var SC                = require( 'app/shaders/shaderChunks'       );
-  var fragmentShaders   = require( 'app/shaders/fragmentShaders'    );
-  var vertexShaders     = require( 'app/shaders/vertexShaders'      );
-  var tempParticles     = require( 'app/shaders/tempParticles'      );
+  var SC                = require( 'wombs/shaders/shaderChunks'       );
+  var fragmentShaders   = require( 'wombs/shaders/fragmentShaders'    );
+  var vertexShaders     = require( 'wombs/shaders/vertexShaders'      );
+  var tempParticles     = require( 'wombs/shaders/tempParticles'      );
   
   // Visual part of system
-  var physicsParticles  = require( 'app/shaders/physicsParticles'   );
+  var physicsParticles  = require( 'wombs/shaders/physicsParticles'   );
 
-  var physicsShaders    = require( 'app/shaders/physicsShaders'     );
+  var physicsShaders    = require( 'wombs/shaders/physicsShaders'     );
 
-  var helperFunctions   = require( 'app/utils/helperFunctions'      );
+  var helperFunctions   = require( 'wombs/utils/helperFunctions'      );
 
   function FBOSimulation( womb , params ){
 

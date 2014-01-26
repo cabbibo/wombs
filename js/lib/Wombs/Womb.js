@@ -6,29 +6,29 @@ define(function(require, exports, module) {
  
 
   // NON-THREE parts of the WOMB
-  var Interface         = require( 'app/utils/Interface'          );
-  var Detector          = require( 'app/utils/Detector'           );
-  var Loader            = require( 'app/utils/Loader'             );
-  var Animator          = require( 'app/utils/Animator'           );
-  var AudioController   = require( 'app/audio/AudioController'    );
-  var Tweener           = require( 'app/utils/Tweener'            );
-  var MassController    = require( 'app/physics/MassController'   );
-  var SpringController  = require( 'app/physics/SpringController' );
-  var LeapController    = require( 'app/utils/LeapController'     );
+  var Interface         = require( 'wombs/utils/Interface'          );
+  var Detector          = require( 'wombs/utils/Detector'           );
+  var Loader            = require( 'wombs/utils/Loader'             );
+  var Animator          = require( 'wombs/utils/Animator'           );
+  var AudioController   = require( 'wombs/audio/AudioController'    );
+  var Tweener           = require( 'wombs/utils/Tweener'            );
+  var MassController    = require( 'wombs/physics/MassController'   );
+  var SpringController  = require( 'wombs/physics/SpringController' );
+  var LeapController    = require( 'wombs/utils/LeapController'     );
 
 
 
   // THREE Extras
-  var CameraController  = require( 'app/three/CameraController' );
-  var Raycaster         = require( 'app/three/Raycaster'        );
-  var TextCreator       = require( 'app/three/TextCreator'      );
-  var SceneController   = require( 'app/three/SceneController'  );
-  var ImageLoader       = require( 'app/three/ImageLoader'      );
-  var ModelLoader       = require( 'app/three/ModelLoader'      );
-  var ObjLoader         = require( 'app/three/ObjLoader'        );
-  var JSONLoader        = require( 'app/three/JSONLoader'       );
-  var EffectComposer    = require( 'app/three/EffectComposer'   );
-  var UserMediaTexture  = require( 'app/three/UserMediaTexture' );
+  var CameraController  = require( 'wombs/three/CameraController' );
+  var Raycaster         = require( 'wombs/three/Raycaster'        );
+  var TextCreator       = require( 'wombs/three/TextCreator'      );
+  var SceneController   = require( 'wombs/three/SceneController'  );
+  var ImageLoader       = require( 'wombs/three/ImageLoader'      );
+  var ModelLoader       = require( 'wombs/three/ModelLoader'      );
+  var ObjLoader         = require( 'wombs/three/ObjLoader'        );
+  var JSONLoader        = require( 'wombs/three/JSONLoader'       );
+  var EffectComposer    = require( 'wombs/three/EffectComposer'   );
+  var UserMediaTexture  = require( 'wombs/three/UserMediaTexture' );
 
   function Womb(params){
 

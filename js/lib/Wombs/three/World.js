@@ -1,12 +1,12 @@
 define(function(require, exports, module) {
     
-  var CameraController  = require( 'app/three/CameraController' );
-  var Raycaster         = require( 'app/three/Raycaster'        );
-  var TextCreator       = require( 'app/three/TextCreator'      );
-  var SceneController   = require( 'app/three/SceneController'  );
-  var ObjLoader         = require( 'app/three/ObjLoader'        );
-  var EffectComposer    = require( 'app/three/EffectComposer'   );
-  var UserMediaTexture  = require( 'app/three/UserMediaTexture' );
+  var CameraController  = require( 'wombs/three/CameraController' );
+  var Raycaster         = require( 'wombs/three/Raycaster'        );
+  var TextCreator       = require( 'wombs/three/TextCreator'      );
+  var SceneController   = require( 'wombs/three/SceneController'  );
+  var ObjLoader         = require( 'wombs/three/ObjLoader'        );
+  var EffectComposer    = require( 'wombs/three/EffectComposer'   );
+  var UserMediaTexture  = require( 'wombs/three/UserMediaTexture' );
 
   function World( womb , params ){
 

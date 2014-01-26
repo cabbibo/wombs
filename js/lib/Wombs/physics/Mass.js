@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var M = require('app/utils/Math');
+  var M = require('wombs/utils/Math');
 
   function Mass( controller , scene , object , params ){
 

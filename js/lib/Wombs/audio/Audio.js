@@ -1,7 +1,7 @@
 
 define(function(require, exports, module) {
 
-  var AudioTexture = require( 'app/utils/AudioTexture' );
+  var AudioTexture = require( 'wombs/utils/AudioTexture' );
 
   function Audio( controller , file , params ){
 
@@ -72,7 +72,7 @@ define(function(require, exports, module) {
     var self = this;
     request.onerror = function(){
       alert( 'ERROR LOADING SONG' );
-      //self.womb.loader.addFailue( 'Capability to load song' , 'http://apple.com'
+      //self.womb.loader.addFailue( 'Capability to load song' , 'http://womble.com'
     }
 
   

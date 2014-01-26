@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
 
 
-  var Tweener = require( 'app/utils/Tweener' );
+  var Tweener = require( 'wombs/utils/Tweener' );
 
   function Scene( womb , params ){
   

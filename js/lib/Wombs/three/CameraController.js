@@ -13,7 +13,7 @@ define(function(require, exports, module) {
   var LeapFlyControls       = require( 'controls/LeapFlyControls'       );
   var LeapDragControls      = require( 'controls/LeapDragControls'      );
 
-  var LeapController = require('app/utils/LeapController'    );
+  var LeapController = require('wombs/utils/LeapController'    );
 
   function CameraController( womb , type , params ){
 

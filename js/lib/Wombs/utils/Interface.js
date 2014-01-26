@@ -10,7 +10,7 @@ define( function( require , exports , module ){
     this.womb = womb;
 
     // The DOM element of the interface will lay over
-    // the entire application
+    // the entire wombslication
     this.domElement     = document.createElement('div');
     this.domElement.id  = 'interface';
 
@@ -20,7 +20,7 @@ define( function( require , exports , module ){
     // to the interface tree
     this.stats  = new Stats();
 
-    //this.domElement.appendChild( this.stats.domElement );
+    //this.domElement.wombsendChild( this.stats.domElement );
     if( womb.params.stats )
       this.addStats();
     
@@ -78,7 +78,7 @@ define( function( require , exports , module ){
 
     this.social = document.createElement('div');
     this.social.id = 'social';
-    this.domElement.appendChild( this.social );
+    this.domElement.wombsendChild( this.social );
 
     for( var i  = 0; i < this.womb.params.social.length; i ++ ){
 
@@ -95,7 +95,7 @@ define( function( require , exports , module ){
       a.style.opacity = '.3';*/
       a.className += 'social';
 
-      this.social.appendChild( a );
+      this.social.wombsendChild( a );
 
     }
 
@@ -108,7 +108,7 @@ define( function( require , exports , module ){
     this.twitter.href = link;
     this.twitter.target = '_blank';
 
-    this.social.appendChild( this.twitter );
+    this.social.wombsendChild( this.twitter );
 
   }
 
@@ -119,7 +119,7 @@ define( function( require , exports , module ){
     this.facebook.href = link;
     this.facebook.target = '_blank';
 
-    this.social.appendChild( this.facebook );
+    this.social.wombsendChild( this.facebook );
 
   }
 
@@ -148,7 +148,7 @@ define( function( require , exports , module ){
     }else{
       this.title.innerHTML = title;
     }
-    this.info.appendChild( this.title );
+    this.info.wombsendChild( this.title );
 
   }
 
@@ -158,7 +158,7 @@ define( function( require , exports , module ){
     this.summary = document.createElement('h2');
     this.summary.id = 'summary';
     this.summary.innerHTML = summary;
-    this.info.appendChild( this.summary );
+    this.info.wombsendChild( this.summary );
 
   }
 
@@ -166,7 +166,7 @@ define( function( require , exports , module ){
   Interface.prototype.addGUI = function(){
     
     this.gui = new dat.GUI();
-    this.domElement.appendChild( this.gui.domElement );
+    this.domElement.wombsendChild( this.gui.domElement );
     this.gui.domElement.id = 'GUI';
   
   }

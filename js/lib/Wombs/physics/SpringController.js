@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var Spring = require( 'app/physics/Spring' );
+  var Spring = require( 'wombs/physics/Spring' );
 
    /*
    

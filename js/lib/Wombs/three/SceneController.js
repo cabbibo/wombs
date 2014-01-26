@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var Scene = require( 'app/three/Scene' );
+  var Scene = require( 'wombs/three/Scene' );
 
 
   function SceneController( world , params ){

@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var SC = require("app/shaders/shaderChunks");
+  var SC = require("wombs/shaders/shaderChunks");
 
   var fragmentShaders = {
 

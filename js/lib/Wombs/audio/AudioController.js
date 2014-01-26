@@ -1,10 +1,10 @@
 define(function(require, exports, module) {
 
 
-  var Audio     = require( 'app/audio/Audio'      );
-  var UserAudio = require( 'app/audio/UserAudio'  );
-  var Stream    = require( 'app/audio/Stream'     );
-  var Looper    = require( 'app/audio/Looper'     );
+  var Audio     = require( 'wombs/audio/Audio'      );
+  var UserAudio = require( 'wombs/audio/UserAudio'  );
+  var Stream    = require( 'wombs/audio/Stream'     );
+  var Looper    = require( 'wombs/audio/Looper'     );
   
   function AudioController( womb , params ){
   

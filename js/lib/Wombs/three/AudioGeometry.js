@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var aF = require( 'app/utils/AnalyzingFunctions' );
+  var aF = require( 'wombs/utils/AnalyzingFunctions' );
 
   function AudioGeometry( geo , audio , params ){
 
