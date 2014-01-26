@@ -188,7 +188,9 @@ define(function(require, exports, module) {
   };
 		
   Audio.prototype.play = function(){
-		
+	
+    console.log( 'Play Called' );
+    console.log( this.file );
     this.playing = true;
     this.source.noteOn(0);
    

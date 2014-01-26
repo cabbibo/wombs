@@ -1,21 +1,21 @@
 define(function(require, exports, module) {
 
-  var m                   = require( 'app/utils/Math'                 );
-  var AudioGeometry       = require( 'app/three/AudioGeometry'        );
-  var AnalyzingFunctions  = require( 'app/utils/AnalyzingFunctions'   );
+  var m                   = require( 'wombs/utils/Math'                 );
+  var AudioGeometry       = require( 'wombs/three/AudioGeometry'        );
+  var AnalyzingFunctions  = require( 'wombs/utils/AnalyzingFunctions'   );
 
-  var Womb                = require( 'app/Womb'                       );
+  var Womb                = require( 'wombs/Womb'                       );
 
-  var recursiveFunctions  = require( 'app/utils/RecursiveFunctions'   );
+  var recursiveFunctions  = require( 'wombs/utils/RecursiveFunctions'   );
   
-  var fragmentShaders     = require( 'app/shaders/fragmentShaders'    );
-  var vertexShaders       = require( 'app/shaders/vertexShaders'      );
-  var physicsShaders      = require( 'app/shaders/physicsShaders'     );
-  var shaderChunks        = require( 'app/shaders/shaderChunks'       );
+  var fragmentShaders     = require( 'wombs/shaders/fragmentShaders'    );
+  var vertexShaders       = require( 'wombs/shaders/vertexShaders'      );
+  var physicsShaders      = require( 'wombs/shaders/physicsShaders'     );
+  var shaderChunks        = require( 'wombs/shaders/shaderChunks'       );
 
-  var PhysicsSimulator    = require( 'app/shaders/PhysicsSimulator'   );
-  var physicsShaders      = require( 'app/shaders/physicsShaders'     );
-  var physicsParticles    = require( 'app/shaders/physicsParticles'   );
+  var PhysicsSimulator    = require( 'wombs/shaders/PhysicsSimulator'   );
+  var physicsShaders      = require( 'wombs/shaders/physicsShaders'     );
+  var physicsParticles    = require( 'wombs/shaders/physicsParticles'   );
 
 
   /*
@@ -55,7 +55,9 @@ define(function(require, exports, module) {
     velocityStartingRange:.0000,
     positionStartingRange:.000002,
     positionShader: physicsShaders.positionAudio_4,
-    particles:      physicsParticles.basicAudio,
+    particlesUniforms:        physicsParticles.uniforms.audio,
+    particlesVertexShader:    physicsParticles.vertexShaders.audio,
+    particlesFragmentShader:  physicsParticles.fragmentShaders.audio,
     bounds: 400,
     speed: .1,
    

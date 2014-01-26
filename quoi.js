@@ -1,33 +1,33 @@
 define(function(require, exports, module) {
 
-  var m                   = require( 'app/utils/Math'                 );
-  var AudioGeometry       = require( 'app/three/AudioGeometry'        );
-  var AnalyzingFunctions  = require( 'app/utils/AnalyzingFunctions'   );
+  var m                   = require( 'wombs/utils/Math'                 );
+  var AudioGeometry       = require( 'wombs/three/AudioGeometry'        );
+  var AnalyzingFunctions  = require( 'wombs/utils/AnalyzingFunctions'   );
 
-  var Womb                = require( 'app/Womb'                       );
+  var Womb                = require( 'wombs/Womb'                       );
 
-  var recursiveFunctions  = require( 'app/utils/RecursiveFunctions'   );
+  var recursiveFunctions  = require( 'wombs/utils/RecursiveFunctions'   );
   
-  var fragmentShaders     = require( 'app/shaders/fragmentShaders'    );
-  var vertexShaders       = require( 'app/shaders/vertexShaders'      );
-  var physicsShaders      = require( 'app/shaders/physicsShaders'     );
-  var shaderChunks        = require( 'app/shaders/shaderChunks'       );
+  var fragmentShaders     = require( 'wombs/shaders/fragmentShaders'    );
+  var vertexShaders       = require( 'wombs/shaders/vertexShaders'      );
+  var physicsShaders      = require( 'wombs/shaders/physicsShaders'     );
+  var shaderChunks        = require( 'wombs/shaders/shaderChunks'       );
 
-  var PhysicsSimulator    = require( 'app/shaders/PhysicsSimulator'   );
-  var physicsShaders      = require( 'app/shaders/physicsShaders'     );
+  var PhysicsSimulator    = require( 'wombs/shaders/PhysicsSimulator'   );
+  var physicsShaders      = require( 'wombs/shaders/physicsShaders'     );
 
 
   // Scenes
-  var PhysicsSimulation   = require( 'app/scenes/quoi/PhysicsSimulator' );
-  var AntiSerpenski1      = require( 'app/scenes/quoi/AntiSerpenski1'   );
-  var AntiSerpenski2      = require( 'app/scenes/quoi/AntiSerpenski2'   );
-  var Kitty               = require( 'app/scenes/quoi/Kitty'            );
-  var Ring                = require( 'app/scenes/quoi/Ring'             );
-  var Random              = require( 'app/scenes/quoi/Random'           );
-  var Beauty              = require( 'app/scenes/quoi/Beauty'           );
-  var FractalCombo        = require( 'app/scenes/quoi/FractalCombo'     );
-  var Credits             = require( 'app/scenes/quoi/Credits'          );
-  var Begin               = require( 'app/scenes/quoi/Begin'            );
+  var PhysicsSimulation   = require( 'wombs/scenes/quoi/PhysicsSimulator' );
+  var AntiSerpenski1      = require( 'wombs/scenes/quoi/AntiSerpenski1'   );
+  var AntiSerpenski2      = require( 'wombs/scenes/quoi/AntiSerpenski2'   );
+  var Kitty               = require( 'wombs/scenes/quoi/Kitty'            );
+  var Ring                = require( 'wombs/scenes/quoi/Ring'             );
+  var Random              = require( 'wombs/scenes/quoi/Random'           );
+  var Beauty              = require( 'wombs/scenes/quoi/Beauty'           );
+  var FractalCombo        = require( 'wombs/scenes/quoi/FractalCombo'     );
+  var Credits             = require( 'wombs/scenes/quoi/Credits'          );
+  var Begin               = require( 'wombs/scenes/quoi/Begin'            );
 
 
   /*
@@ -664,6 +664,7 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
+    console.log('WHCLSSS' );
     //document.body.style.cursor = 'none';    
     
     var offset = -490;
@@ -680,9 +681,11 @@ define(function(require, exports, module) {
     }
 
 
+    console.log('HELLO' );
 
     var start = function(){
       womb.begin.exit();
+      console.log( 'WHOA');
       womb.stream.play();
     }
 
@@ -1756,6 +1759,7 @@ FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIRST DROP FIR
     var t = setTimeout( begin             , 0                );
     var t = setTimeout( leave             , -1000   + offset );
     var t = setTimeout( start             , 492     + offset );
+
     var t = setTimeout( firstHit          , 492     + offset );
     var t = setTimeout( firstHO           , 1710    + offset );
 

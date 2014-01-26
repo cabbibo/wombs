@@ -56,10 +56,9 @@ define(function(require, exports, module) {
       debug:                  true,
       startingVelocityRange:  10,
       startingPositionRange:  1,  
-      particles:              physicsParticles.basic1,
-      particlesUniforms:
-      particlesVertexShader:
-      particlesFragmentShader:
+      particlesUniforms:      physicsParticles.uniforms.basic,
+      particlesVertexShader:  physicsParticles.vertexShaders.lookup,
+      particlesFragmentShader:physicsParticles.fragmentShaders.basic,
       
       speed:                  1.0,
 
@@ -91,13 +90,19 @@ define(function(require, exports, module) {
 
     });
 
+    this.particles = {
+
+      uniforms:         this.params.particlesUniforms,
+      vertexShader:     this.params.particlesVertexShader,
+      fragmentShader:   this.params.particlesFragmentShader,
+
+
+    }
    
     // Setting up audio
     if( this.params.audio )
       this.audio = this.params.audio
 
-
-    this.particles  = this.params.particles;
     this.bounds     = this.params.bounds;
 
     this.params.textureHeight = this.params.textureWidth;

@@ -1,18 +1,18 @@
 define(function(require, exports, module) {
 
-  var m                   = require( 'app/utils/Math'                 );
-  var AudioGeometry       = require( 'app/three/AudioGeometry'        );
-  var AnalyzingFunctions  = require( 'app/utils/AnalyzingFunctions'   );
+  var m                   = require( 'wombs/utils/Math'                 );
+  var AudioGeometry       = require( 'wombs/three/AudioGeometry'        );
+  var AnalyzingFunctions  = require( 'wombs/utils/AnalyzingFunctions'   );
 
-  var Womb                = require( 'app/Womb'                       );
+  var Womb                = require( 'wombs/Womb'                       );
 
-  var recursiveFunctions  = require( 'app/utils/RecursiveFunctions'   );
+  var recursiveFunctions  = require( 'wombs/utils/RecursiveFunctions'   );
   
-  var fragmentShaders     = require( 'app/shaders/fragmentShaders'    );
-  var vertexShaders       = require( 'app/shaders/vertexShaders'      );
-  var shaderChunks        = require( 'app/shaders/shaderChunks'       );
+  var fragmentShaders     = require( 'wombs/shaders/fragmentShaders'    );
+  var vertexShaders       = require( 'wombs/shaders/vertexShaders'      );
+  var shaderChunks        = require( 'wombs/shaders/shaderChunks'       );
 
-  var PS = require( 'app/scenes/quoi/PhysicsSimulator' );
+  var PS = require( 'wombs/scenes/quoi/PhysicsSimulator' );
   /*
    
      Create our womb

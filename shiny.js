@@ -1,16 +1,16 @@
 define(function(require, exports, module) {
 
-  var m                   = require( 'app/utils/Math'                 );
-  var AudioGeometry       = require( 'app/three/AudioGeometry'        );
-  var AnalyzingFunctions  = require( 'app/utils/AnalyzingFunctions'   );
+  var m                   = require( 'wombs/utils/Math'                 );
+  var AudioGeometry       = require( 'wombs/three/AudioGeometry'        );
+  var AnalyzingFunctions  = require( 'wombs/utils/AnalyzingFunctions'   );
 
-  var Womb                = require( 'app/Womb'                       );
+  var Womb                = require( 'wombs/Womb'                       );
 
-  var recursiveFunctions  = require( 'app/utils/RecursiveFunctions'   );
+  var recursiveFunctions  = require( 'wombs/utils/RecursiveFunctions'   );
   
-  var fragmentShaders     = require( 'app/shaders/fragmentShaders'    );
-  var vertexShaders       = require( 'app/shaders/vertexShaders'      );
-  var shaderChunks        = require( 'app/shaders/shaderChunks'       );
+  var fragmentShaders     = require( 'wombs/shaders/fragmentShaders'    );
+  var vertexShaders       = require( 'wombs/shaders/vertexShaders'      );
+  var shaderChunks        = require( 'wombs/shaders/shaderChunks'       );
 
 
   /*
@@ -94,11 +94,11 @@ define(function(require, exports, module) {
 
   
   womb.shinyTexture = THREE.ImageUtils.loadTexture( '/lib/img/shiny/cross.png' );
-  womb.metaTexture  = THREE.ImageUtils.loadTexture( '/lib/img/shiny/meta.png', THREE.UVMapping , function(){
+  womb.metaTexture  = THREE.ImageUtils.loadTexture( '/lib/img/shiny/meta.png', THREE.UVMwombsing , function(){
     console.log('META' );   
   });
 
-  womb.moonTexture  = THREE.ImageUtils.loadTexture( '/lib/img/moon_1024.jpg', THREE.UVMapping  , function(){
+  womb.moonTexture  = THREE.ImageUtils.loadTexture( '/lib/img/moon_1024.jpg', THREE.UVMwombsing  , function(){
     console.log('MOON' );
   });
 

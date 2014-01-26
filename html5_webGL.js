@@ -1,26 +1,26 @@
 define(function(require, exports, module) {
 
-  var Womb                = require( 'app/Womb'                         );
+  var Womb                = require( 'wombs/Womb'                         );
   
-  var Ring                = require( 'app/scenes/html5_webGL/Ring'      );
-  var Text                = require( 'app/scenes/html5_webGL/Text'      );
-  var Image               = require( 'app/scenes/html5_webGL/Image'     );
-  var Fan                 = require( 'app/scenes/html5_webGL/Fan'       );
-  var Random              = require( 'app/scenes/html5_webGL/Random'    );
+  var Ring                = require( 'wombs/scenes/html5_webGL/Ring'      );
+  var Text                = require( 'wombs/scenes/html5_webGL/Text'      );
+  var Image               = require( 'wombs/scenes/html5_webGL/Image'     );
+  var Fan                 = require( 'wombs/scenes/html5_webGL/Fan'       );
+  var Random              = require( 'wombs/scenes/html5_webGL/Random'    );
 
 
-  var Intro               = require( 'app/scenes/html5_webGL/Intro'     );
-  var HardLife            = require( 'app/scenes/html5_webGL/HardLife'  );
-  var Coffee              = require( 'app/scenes/html5_webGL/Coffee'    );
-  var Nature              = require( 'app/scenes/html5_webGL/Nature'    );
-  var Physical            = require( 'app/scenes/html5_webGL/Physical'  );
-  var Digital             = require( 'app/scenes/html5_webGL/Digital'   );
-  var Thievery            = require( 'app/scenes/html5_webGL/Thievery'  );
-  var Variables           = require( 'app/scenes/html5_webGL/Variables' );
-  var WebGL               = require( 'app/scenes/html5_webGL/WebGL'     );
+  var Intro               = require( 'wombs/scenes/html5_webGL/Intro'     );
+  var HardLife            = require( 'wombs/scenes/html5_webGL/HardLife'  );
+  var Coffee              = require( 'wombs/scenes/html5_webGL/Coffee'    );
+  var Nature              = require( 'wombs/scenes/html5_webGL/Nature'    );
+  var Physical            = require( 'wombs/scenes/html5_webGL/Physical'  );
+  var Digital             = require( 'wombs/scenes/html5_webGL/Digital'   );
+  var Thievery            = require( 'wombs/scenes/html5_webGL/Thievery'  );
+  var Variables           = require( 'wombs/scenes/html5_webGL/Variables' );
+  var WebGL               = require( 'wombs/scenes/html5_webGL/WebGL'     );
 
-  var Turbulence          = require( 'app/scenes/html5_webGL/Turbulence');
-  var End                 = require( 'app/scenes/html5_webGL/End'       );
+  var Turbulence          = require( 'wombs/scenes/html5_webGL/Turbulence');
+  var End                 = require( 'wombs/scenes/html5_webGL/End'       );
 
 
 
@@ -38,7 +38,7 @@ define(function(require, exports, module) {
     modelLoader:      true,
     textCreator:      true,
     raycaster:        true,
-    title:            'Turbulence: Finding and Making your Happy Place',
+    title:            'Turbulence: Finding and Making your Hwombsy Place',
     link:             link, 
     summary:          info,
     gui:              true,

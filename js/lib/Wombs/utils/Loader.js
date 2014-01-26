@@ -239,8 +239,13 @@ define(function(require, exports, module) {
     },
 
     onStart: function(){
-    
-      this.womb._start();
+   
+      if( !this.womb.started ){
+        this.womb.started = true;
+        this.womb._start();
+      }else{
+        console.log('Womb Already Started' );
+      }
       
     },
 

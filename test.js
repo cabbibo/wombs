@@ -69,7 +69,9 @@ define(function(require, exports, module) {
 
 
 
-  womb.particles = physicsParticles.basicPicture;
+  womb.particleUniforms = physicsParticles.uniforms.basic;
+  womb.particleVertShader = physicsParticles.vertexShaders.lookup;
+  womb.particleFragShader = physicsParticles.fragmentShaders.position;
 
   womb.particleParams =   {
     size: 25,
@@ -84,9 +86,9 @@ define(function(require, exports, module) {
 
   womb.particleMaterial = new THREE.ShaderMaterial({
 
-    uniforms:       womb.particles.uniforms,
-    vertexShader:   womb.particles.vertexShader,
-    fragmentShader: womb.particles.fragmentShader,
+    uniforms:       womb.particleUniforms,
+    vertexShader:   womb.particleVertShader,
+    fragmentShader: womb.particleFragShader,
 
     color:          true,
     blending:       womb.particleParams.blending,
@@ -143,6 +145,7 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
+    console.log('CHECK' );
   
   }
 
