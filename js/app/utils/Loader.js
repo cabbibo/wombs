@@ -244,6 +244,14 @@ define(function(require, exports, module) {
       
     },
 
+    setNavigator: function(){
+
+      window.navigator.getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia || window.navigator.msGetUserMedia;
+
+      this.womb.navigator = window.navigator;
+
+    },
+
     detect: function(){
 
 

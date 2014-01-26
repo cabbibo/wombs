@@ -31,17 +31,18 @@ define(function(require, exports, module) {
     audio:{
       color:{
 
-      uv:{
+        uv:{
+        
 
-        x: SC.createAudioColorShader( 'vUv.x' ),
-        y: SC.createAudioColorShader( 'vUv.y' ),
-        xy: SC.createAudioColorShader( '( vUv.x + vUv.y ) / 2.0' ),
-        absX: SC.createAudioColorShader( 'abs(vUv.x - 0.5) * 2.0' ),
-        absY: SC.createAudioColorShader( 'abs(vUv.y - 0.5) * 2.0' ),
-        absXY: SC.createAudioColorShader( 'abs( vUv.y + vUv.x - 1.0 )' ),
-        absDiamond: SC.createAudioColorShader( 
-          'abs( vUv.y - .5) + abs( vUv.x - .5 )' 
-        ),
+          x: SC.createAudioColorShader( 'vUv.x' ),
+          y: SC.createAudioColorShader( 'vUv.y' ),
+          xy: SC.createAudioColorShader( '( vUv.x + vUv.y ) / 2.0' ),
+          absX: SC.createAudioColorShader( 'abs(vUv.x - 0.5) * 2.0' ),
+          absY: SC.createAudioColorShader( 'abs(vUv.y - 0.5) * 2.0' ),
+          absXY: SC.createAudioColorShader( 'abs( vUv.y + vUv.x - 1.0 )' ),
+          absDiamond: SC.createAudioColorShader( 
+            'abs( vUv.y - .5) + abs( vUv.x - .5 )' 
+          ),
 
 
       },

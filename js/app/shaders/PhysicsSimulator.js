@@ -57,6 +57,9 @@ define(function(require, exports, module) {
       startingVelocityRange:  10,
       startingPositionRange:  1,  
       particles:              physicsParticles.basic1,
+      particlesUniforms:
+      particlesVertexShader:
+      particlesFragmentShader:
       
       speed:                  1.0,
 
