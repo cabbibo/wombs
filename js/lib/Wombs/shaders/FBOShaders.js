@@ -113,7 +113,10 @@ define(function(require, exports, module) {
             "pos.z += sin( x * 0.037 ) * cos( y * 0.033 ) * 0.4;",
             "pos.w -= 0.00001;",
 
-           // "pos = vec4( 1.0 , 1.0 , 1.0 , 1.0 );",
+            "pos.x += sin( audio.x * 2.0 * 3.14 );",
+            "pos.y += sin( audio.y * 2.0 * 3.14 );",
+
+             //"pos = vec4( 1.0 , 1.0 , 1.0 , 1.0 );",
 
           "}",
 

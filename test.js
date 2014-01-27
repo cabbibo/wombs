@@ -178,15 +178,20 @@ define(function(require, exports, module) {
 
   particleMaterial = new THREE.ShaderMaterial( {
 
-    uniforms:       physicsParticles.uniforms.basic,
+    uniforms:       physicsParticles.uniforms.audio,
     vertexShader:   physicsParticles.vertex.lookup,
-    fragmentShader: physicsParticles.fragment.basic,
+    fragmentShader: physicsParticles.fragment.audio,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
   // depthTest: false,
     transparent: true
 
   } );
+
+  console.log( particleMaterial.uniforms );
+
+  particleMaterial.uniforms.audioTexture.value = womb.stream.texture.texture;
+
 
   mesh = new THREE.ParticleSystem( geometry, particleMaterial );
   womb.scene.add( mesh );
