@@ -52,29 +52,19 @@ define(function(require, exports, module) {
       textureWidth:           50.0,
       bounds:                 womb.size,
       positionShader:         ps.position,
-      velocityShader:         ps.velocity.curl,
       debug:                  true,
       startingVelocityRange:  10,
       startingPositionRange:  1,  
       particlesUniforms:      physicsParticles.uniforms.basic,
-      particlesVertexShader:  physicsParticles.vertex.lookup,
-      particlesFragmentShader:physicsParticles.fragment.basic,
+      particlesVertexShader:  physicsParticles.vertexShaders.lookup,
+      particlesFragmentShader:physicsParticles.fragmentShaders.basic,
       
       speed:                  1.0,
 
-      velocityShaderUniforms:{
-  
-          seperationDistance:   100.0,
-          alignmentDistance:    150.0,
-          cohesionDistance:     100.0,
-          freedomFactor:          0.3,
-          
-          noiseSize:              .001,
-          potentialPower:         5.0,
-          
-          dampening:             1.0,
-          gravityStrength:    .001,
-        
+      positionShaderUniforms:{
+    
+        speed: .1
+
       },
 
       particleParams:   {
@@ -103,15 +93,9 @@ define(function(require, exports, module) {
     if( this.params.audio )
       this.audio = this.params.audio
 
-    this.bounds     = this.params.bounds;
-
     this.params.textureHeight = this.params.textureWidth;
 
-    //making sure the bounds are properly set up
-    this.params.velocityShaderUniforms.upperBounds = this.bounds;
-    this.params.velocityShaderUniforms.lowerBounds = -this.bounds;
-
-    this.velocityShader = this.params.velocityShader;
+    this.physicsSimulator = this.params.velocityShader;
 
 
     // Camera and renderScene for renderering physics texture
@@ -120,7 +104,6 @@ define(function(require, exports, module) {
     this.camera.position.z = 1;
 
     this.textureWidth   = this.params.textureWidth;
-    
     this.TW             = this.textureWidth;
 
     // Bounds for physics Parameters requiring bounds
@@ -140,8 +123,6 @@ define(function(require, exports, module) {
     this.renderTextures = {
       position1:null,
       position2:null,
-      velocity1:null,
-      velocity2:null
     }
 
     this.RT = this.renderTextures;
@@ -154,7 +135,16 @@ define(function(require, exports, module) {
 
     */
 
-    this.checkForCompatibility();
+    if( !this.gl.getExtension( "OES_texture_float" )) {
+      this.womb.loader.addFailure( "NO FLOAT TEXTURES" , "http://robbieTilton.com" );
+      return;
+    }
+
+    if( this.gl.getParameter(this.gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) == 0) {
+      this.womb.loader.addFailure( "NO VERTEX TEXTURES" , "http://robbieTilton.com" );
+      return;
+    }
+
 
 
     /*
@@ -184,8 +174,6 @@ define(function(require, exports, module) {
     this.textureMesh = new THREE.Mesh( this.textureGeometry , this.textureMaterial );
 
     this.renderScene.add( this.textureMesh );
-
-
 
 
     /*
@@ -219,50 +207,8 @@ define(function(require, exports, module) {
     
     });
 
-
-    // In Order to create correct For Loops
-    // HACKEY AS FUCK
-    this.velocityVertexShader = this.createVelocityShader( this.velocityShader );
-
-    var u =  {
-          time: { type: "f", value: 1.0 },
-          resolution: { type: "v2", value: new THREE.Vector2( this.TW , this.TW ) },
-
-          texturePosition:    { type: "t" , value: null },
-          textureVelocity:    { type: "t" , value: null },
-          texturePosition_OG: { type: "t", value: null },
-          textureVelocity_OG: { type: "t", value: null },
-
-          speed:              { type: "f" , value: null },
-
-          lowerBounds:    { type: "f" , value: null },
-          upperBounds:    { type: "f" , value: null },
-
-          seperationDistance: { type: "f" , value: null },
-          alignmentDistance:  { type: "f" , value: null },
-          cohesionDistance:   { type: "f" , value: null },
-          freedomFactor:      { type: "f" , value: null },
-
-          dampening:          { type: "f" , value: null },
-          gravityStrength:    { type: "f" , value: null },
-
-          noiseSize:          { type: "f" , value: null },
-          potentialPower:     { type: "f" , value: null },
-
-      }
-
-
-    this.velocityShader = new THREE.ShaderMaterial( {
-
-      uniforms: u,
-      vertexShader: vertexShaders.passThrough_noMV,
-      fragmentShader: this.velocityVertexShader,
-      transparent: true
-
-    });
-
     // Make it so we can pass in parameters to the shader
-    helperFunctions.setMaterialUniforms( this.velocityShader , this.params.velocityShaderUniforms );
+    helperFunctions.setMaterialUniforms( this.positionShader , this.params.positionShaderUniforms );
 
     /*
     
@@ -342,30 +288,24 @@ define(function(require, exports, module) {
 
   PhysicsSimulator.prototype._update = function(){
 
+
+
+
     this.positionShader.uniforms.delta.value = this.womb.delta;
     if( this.flipflop ){
 
-      this.renderVelocity( this.RT.position1 , this.RT.velocity1 , this.RT.velocity2 );
       this.renderPosition( this.RT.position1 , this.RT.velocity2 , this.RT.position2 );
 
       if( this.particleMaterial.uniforms ){
         this.particleMaterial.uniforms.lookup.value = this.RT.position2;
-
-        if( this.particleMaterial.uniforms.lookupVel )
-          this.particleMaterial.uniforms.lookupVel.value = this.RT.velocity2;
       }
 
     }else {
 
-      this.renderVelocity( this.RT.position2 , this.RT.velocity2 , this.RT.velocity1 );
       this.renderPosition( this.RT.position2 , this.RT.velocity1 , this.RT.position1 );
 
       if( this.particleMaterial.uniforms ){
         this.particleMaterial.uniforms.lookup.value = this.RT.position1;
-
-        if( this.particleMaterial.uniforms.lookupVel )
-          this.particleMaterial.uniforms.lookupVel.value = this.RT.velocity1;
-
       }
     }
 
@@ -521,8 +461,8 @@ define(function(require, exports, module) {
   PhysicsSimulator.prototype.getRenderTarget = function(){
 
     var renderTarget = new THREE.WebGLRenderTarget( this.TW , this.TW , {
-        wrapS: THREE.RepeatWrapping,
-        wrapT: THREE.RepeatWrapping,
+        wrapS: THREE.RepeatWrwombsing,
+        wrapT: THREE.RepeatWrwombsing,
         minFilter: THREE.NearestFilter,
         magFilter: THREE.NearestFilter,
         format: THREE.RGBAFormat,
@@ -724,7 +664,6 @@ define(function(require, exports, module) {
 
 
 
-
   // This method is made in order to add const for the width of the texture
   PhysicsSimulator.prototype.createVelocityShader = function( shader ){
 
@@ -738,22 +677,6 @@ define(function(require, exports, module) {
   }
 
 
-
-  PhysicsSimulator.prototype.checkForCompatibility = function(){
-
-    if( !this.gl.getExtension( "OES_texture_float" )) {
-      this.womb.loader.addFailure( "NO FLOAT TEXTURES" , "http://robbieTilton.com" );
-      return;
-    }
-
-    if( this.gl.getParameter(this.gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS) == 0) {
-      this.womb.loader.addFailure( "NO VERTEX TEXTURES" , "http://robbieTilton.com" );
-      return;
-    }
-
-
-
-  }
 
 
 

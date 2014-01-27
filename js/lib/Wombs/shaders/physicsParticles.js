@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
     },
 
-    vertexShaders:{
+    vertex:{
 
       lookup: [
 
@@ -167,7 +167,7 @@ define(function(require, exports, module) {
 
     },
 
-    fragmentShaders: {
+    fragment: {
 
 
       basic: [
