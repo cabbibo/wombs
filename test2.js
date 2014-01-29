@@ -44,7 +44,7 @@ define(function(require, exports, module) {
     size: 400
   });
 
-  /*womb.texture = new VideoTexture( womb , {
+  womb.texture = new VideoTexture( womb , {
 
     file:'/lib/videos/demoReel.mp4'
 
@@ -124,9 +124,9 @@ define(function(require, exports, module) {
 
   womb.mesh = new THREE.Mesh( womb.geo , womb.material );
 
-  womb.scene.add( womb.mesh );*/
+  womb.scene.add( womb.mesh );
 
-
+/*
   womb.stream = womb.audioController.createStream( '../lib/audio/tracks/weOver.mp3' );
 
 
@@ -155,7 +155,7 @@ define(function(require, exports, module) {
         opacity:    1,
       }, 
   });
-  //womb.ps.scene.position.z = -100;
+  //womb.ps.scene.position.z = -100;*/
 
 
   womb.loader.loadBarAdd();

@@ -18,12 +18,109 @@
 // TODO NOTES:
 
 
+
+
   PRE ALPHA:
 
   - figure out physics simulation particles
   - Clean up code
   - Figure out make and make build!
 
+
+  - Textures should be utils, not in Wombs!
+
+
+  Organization:
+
+    -Womb ( World )
+        
+        - Audio
+          - AudioController.js
+          - Audio.js
+          - Looper.js
+          - UserAudio.js
+          - Stream.js
+          - 
+        - Camera
+          - Controls
+            - LeapFlyControls.js
+            - MomentumControls.js
+            - etc
+          - CameraController.js
+
+        - Physics
+          - Global Forces
+          - forces that can be assigned to single being
+
+        - Loading
+          - ObjLoader.js
+          - JsonLoader.js
+          - ImageLoader.js
+          - ModelLoader.js
+
+
+        - Raycaster.js
+      
+        - EffectComposer.js
+  
+        - LinkCreator.js (???)
+        
+
+        - Textures
+          - UserMediaTexture.js
+          - VideoTexture.js
+          - AudioTexture.js
+          - TextCreator.js
+
+
+        - World.js
+        
+        - Creator
+
+        - Loader.js
+        - Interface.js
+        - Animator.js
+        - Detector.js
+        - 
+      
+
+    - Being ( Game Object / Scene )
+        - Physics
+          - Mass
+          - Types of forces to add
+
+        - Body
+          - Geometry
+          - Material
+          - Arrangement( default is single Geometry )
+            - Placement
+            - Tweening functions such as fan out
+
+
+        - Prefabs
+          
+
+
+    // THings that are not 'Womb' dependent
+    - Utils
+      - CanvasFunctions.js
+      - Math.js
+      - RecursiveFunctions.js
+      - PlacementFunctions.js
+      - helperFunctions.js
+
+
+
+
+
+
+
+
+
+
+    - Shaders
+
+      
 
   - loader conditions
   - loader.failure() to be called on errors
