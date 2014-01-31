@@ -5,13 +5,14 @@
 
 */
 
+Constant Work In Progress. Feel Free To Jump in and help out, or send me any suggestions!
+@cabbibo
+
 
 //SHADER NOTES:
 
-  -If using THREE.js shaders, need to reassign the values assigned in the original shader
-
+  - If using THREE.js shaders, need to reassign the values assigned in the original shader
   - using SC.modelView, because we want to do all teh 'pos' stuff BEFORE we define
-
   - Flip flop is to change from one mat to another
 
 
@@ -144,10 +145,8 @@
   */
 
   // Update ShaderLib
-    - grab jaume's tools
-    - 
-      - Grab some new shaders for shaderLib:
-        - Cross hatch shader and some of jaume's tools
+    - Grab some new shaders for shaderLib:
+    - Cross hatch shader and some of jaume's tools
       
   // Data to JSON GPU SHADER
   
@@ -237,9 +236,6 @@
 
  
   // NEXT SONG
-
-
-
 
   - The path of lonliness ( aka not hitting any guides has its own reward if user makes it to the end ( 
         easter egg )
