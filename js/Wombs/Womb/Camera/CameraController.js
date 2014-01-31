@@ -8,12 +8,10 @@ define(function(require, exports, module) {
   var MouseMoveControls     = require( 'Womb/Camera/Controls/MouseMoveControls'     );
   var MomentumFlyControls   = require( 'Womb/Camera/Controls/MomentumFlyControls'   );
   var FlyControls           = require( 'Womb/Camera/Controls/FlyControls'           );
-  var LeapPaddleControls    = require( 'Womb/Camera/Controls/LeapPaddleControls'    );
-  var LeapSpringControls    = require( 'Womb/Camera/Controls/LeapSpringControls'    );
   var LeapFlyControls       = require( 'Womb/Camera/Controls/LeapFlyControls'       );
   var LeapDragControls      = require( 'Womb/Camera/Controls/LeapDragControls'      );
 
-  var LeapController        = require( 'Utils/LeapController'                  );
+  var LeapController        = require( 'Utils/LeapController'                       );
 
   function CameraController( womb , type , params ){
 
@@ -44,15 +42,6 @@ define(function(require, exports, module) {
     
       this.controls = new MouseMoveControls( this.womb.camera, this.womb.renderer.domElement  , params );
     
-    }else if( type == 'LeapPaddleControls' ){
-
-      if( !this.womb.leapController ){
-        this.womb.leapController       = LeapController;
-        this.womb.leapController.size  = this.womb.size;
-      }
-
-      this.controls = new LeapPaddleControls( this.womb.camera , this.womb.leapController , params );
-
     }else if( type == 'LeapDragControls' ){
 
       if( !this.womb.leapController ){
@@ -61,21 +50,6 @@ define(function(require, exports, module) {
       }
 
       this.controls = new LeapDragControls( this.womb.camera , this.womb.leapController , params );
-
-    }else if( type == 'LeapSpringControls' ){
-
-      if( !this.womb.leapController ){
-        this.womb.leapController       = LeapController;
-        this.womb.leapController.size  = this.womb.size;
-      }
-
-
-      this.controls = new LeapSpringControls( 
-        this.womb.camera, 
-        this.womb.leapController , 
-        this.womb.scene, 
-        params 
-      );
 
     }else if( type == 'LeapFlyControls' ){
 
