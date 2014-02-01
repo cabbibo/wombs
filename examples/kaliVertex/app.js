@@ -17,7 +17,7 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    cameraController: 'TrackballControls',
+    cameraController: 'LeapFlyControls',
     raycaster:        false,
     title:            'Kali Fractal Vertex and Fragment Shader',
     link:             link, 
