@@ -7,8 +7,10 @@ define(function(require, exports, module) {
   var vertexShaders       = require( 'Shaders/vertexShaders'      );
   var shaderChunks        = require( 'Shaders/shaderChunks'       );
 
+  var TextCreator         = require( 'Womb/textures/TextTexture'  );
 
-  function Credits( womb , params ){
+
+  function FilterAudioLinks( womb , params ){
 
     this.womb = womb;
 
@@ -24,20 +26,22 @@ define(function(require, exports, module) {
       modelScale: 1,
       audioPower: 0.5,
       noisePower: 0.1,
-      texture: self.womb.stream.texture.texture,
+      vertexShader:   vertexShaders.audio.noise.position,
+      fragmentShader: fragmentShaders.audio.color.image.sample_pos_diamond,
       geo: new THREE.CubeGeometry( 1 , 1 , 1 , 10 , 10 ,10 ),
       numOf: 50,
+      audio: womb.audioController.createLoop( 'lib/audio/loops/dontReallyCare/1.mp3' ),
+      mainTitle: 'Hello World',
 
     });
 
-    var loopFile = '/lib/audio/loops/quoi/creditsLoop.mp3';
-    this.audio = womb.audioController.createLoop( loopFile );
+    this.audio = this.params.audio;    
     
-    this.world = this.womb.sceneController.createScene();
+    this.being = this.womb.creator.createBeing();
 
-    this.scene = this.world.scene;
+    this.scene = this.being.scene;
 
-    this.texture = this.params.texture;
+    this.texture = this.audio.texture.texture;
 
     var self = this;
 
@@ -46,17 +50,24 @@ define(function(require, exports, module) {
     this.links = [];
 
     this.u = {
-      texture:    { type: "t", value: womb.stream.texture.texture },
-      image:      { type: "t", value: womb.stream.texture.texture },
-
-      color:      { type: "v3", value: this.params.color },
+      
       time:       womb.time,
-      pow_noise:  { type: "f" , value: 0.01 },
-      pow_audio:  { type: "f" , value: .04 },
+
+      pow_noise:  { type: "f"  , value: 0.01 },
+      pow_audio:  { type: "f"  , value: .04 },
+
+      texture:    { type: "t"  , value: null  },
+      image:      { type: "t"  , value: null  },
+      color:      { type: "v3" , value: this.params.color },
+
     }
 
+    // Makes sure our womb has a textCreator!
+  
+    if( !this.womb.textCreator )
+      this.womb.textCreator = new TextCreator( this.womb );
 
-    this.t_CENTER = this.womb.textCreator.createTexture( 'INFO ORBS' );
+    this.t_CENTER = this.womb.textCreator.createTexture( this.params.mainTitle );
 
     this.u_CENTER= THREE.UniformsUtils.merge( [
         THREE.ShaderLib['basic'].uniforms,
@@ -65,13 +76,13 @@ define(function(require, exports, module) {
 
     this.u_CENTER.time          = this.womb.time;
     this.u_CENTER.image.value   = this.t_CENTER;
-    this.u_CENTER.texture.value = this.audio.texture.texture;
-    this.u_CENTER.color.value   = new THREE.Vector3( 1.0 , 1.0 , 1.0 );
+    this.u_CENTER.texture.value = this.texture;
+    this.u_CENTER.color.value   = this.params.color; 
 
     this.m_CENTER = new THREE.ShaderMaterial( {
       uniforms:       this.u_CENTER, 
-      vertexShader:   vertexShaders.audio.noise.position,
-      fragmentShader: fragmentShaders.audio.color.image.sample_pos_diamond,
+      vertexShader:   this.params.vertexShader,
+      fragmentShader: this.params.fragmentShader,
       transparent:    true,
       fog:            true,
       opacity:        0.1,
@@ -87,6 +98,15 @@ define(function(require, exports, module) {
     this.CENTER.scale.y = this.t_CENTER.scaledHeight;
 
     this.scene.add( this.CENTER );
+
+    for( var i = 0; i < this.params.links.length; i++ ){
+
+      var l = this.params.links[i];
+      var link = this.createLink( l[0] , l[1] , l[2] );
+      link.scale.
+
+
+    }
 
     var i = '../lib/img/icons/avalon_1.png';
     var t = 'AVALON EMERSON';
@@ -171,12 +191,12 @@ define(function(require, exports, module) {
 
     this.womb.loader.loadBarAdd();
 
-    this.world.update = this.update.bind( this );
+    this.being.update = this.update.bind( this );
 
   }
 
 
-  Credits.prototype.createLink = function( image , text , link ){
+  FilterAudioLinks.prototype.createLink = function( image , text , link ){
 
     var image = this.womb.imageLoader.load( image );
  
@@ -213,16 +233,16 @@ define(function(require, exports, module) {
   }
 
 
-  Credits.prototype.update = function(){
+  FilterAudioLinks.prototype.update = function(){
 
   }
 
-  Credits.prototype.click = function( e ){
+  FilterAudioLinks.prototype.click = function( e ){
 
   }
 
 
-  Credits.prototype.mouseDown = function(){
+  FilterAudioLinks.prototype.mouseDown = function(){
 
     for( var i = 0; i < this.links.length; i++ ){
 
@@ -237,7 +257,7 @@ define(function(require, exports, module) {
 
   }
 
-  Credits.prototype.mouseUp = function(){
+  FilterAudioLinks.prototype.mouseUp = function(){
 
     for( var i = 0; i < this.links.length; i++ ){
 
@@ -255,7 +275,7 @@ define(function(require, exports, module) {
 
 
 
-  Credits.prototype.onMeshHoveredOver = function(object){
+  FilterAudioLinks.prototype.onMeshHoveredOver = function(object){
 
     this.audio.filter.frequency.value = 2000;
     for( var i = 0; i < this.links.length; i++ ){
@@ -281,7 +301,7 @@ define(function(require, exports, module) {
 
   }
 
-  Credits.prototype.onMeshHoveredOut = function(object){
+  FilterAudioLinks.prototype.onMeshHoveredOut = function(object){
 
     this.audio.filter.frequency.value = 1200;
 
@@ -304,7 +324,7 @@ define(function(require, exports, module) {
   }
 
 
-  Credits.prototype.update = function(){
+  FilterAudioLinks.prototype.update = function(){
 
     for( var i = 0; i < this.links.length; i++ ){
 
@@ -318,19 +338,19 @@ define(function(require, exports, module) {
   }
 
 
-  Credits.prototype.enter = function(){
+  FilterAudioLinks.prototype.enter = function(){
     this.audio.play();
     this.audio.gain.gain.value = 0.0
     this.audio.fadeIn( 10 );
     this.audio.turnOnFilter();
-    this.world.enter();
+    this.being.enter();
   }
 
-  Credits.prototype.exit = function(){
+  FilterAudioLinks.prototype.exit = function(){
     this.audio.fadeOut();
-    this.world.exit();
+    this.being.exit();
   }
 
-  module.exports = Credits;
+  module.exports = FilterAudioLinks;
 
 });

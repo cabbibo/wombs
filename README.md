@@ -111,17 +111,17 @@ Constant Work In Progress. Feel Free To Jump in and help out, or send me any sug
       - helperFunctions.js
 
 
-
-
-
-
-
-
-
-
     - Shaders
 
-      
+   
+  - Placement Functions:
+     - Random Sphere edge,
+     - Random Placed,
+     - Recursive Random
+     - Pure Circle,
+     - Line,
+     - Grid
+
 
   - loader conditions
   - loader.failure() to be called on errors
@@ -151,21 +151,12 @@ Constant Work In Progress. Feel Free To Jump in and help out, or send me any sug
   // Data to JSON GPU SHADER
   
     - create 'transition shader'
-      - check out Mr.Doob Sporel for original vs/ time update vert shader
-      - 
-
-  // FBO Utils 
-      -research further
 
 
 
   // Create Meta Balls
 
 
-  // Particle Simulations
-  - create easy debug meshes
-  - create physicShaders
-  - create 'const' creator which will stringify a passed in Variable
 
 
 
@@ -174,15 +165,6 @@ Constant Work In Progress. Feel Free To Jump in and help out, or send me any sug
      ORGANIZATION
 
   */
-
-  - Reorganize home dir
-    - Make sure that there is an easy ways to create scenes and objects in the proper directory
-
-
-  - Move Wombs from app to lib!
-    scenes should be part of an individual app, not the fullLibb
-    - This will us to more easily combine larger file structures object together acuratly
-
 
 
   /*
