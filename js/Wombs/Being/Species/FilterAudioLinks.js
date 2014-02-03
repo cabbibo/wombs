@@ -1,3 +1,35 @@
+/*
+
+   Filter Audio Links:
+
+
+   Anything Not 3-D is dumb, Including Links.
+    
+   By allowing a link list to be passed into itself, 
+   Filter Audio Links spices up your silly old hrefs using 
+   a 'Audio Hover' technique, which reveals more of the audio 
+   once it is hovered over. Changing the MUTED FREQUENCY and
+   HOVERED FREQUENCY tells Filter Audio Links how to best reveal
+   the audio when hovered over, and hovered away.
+
+
+   Notes:
+
+   - If you decided to hack around the vertex shader for the actual
+     links, remember that the wombs raycaster will not pick up these
+     changes.
+
+   Ways in which you can help the Filter Audio Links grow:
+
+   - create a 'placement function' for the title, as well
+     as all of the links.
+
+   - Make is so that a vertexShader can be passed in both for the 
+     title, as well as for the 
+
+*/
+
+
 define(function(require, exports, module) {
 
   var Womb                = require( 'Womb/Womb'                  );
@@ -23,10 +55,12 @@ define(function(require, exports, module) {
       spin: .001,
       color: new THREE.Vector3( .3 , .5 , 1.9 ),
       radius: 10,
-      size:   .3,
+      size:   30,
       modelScale: 1,
       audioPower: 0.5,
       noisePower: 0.1,
+      mutedFrequency:   100 ,
+      hoveredFrequency: 2000 ,
       vertexShader:   vertexShaders.audio.noise.position,
       fragmentShader: fragmentShaders.audio.color.image.sample_pos_diamond,
       geo: new THREE.CubeGeometry( 1 , 1 , 1 , 10 , 10 ,10 ),
@@ -49,9 +83,9 @@ define(function(require, exports, module) {
     
     this.being = this.womb.creator.createBeing();
 
-    this.scene = this.being.scene;
-    console.log( this.scene );
+    this.body = this.being.body;
 
+    console.log( this.being );
     this.texture = this.audio.texture.texture;
 
     var self = this;
@@ -108,10 +142,11 @@ define(function(require, exports, module) {
     this.CENTER.scale.x = this.t_CENTER.scaledWidth;
     this.CENTER.scale.y = this.t_CENTER.scaledHeight;
 
-    this.scene.add( this.CENTER );
+    this.body.add( this.CENTER );
 
     for( var i = 0; i < this.params.links.length; i++ ){
 
+      console.log( i );
       var l = this.params.links[i];
       var link = this.createLink( l[0] , l[1] , l[2] );
       link.scale.multiplyScalar( this.params.size );
@@ -119,18 +154,26 @@ define(function(require, exports, module) {
       link.position.x = ( ( i % 3 ) - 1 ) * 100;
 
 
-      this.scene.add( link );
+      this.body.add( link );
 
 
     }
 
     var c = this.womb.container;
+
+    this.womb.addToMouseDownEvents( this.mouseDown.bind( this ) );
+    this.womb.addToMouseUpEvents( this.mouseDown.bind( this ) );
     
-    document.addEventListener( 'click', this.click.bind( this ));
-    c.addEventListener( 'mousedown', this.mouseDown.bind( this ));
-    c.addEventListener( 'mouseup', this.mouseUp.bind( this ));
 
+    if( !this.womb.raycaster ){
+      this.womb.raycaster = new Raycaster( this.womb );
 
+      console.log( 'Raycaster Created' );
+    }
+
+    var rc = this.womb.raycaster;
+    rc.addToMeshHoveredOverEvents( this.onMeshHoveredOver.bind( this ) );
+    rc.addToMeshHoveredOutEvents(  this.onMeshHoveredOut.bind( this )  );
 
     this.womb.loader.loadBarAdd();
 
@@ -162,19 +205,13 @@ define(function(require, exports, module) {
       //side:           THREE.DoubleSide
     });
 
-    if( !this.womb.raycaster ){
-      this.womb.raycaster = new Raycaster( this.womb );
-
-      console.log( 'Raycaster Created' );
-    }
-
-    var rc = this.womb.raycaster;
-    rc.addToMeshHoveredOverEvents( this.onMeshHoveredOver.bind( this ) );
-    rc.addToMeshHoveredOutEvents(  this.onMeshHoveredOut.bind( this )  );
 
     var mesh = new THREE.Mesh( this.params.geo  , material );
-    text = this.womb.textCreator.createTexture( text );
     
+    mesh.title = text;
+    
+    text = this.womb.textCreator.createTexture( text );
+
     mesh.image  = image;
     mesh.text   = text;
     mesh.link   = link;
@@ -185,18 +222,13 @@ define(function(require, exports, module) {
 
   }
 
-
   FilterAudioLinks.prototype.update = function(){
 
   }
 
-  FilterAudioLinks.prototype.click = function( e ){
-
-  }
-
-
   FilterAudioLinks.prototype.mouseDown = function(){
 
+    console.log('MouseDown' );
     for( var i = 0; i < this.links.length; i++ ){
 
       var l = this.links[i];
@@ -212,9 +244,14 @@ define(function(require, exports, module) {
 
   FilterAudioLinks.prototype.mouseUp = function(){
 
+    console.log( this );
     for( var i = 0; i < this.links.length; i++ ){
 
       var l = this.links[i];
+
+      console.log('Link');
+      console.log( l.selected );
+      console.log( l.active );
 
       if( l.selected && l.active ){
         window.open( l.link , '_blank' );
@@ -230,7 +267,9 @@ define(function(require, exports, module) {
 
   FilterAudioLinks.prototype.onMeshHoveredOver = function(object){
 
-    this.audio.filter.frequency.value = 2000;
+
+    console.log( object.title );
+    this.audio.filter.frequency.value = this.params.hoveredFrequency;
     for( var i = 0; i < this.links.length; i++ ){
 
       var l = this.links[i];
@@ -242,7 +281,7 @@ define(function(require, exports, module) {
         this.CENTER.material.uniforms.image.value = object.text;
         this.CENTER.scale.x = object.text.scaledWidth;
         this.CENTER.scale.y = object.text.scaledHeight;
-        this.scene.add( this.CENTER );
+        this.body.add( this.CENTER );
 
         object.material.uniforms.color.value = new THREE.Vector3( 1.0 , 1.0 , 1.0 );
 
@@ -256,7 +295,9 @@ define(function(require, exports, module) {
 
   FilterAudioLinks.prototype.onMeshHoveredOut = function(object){
 
-    this.audio.filter.frequency.value = 1200;
+    
+    console.log( object.title );
+    this.audio.filter.frequency.value = this.params.mutedFrequency;
 
      for( var i = 0; i < this.links.length; i++ ){
 
@@ -267,7 +308,7 @@ define(function(require, exports, module) {
         object.active = false;
         object.selected = false;
         
-        this.scene.remove( this.CENTER );
+        this.body.remove( this.CENTER );
         object.material.uniforms.color.value = this.params.color;
       
       }
@@ -277,14 +318,17 @@ define(function(require, exports, module) {
 
   }
 
-
   FilterAudioLinks.prototype.update = function(){
 
-    for( var i = 0; i < this.links.length; i++ ){
+    if( this.spinning == true ){
+      
+      for( var i = 0; i < this.links.length; i++ ){
 
-      this.links[i].rotation.x += Math.sin( i ) * .02;
-      this.links[i].rotation.y += Math.cos( i ) * .02;
-      this.links[i].rotation.z += Math.sin( i * 55.3 ) * .02;
+        this.links[i].rotation.x += Math.sin( i+1 ) * .02;
+        this.links[i].rotation.y += Math.cos( i+1 ) * .02;
+        this.links[i].rotation.z += Math.sin( (i+1) * 55.3 ) * .02;
+
+      }
 
     }
 
@@ -293,16 +337,24 @@ define(function(require, exports, module) {
 
 
   FilterAudioLinks.prototype.enter = function(){
-    this.audio.play();
+
+    if( this.audio.play )
+      this.audio.play();
+
     this.audio.gain.gain.value = 0.0
     this.audio.fadeIn( 10 );
     this.audio.turnOnFilter();
+
     this.being.enter();
   }
 
   FilterAudioLinks.prototype.exit = function(){
+   
     this.audio.fadeOut();
+
     this.being.exit();
+
+
   }
 
   module.exports = FilterAudioLinks;

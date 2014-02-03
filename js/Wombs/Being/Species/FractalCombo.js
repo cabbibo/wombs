@@ -10,19 +10,22 @@
 
    Changing the COMPLEXITY parameter will tell you how deep into the mind of 
    the fractal beast you will see, whereas the VARIANCE will determine how much
-   its skin crawls if it is being updated.
+   its skin crawls if it is being updated. INFLUENCE directs the proportion of 
+   how much is the original color, and how much is the fractal color.
 
    Notes:
    
-   -  The Fractal Combo is quite a complex beast, thus make sure it remains relatively
-      small, or your GPU will hate you. Covering the screen with a Fractal Combo is 
-      NOT recommended.
+   -  The Fractal Combo is quite a complex beast, thus make sure it 
+      remains relatively small, or your GPU will hate you. Covering 
+      the screen with a Fractal Combo is NOT recommended.
 
   Ways in which you can help the Fractal Combo can grow:
 
-  - a 'numOfFractals' parameter may be added, so it could be the combination of 1-100 fractals
-  - the vertex shader should be able to be passed in, making the body of the beast variable,
-    but the skin still fractal as FUK.
+  - a 'numOfFractals' parameter may be added, so it could be the 
+    combination of 1-100 fractals
+
+  - the vertex shader should be able to be passed in, making the
+    body of the beast variable,but the skin still fractal as FUK.
 
 */
 
@@ -47,32 +50,37 @@ define(function(require, exports, module) {
     this.params = _.defaults( params || {} , {
 
       spin:       .001,
-      color:      new THREE.Vector3( 0.5 , 0.1 , 0.0 ),
-      seed:       new THREE.Vector3( -0.5 , -0.8 ,  -0.9),
+      color:      new THREE.Vector3( 0.5 , 0.0 , 1.5 ),
+      seed:       new THREE.Vector3( -0.7 , -0.8 ,  -0.9),
       seed1:      new THREE.Vector3( -0.7 , -0.6 ,  -0.5),
       seed2:      new THREE.Vector3( -0.6 , -0.6 ,  -0.6),
       seed3:      new THREE.Vector3( -0.9 , -0.6 ,  -0.8),
       seed4:      new THREE.Vector3( -0.6 , -0.8 ,  -0.7),
-      speed:      1,
-      lightness:  1,
+      speed:      10,
+      lightness:  .9,
       radius:     10,
       modelScale: 1,
-      audioPower: 0.1,
+      audioPower: 0.8,
       noisePower: 0.4,
       complexity: 5,
       variance:   .5,
-      texture:    self.womb.stream.texture.texture,
-      additive:   true,
-      geo:        new THREE.IcosahedronGeometry( 1 , 5 ),
-      numOf:      1,
+      influence:  3,
+      audio:      womb.audioController.createLoop( '/lib/audio/loops/dontReallyCare/1.mp3' ),
+      additive:   false, 
+      geo:        new THREE.IcosahedronGeometry( 50 , 5 ),
+      numOf:      5,
 
     });
-    
+   
+    console.log('HELLO' );
     this.being = this.womb.creator.createBeing();
 
-    this.scene = this.being.scene;
+    this.body = this.being.body;
 
-    this.texture = this.params.texture;
+
+    this.audio   = this.params.audio;
+    console.log( this.audio );
+    this.texture = this.audio.texture.texture;
 
     var self = this;
 
@@ -82,15 +90,16 @@ define(function(require, exports, module) {
 
       color:      { type: "v3" , value: this.params.color  },
 
-      seed:       { type: "v3" , value: this.params.seed   },
-      seed1:      { type: "v3" , value: this.params.seed1  },
-      seed2:      { type: "v3" , value: this.params.seed2  },
-      seed3:      { type: "v3" , value: this.params.seed3  },
-      seed4:      { type: "v3" , value: this.params.seed4  },
+      seed:       { type: "v3" , value: this.params.seed.clone()   },
+      seed1:      { type: "v3" , value: this.params.seed1.clone()   },
+      seed2:      { type: "v3" , value: this.params.seed2.clone()   },
+      seed3:      { type: "v3" , value: this.params.seed3.clone()   },
+      seed4:      { type: "v3" , value: this.params.seed4.clone()   },
       
-      texture:    { type: "t"  , value: womb.stream.texture.texture },
+      texture:    { type: "t"  , value: this.texture },
       
       noiseSize:  { type: "f"  , value: 1 },
+      influence:  { type: "f"  , value: this.params.influence  },      
       lightness:  { type: "f"  , value: this.params.lightness  },      
       noisePower: { type: "f"  , value: this.params.noisePower },
       audioPower: { type: "f"  , value: this.params.audioPower },    
@@ -162,9 +171,8 @@ define(function(require, exports, module) {
       "uniform vec3 seed3;",
       "uniform vec3 seed4;",
       "uniform float lightness;",
-      "uniform float loop;",
-      "uniform float noisePower;",
-      
+      "uniform float influence;",
+         
       "varying vec2 vUv;",
       "varying vec3 vPos;",
       "varying float displacement;",
@@ -174,16 +182,17 @@ define(function(require, exports, module) {
       "void main( void ){",
         "vec3 nPos = normalize( vPos );",
 
-        "vec3 c  = kali( nPos , seed  );",
-        "vec3 c1 = kali( nPos , seed1 );",
-        "vec3 c2 = kali( nPos , seed2 );",
-        "vec3 c3 = kali( nPos , seed3 );",
-        "vec3 c4 = kali( nPos , seed4 );",
+        "vec3 c  = kali( nPos , -abs( seed  ));",
+        "vec3 c1 = kali( nPos , -abs( seed1 ));",
+        "vec3 c2 = kali( nPos , -abs( seed2 ));",
+        "vec3 c3 = kali( nPos , -abs( seed3 ));",
+        "vec3 c4 = kali( nPos , -abs( seed4 ));",
 
-        "vec3 cT = normalize( c + c1 + c2 + c3 + c4 );",
+        "vec3 cT = normalize( abs(c) + abs(c1) + abs(c2) + abs(c3) + abs(c4) );",
+        //"vec3 cT = normalize( c + c1 + c2 + c3 + c4 );",
 
-        "vec3 cN = normalize( normalize( cT ) + color );",
-        "gl_FragColor = vec4( lightness * vec3(cN.x , cN.y * .4 , .1 ) , cN.z+.5 );",
+        "vec3 cN = normalize( cT * influence + color );",
+        "gl_FragColor = vec4( cN * lightness , 1.0 );",
       "}"
 
     ].join( "\n" );
@@ -223,8 +232,8 @@ define(function(require, exports, module) {
     
       this.mesh = new THREE.Mesh( this.geo , this.material );
       this.mesh.scale.multiplyScalar( this.params.modelScale );
-      this.mesh.rotation.x = 2 * Math.PI * i / this.params.numOf;
-      this.scene.add( this.mesh );
+      this.mesh.rotation.z = 2 * Math.PI * i / this.params.numOf;
+      this.body.add( this.mesh );
 
     }
  
@@ -254,8 +263,9 @@ define(function(require, exports, module) {
 
 
       if( self.updateSeed ==  true ){
-      
-        uSeed.x  = seed.x  + v * ( Math.sin( t * s / 10.0 ) - 1.0 ) / 2;
+     
+        //uSeed.x = ( Math.sin( t * s ) -1.0 ) /2;
+        uSeed.x  = seed.x  + v * ( Math.sin( t * s / 12.0 ) - 1.0 ) / 2;
         uSeed.y  = seed.y  + v * ( Math.cos( t * s / 10.0 ) - 1.0 ) / 2;
         uSeed.z  = seed.z  + v * ( Math.cos( t * s / 30.0 ) - 1.0 ) / 2;
 

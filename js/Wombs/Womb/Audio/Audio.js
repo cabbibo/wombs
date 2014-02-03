@@ -36,6 +36,8 @@ define(function(require, exports, module) {
 
     this.gain.connect( this.analyser );
 
+    this.time = 0;
+
     if( this.params.texture ){
 
       this.texture = new AudioTexture( this );
@@ -192,6 +194,9 @@ define(function(require, exports, module) {
 	
     console.log( 'Play Called' );
     console.log( this.file );
+
+    this.startTime = this.controller.womb.time.value;
+
     this.playing = true;
     this.source.noteOn(0);
    
@@ -210,6 +215,8 @@ define(function(require, exports, module) {
 
 
   Audio.prototype._update = function(){
+
+    this.time = this.controller.womb.time.value - this.startTime;
 
     this.analyser.getByteFrequencyData( this.analyser.array );
 

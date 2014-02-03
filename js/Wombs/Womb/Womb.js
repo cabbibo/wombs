@@ -37,7 +37,7 @@ define(function(require, exports, module) {
 
     this.params = _.defaults( params || {} , {
       raycaster:        false,
-      cameraController: false,
+      cameraController: 'TrackballControls',
       massController:   false,
       springController: false,
       leapController:   false,
@@ -61,8 +61,8 @@ define(function(require, exports, module) {
     this.audioController  = new AudioController(  this );
 
     // Time uniform
-    this.time = { type: "f", value: 1.0 } ;
-
+    this.time = { type: "f", value: 0.0 } ;
+    
     /*
      *
      * SETTING UP THE SCENE
@@ -110,37 +110,15 @@ define(function(require, exports, module) {
     this.renderer.domElement.style.background = this.params.color;
     this.container.appendChild( this.renderer.domElement );
 
-    if( this.params.leapController ){
-      this.leapController = LeapController;
-      this.leapController.size = this.size;
-    }
+    this.leapController = LeapController;
+    this.leapController.size = this.size;
 
-    if( this.params.cameraController )
-      this.cameraController = new CameraController( this , this.params.cameraController );
-      
-    if( this.params.raycaster )
-      this.raycaster = new Raycaster( this );
-
-    if( this.params.imageLoader )
-      this.imageLoader = new ImageLoader( this );
-
-    if( this.params.modelLoader )
-      this.modelLoader = new ModelLoader( this );
-
-    if( this.params.objLoader )
-      this.objLoader = new ObjLoader( this );
-
-    if( this.params.JSONLoader )
-      this.JSONLoader = new JSONLoader( this );
-
-    if( this.params.effectComposer )
-      this.effectComposer  = new EffectComposer(  this );
-
-    if( this.params.userMediaTexture )
-      this.userMediaTexture = new UserMediaTexture( this );
-
-    if( this.params.textCreator )
-      this.textCreator = new TextCreator( this );
+    this.cameraController = new CameraController( this , this.params.cameraController );
+    this.raycaster = new Raycaster( this );
+    this.imageLoader = new ImageLoader( this );
+    this.modelLoader = new ModelLoader( this );
+    //this.effectComposer  = new EffectComposer(  this );
+    this.textCreator = new TextCreator( this );
 
     this.creator  = new Creator( this );
 
@@ -150,15 +128,14 @@ define(function(require, exports, module) {
     this.container.addEventListener( 'mousedown', this._onMouseDown.bind(  this ), false );
     this.container.addEventListener( 'mouseup'  , this._onMouseUp.bind(    this ), false );
 
+    this.mouseUpEvents = [];
+    this.mouseDownEvents = [];
 
 
     this.clock            = new THREE.Clock();
 
-    if( this.params.massController )
-      this.massController   = new MassController( this );
-
-    if( this.params.springController )
-      this.springController = new SpringController( this , this.massController );
+    //this.massController   = new MassController( this );
+    //this.springController = new SpringController( this , this.massController );
 
   }
 
@@ -194,19 +171,37 @@ define(function(require, exports, module) {
   Womb.prototype._onMouseDown = function(e){
   
     this.onMouseDown(e);
+
+    for( var i = 0; i < this.mouseDownEvents.length; i++ ){
+      this.mouseDownEvents[i]();
+    }
+
     this.mouseDown = true;
 
   }
   Womb.prototype.onMouseDown = function(e){};
 
+   Womb.prototype.addToMouseDownEvents = function( callback ){
+    this.mouseDownEvents.push( callback );
+  }
+
+
   Womb.prototype._onMouseUp = function(e){
   
     this.onMouseUp(e);
-    this.mouseDown = false;
 
+    for( var i = 0; i < this.mouseUpEvents.length; i++ ){
+      this.mouseUpEvents[i]();
+    }
+
+    this.mouseDown = false;
 
   }
   Womb.prototype.onMouseUp = function(e){};
+
+  Womb.prototype.addToMouseUpEvents = function( callback ){
+    this.mouseUpEvents.push( callback );
+  }
 
 
 
@@ -219,26 +214,22 @@ define(function(require, exports, module) {
 
     this.delta = this.clock.getDelta();
 
+    //console.log( this.delta );
+    //console.log( this.time );
     this.time.value += this.delta;
-    
+
     TWEEN.update();
 
-    if( this.massController   ) this.massController._update();
-    if( this.springController ) this.springController._update();
+    //this.massController._update();
+    //this.springController._update();
    
     this.audioController._update();
      
     this.creator._update();
     
-    if( this.raycaster ) 
-      this.raycaster._update();
+    this.raycaster._update();
     
-    if( this.cameraController )
-      this.cameraController._update( this.delta );
-
-    if( this.userMediaTexture )
-      this.userMediaTexture._update();
-
+    this.cameraController._update( this.delta );
 
     this.update();
 

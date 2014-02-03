@@ -1,3 +1,6 @@
+
+// TODO: make everything part of the updateArray
+
 define(function(require, exports, module) {
 
 
@@ -51,6 +54,9 @@ define(function(require, exports, module) {
 
     }
 
+
+    // Events to be Called on update
+    this.updateArray = [];
 
 
     /*
@@ -128,6 +134,27 @@ define(function(require, exports, module) {
     
   }
 
+  AudioController.prototype.createNote = function( file, params ){
+
+    var note  = new Audio( this , file , params);
+    this.notes.array.push( note );
+
+    return note;
+
+  }
+
+
+
+  AudioController.prototype.createLooper = function( audio , params ){
+
+    var looper = new Looper( audio , this , params );
+
+    return looper;
+
+
+  }
+
+
   AudioController.prototype.fadeOut = function( time ){
  
     var t = this.ctx.currentTime;
@@ -164,14 +191,7 @@ define(function(require, exports, module) {
   
   }
 
-  AudioController.prototype.createNote = function( file, params ){
 
-    var note  = new Audio( this , file , params);
-    this.notes.array.push( note );
-
-    return note;
-
-  }
 
   AudioController.prototype.playAllLoops = function(){
 
@@ -186,10 +206,14 @@ define(function(require, exports, module) {
   AudioController.prototype._update = function(){
 
     this.analyser.getByteFrequencyData( this.analyser.array );
-    //console.log( this.analyser.array );
-
-    //AudioController.looper._update();
     this.update();
+
+    for( var i = 0; i < this.updateArray.length; i++ ){
+
+      this.updateArray[i]();
+
+    }
+
 
     if ( this.stream ){
       this.stream._update();
@@ -217,6 +241,9 @@ define(function(require, exports, module) {
 
   }
 
+  AudioController.prototype.addToUpdateArray = function( callback ){
+    this.updateArray.push( callback );
+  }
 
   return AudioController
 

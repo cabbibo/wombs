@@ -17,6 +17,11 @@ define(function(require, exports, module) {
 
     this.intersectedMesh;
 
+    // Pushing to this list will make 
+    this.meshHoveredOverEvents  = [];
+    this.meshHoveredOutEvents   = [];
+    this.meshSwitchedEvents     = [];
+
     var c = this.womb.container;
 
     c.addEventListener( 'mousemove', this.onMouseMove.bind( this ));
@@ -91,18 +96,37 @@ define(function(require, exports, module) {
     this.onMeshHoveredOver( object );
     this.oPrimary = this.primary;
     this.primary  = object;
+     
+    for( var i = 0; i < this.meshHoveredOverEvents.length ; i++ ){
+
+      this.meshHoveredOverEvents[i]( object );
+
+    }
 
   }
 
-  Raycaster.prototype.onMeshHoveredOver = function( whichObject ){
+  Raycaster.prototype.onMeshHoveredOver = function( object ){}
+
+  Raycaster.prototype.addToMeshHoveredOverEvents = function( callback ){
+
+    this.meshHoveredOverEvents.push( callback );
 
   }
 
   Raycaster.prototype._onMeshHoveredOut = function(){
 
     this.onMeshHoveredOut( this.primary );
+
+    for( var i = 0; i < this.meshHoveredOutEvents.length ; i++ ){
+
+      this.meshHoveredOutEvents[i]( this.primary );
+
+    }
+
     this.oPrimary = this.primary;
     this.primary  = undefined;
+
+
 
   }
 
@@ -110,17 +134,42 @@ define(function(require, exports, module) {
 
   }
 
+  Raycaster.prototype.addToMeshHoveredOutEvents = function( callback ){
+
+    this.meshHoveredOutEvents.push( callback );
+
+  }
+
   Raycaster.prototype._onMeshSwitched = function( newMesh , oldMesh ){
 
     // Moving from one mesh to another
     this.onMeshSwitched( newMesh , oldMesh );
+
+    // Making sure that we call the hover functions for the 
+    // switched meshes
+    this._onMeshHoveredOut(  this.primary );
+    this._onMeshHoveredOver( newMesh );
+
     this.oPrimary = this.primary;
     this.primary  = newMesh;
+
+   
+    for( var i = 0; i < this.meshSwitchedEvents.length ; i++ ){
+
+      this.meshSwitchedEvents[i]( newMesh , oldMesh );
+
+    }
 
   }
 
   Raycaster.prototype.onMeshSwitched = function( newMesh , oldMesh ){
 
+
+  }
+
+  Raycaster.prototype.addToMeshSwitchedEvents = function( callback ){
+
+    this.meshSwitchedEvents.push( callback );
 
   }
 
