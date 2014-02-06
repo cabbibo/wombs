@@ -29,7 +29,7 @@ define(function(require, exports, module) {
       
       if( being.active ){
 
-        being.update();
+        being._update();
 
       }
 

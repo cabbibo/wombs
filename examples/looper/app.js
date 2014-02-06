@@ -17,11 +17,16 @@ define(function(require, exports, module) {
 
   womb.audioController.gain.gain.value = 0;
 
+  womb.being = womb.creator.createBeing();
+
   womb.audio = womb.audioController.createLoop( 
     '/lib/audio/loops/dontReallyCare/1.mp3' 
   );
 
   womb.looper = womb.audioController.createLooper( womb.audio );
+  womb.looper.addHit( function(){
+
+  } );
 
   womb.loader.loadBarAdd();
 

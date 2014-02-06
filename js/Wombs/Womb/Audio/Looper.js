@@ -26,13 +26,24 @@ define(function(require, exports, module) {
     this.beatsPerSecond = this.bpm / 60;
     this.bps = this.beatsPerSecond;
 
-    this.measureLength = this.bps * this.beatsPerMeasure;
+    this.secondsPerBeat = 1 / this.bps;
+    this.spb = this.secondsPerBeat;
 
-    this.timeInMeasure = 0;
-    this.percentOfMeasure = 0;
-    this.oPercentOfMeasure = 0;
-    
+    this.beatsPerMeasure = this.params.beatsPerMeasure;
 
+    this.measureLength = this.spb * this.beatsPerMeasure;
+
+    console.log( this.measureLength );
+
+    this.measure            = 0;
+    this.oMeasure           = 0;
+
+    this.timeInMeasure      = 0;
+    this.totalTime          = 0;
+    this.percentOfMeasure   = 0;
+    this.oPercentOfMeasure  = 0;    
+
+    this.hits = [];
 
     this.controller.addToUpdateArray( this._update.bind( this ) );
 
@@ -42,14 +53,13 @@ define(function(require, exports, module) {
   Looper.prototype._update = function(){
 
     if( this.audio.playing ){
-      console.log('Playing');  
-
-
       
+      this.updateTime();
       this.checkHits();
 
     }else{
-      console.log('stopped');
+
+
     }
 
     this.update();
@@ -58,28 +68,92 @@ define(function(require, exports, module) {
 
   Looper.prototype.update = function(){};
 
+  Looper.prototype.updateTime = function(){
+    
+    this.newMeasure = false;
+
+
+    this.oPercentOfMeasure = this.percentOfMeasure;
+
+    this.timeInMeasure = this.audio.time - this.totalTime;
+    this.percentOfMeasure = this.timeInMeasure / this.measureLength;
+
+
+    if(  this.percentOfMeasure >= 1.0 ){
+
+      this.oMeasure = this.measure;
+      this.measure +=1;
+      this.totalTime = this.measure * this.measureLength;
+
+      this.newMeasure = true;
+
+    }
+
+
+  }
+
   Looper.prototype.addHit = function( callback , params ){
 
-    var hit = []
-    hit.params = _.defaults( params || {}, {
+    var hit = _.defaults( params || {}, {
       
-      measureFrequency:  1,
-      
-      measureOffset:     0,
-      duration        [0 , 1000000000 ],
+      callback:           callback,
+     
+      percents:        [ .0 , .25 , .50 , .75 ],
+      measureFrequency:   1,
+      measureOffset:      0,
+      duration:           [ 0 , 1000000000 ],
       
       
     });
 
-    hit[0] = newParams.measureFrequency;
-    hit[1]
 
-
-
-    this.hits.push( this );
+    this.hits.push( hit );
 
   }
 
+  Looper.prototype.checkHits = function(){
+
+    for( var i = 0; i < this.hits.length; i++ ){
+
+      var hit = this.hits[i];
+
+      var t = this.audio.time;
+
+      // only check if within the duration of hit
+      if( t >= hit.duration[0] && t <= hit.duration[1] ){
+
+        // only check if on proper measure
+        if( this.measure % hit.measureFrequency == hit.measureOffset ){
+
+          for( var j = 0; j < hit.percents.length; j ++ ){
+
+            var p = hit.percents[j];
+
+            //console.log( p );
+            if( 
+              this.percentOfMeasure  >= p && 
+              this.oPercentOfMeasure < p 
+            ){
+
+              hit.callback();
+
+            // In this case the percentage is at 0
+            }else if( p == 0 && this.newMeasure ){
+
+              hit.callback();
+
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+
+  };
 
   module.exports = Looper;
 

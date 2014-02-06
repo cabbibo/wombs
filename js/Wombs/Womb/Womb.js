@@ -73,6 +73,7 @@ define(function(require, exports, module) {
     this.size = this.params.size;
 
     this.scene = new THREE.Scene();
+    this.body  = this.scene;
 
 
     // CAMERA

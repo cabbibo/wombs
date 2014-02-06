@@ -9,16 +9,50 @@ define(function(require, exports, module) {
     this.womb = womb;
 
     this.params = _.defaults( params || {} , {
-     
-      body:                    this,
+    
+      parent:                   womb,
       transition:            'scale',
       transitionTime:              1,
+
+      mass:                        1,
+      dampening:                 .99,
+      position:  new THREE.Vector3(),
+      velocity:  new THREE.Vector3(),
+
+
+      
+      
       enterStart:       function(){},
       enterFinish:      function(){},
       exitStart:        function(){},
       exitFinish:       function(){},
-      
+     
     });
+
+
+    this.parent = this.params.parent;
+
+
+
+    this.updateArray = [];
+
+
+    this.meshes      = [];
+    
+    
+    this.body           = new THREE.Object3D();
+
+       
+    // Physics
+    this.body.position  = this.params.position;
+    this.body.velocity  = this.params.velocity;
+
+    this.body.mass      = this.params.mass;
+    this.body.dampening = this.params.dampening;
+
+    this.forces         = [];
+    this.totalForce     = new THREE.Vector3();
+
 
 
     /* Assigning in and out target based on the transition type */
@@ -46,8 +80,6 @@ define(function(require, exports, module) {
 
     // Only updates if active
     this.active = false;
-
-    this.body = new THREE.Object3D();
 
     // Makes sure that we start in the right place
     if( this.params.transition == 'position' ){
@@ -84,10 +116,10 @@ define(function(require, exports, module) {
     // Notice that this is calling 'this' from the tween 
     // it is part of.
     this.onExit = function(){
-      var o = this.params.body;       // Getting 'this' of body
-      o.active = false;                // No longer update after it has left
-      o.params.exitFinish();           // Call the exit functino passed through
-      o.womb.body.remove( o.body ); // Remove it from our world
+      console.log( this );
+      this.active = false;                // No longer update after it has left
+      this.params.exitFinish();           // Call the exit functino passed through
+      this.parent.body.remove( this.body ); // Remove it from our world
     }
 
     this.transitionOut = this.womb.tweener.createTween({
@@ -97,7 +129,7 @@ define(function(require, exports, module) {
       target:        this.params.outTarget,
       type:         this.params.transition,
       time:     this.params.transitionTime,
-      callback:                 this.onExit
+      callback:   this.onExit.bind( this )
 
     });
 
@@ -107,7 +139,7 @@ define(function(require, exports, module) {
   Being.prototype.enter = function(){
 
    
-    this.womb.scene.add( this.body );
+    this.parent.body.add( this.body );
     this.active = true;
 
     this.params.enterStart();
@@ -149,7 +181,75 @@ define(function(require, exports, module) {
   Being.prototype.live  = Being.prototype.enter;
   Being.prototype.die   = Being.prototype.exit;
 
+
+  Being.prototype._update = function(){
+
+    //console.log( this.updateArray.length );
+    for( var i = 0; i < this.updateArray.length; i++ ){
+
+      //console.log( 'WHO' );
+      this.updateArray[i]();
+
+    }
+
+    this.totalForce.set( 0 , 0 , 0 );
+
+    for( var i = 0; i < this.forces.length; i++ ){
+
+      this.totalForce.add( this.forces[i] );
+
+    }
+    // Dealing with forces
+    this.position += this.velocity;
+    this.velocity *= this.dampening;
+    this.velocity += this.totalForce / this.mass;
+    
+
+    this.update();
+
+  }
+
   Being.prototype.update = function(){
+
+  }
+
+  Being.prototype.addToUpdateArray =function( callback ){
+
+    console.log('Adding to update Array' );
+    console.log( callback );
+    this.updateArray.push( callback );
+
+  }
+
+ 
+  Being.prototype.addMesh = function( geometry , material ){
+
+
+    if( geometry._update )
+      this.addToUpdateArray( geometry._update.bind( geometry ) );
+
+    if( material._update )
+      this.addToUpdateArray( material._update.bind( material ) );
+
+    var mesh = new THREE.Mesh( geometry , material );
+
+    mesh.body = this.body;
+    mesh.addToBody = function(){
+      console.log( 'mesh.addToBody' );
+      console.log( this );
+      this.body.add( this );
+    }
+
+    mesh.removeFromBody = function(){
+      console.log( 'mesh.removeFromBody' );
+      console.log( this );
+      this.body.remove( this );
+    }
+
+
+    this.meshes.push( mesh );
+
+    this.body.add( mesh );
 
   }
 
