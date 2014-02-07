@@ -133,12 +133,15 @@ define(function(require, exports, module) {
 
     window.addEventListener( 'resize', this.onWindowResize.bind( this ), false );
 
-    this.container.addEventListener( 'mousemove', this._onMouseMove.bind(  this ), false );
-    this.container.addEventListener( 'mousedown', this._onMouseDown.bind(  this ), false );
-    this.container.addEventListener( 'mouseup'  , this._onMouseUp.bind(    this ), false );
+    var c = this.container;
+    c.addEventListener( 'mousemove' , this._onMouseMove.bind(  this ), false );
+    c.addEventListener( 'mousedown' , this._onMouseDown.bind(  this ), false );
+    c.addEventListener( 'mouseup'   , this._onMouseUp.bind(    this ), false );
+    c.addEventListener( 'click'     , this._onMouseClick.bind( this ), false );
 
-    this.mouseUpEvents = [];
-    this.mouseDownEvents = [];
+    this.mouseUpEvents      = [];
+    this.mouseDownEvents    = [];
+    this.mouseClickEvents   = [];
 
 
     this.clock            = new THREE.Clock();
@@ -177,6 +180,25 @@ define(function(require, exports, module) {
   Womb.prototype.onMouseMove = function(e){};
 
 
+
+  Womb.prototype._onMouseClick = function(e){
+  
+    this.onMouseDown(e);
+
+    for( var i = 0; i < this.mouseClickEvents.length; i++ ){
+      this.mouseClickEvents[i]();
+    }
+
+
+  }
+  Womb.prototype.onMouseClick = function(e){};
+
+  Womb.prototype.addToMouseClickEvents = function( callback ){
+    this.mouseClickEvents.push( callback );
+  }
+
+
+
   Womb.prototype._onMouseDown = function(e){
   
     this.onMouseDown(e);
@@ -190,7 +212,7 @@ define(function(require, exports, module) {
   }
   Womb.prototype.onMouseDown = function(e){};
 
-   Womb.prototype.addToMouseDownEvents = function( callback ){
+  Womb.prototype.addToMouseDownEvents = function( callback ){
     this.mouseDownEvents.push( callback );
   }
 

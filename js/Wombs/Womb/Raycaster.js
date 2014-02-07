@@ -22,6 +22,8 @@ define(function(require, exports, module) {
     this.meshHoveredOutEvents   = [];
     this.meshSwitchedEvents     = [];
 
+    this.checkedMeshes          = [];
+
     var c = this.womb.container;
 
     c.addEventListener( 'mousemove', this.onMouseMove.bind( this ));
@@ -90,6 +92,12 @@ define(function(require, exports, module) {
 
   }
 
+  Raycaster.prototype.addCheckedMesh = function( mesh ){
+
+    this.checkedMeshes.push( mesh );
+
+  }
+
   Raycaster.prototype._onMeshHoveredOver = function( object ){
 
     // Hovering over a mesh
@@ -100,6 +108,16 @@ define(function(require, exports, module) {
     for( var i = 0; i < this.meshHoveredOverEvents.length ; i++ ){
 
       this.meshHoveredOverEvents[i]( object );
+
+    }
+
+    for( var i = 0; i < this.checkedMeshes.length; i++ ){
+
+      if( object == this.checkedMeshes[i] ){
+
+        this.checkedMeshes[i]._onHoverOver();
+
+      }
 
     }
 
@@ -122,6 +140,18 @@ define(function(require, exports, module) {
       this.meshHoveredOutEvents[i]( this.primary );
 
     }
+
+    for( var i = 0; i < this.checkedMeshes.length; i++ ){
+
+      if( this.primary == this.checkedMeshes[i] ){
+
+        this.checkedMeshes[i]._onHoverOut();
+
+      }
+
+    }
+
+
 
     this.oPrimary = this.primary;
     this.primary  = undefined;

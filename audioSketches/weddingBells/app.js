@@ -33,18 +33,18 @@ define(function(require, exports, module) {
     }
 
     if( object[0] instanceof THREE.Geometry ){
-      womb.mugGeo = object[0];
-      womb.mugGeo.computeFaceNormals();
-      womb.mugGeo.computeVertexNormals();
+      var geo = object[0];
+      geo.computeFaceNormals();
+      geo.computeVertexNormals();
       
-      womb.modelLoader.assignUVs( womb.mugGeo );
+      womb.modelLoader.assignUVs( geo );
      
-      womb.onMugLoad( womb.mugGeo );
+      womb.onMugLoad( geo);
     }
 
   });
 
-  womb.onMugLoad = function(){
+  womb.onMugLoad = function( geo ){
 
 
       womb.loader.loadBarAdd();
@@ -61,9 +61,9 @@ define(function(require, exports, module) {
         noisePower:3,
        
         placementSize: womb.size/20,
-        numOf: 10,
+        numOf: 6,
         color: new THREE.Vector3( 0.5 , 0.0 , 1.5 ),
-        influence: 1
+        influence: 1,
 
       });
 

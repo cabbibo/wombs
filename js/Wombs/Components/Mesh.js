@@ -26,7 +26,7 @@ define(function(require, exports, module) {
 
     params = _.defaults( parameters || {} , {
 
-      geometery: being.womb.defaults.geometry,
+      geometry: being.womb.defaults.geometry,
       material: being.womb.defaults.material
 
     });
