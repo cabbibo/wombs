@@ -5,19 +5,26 @@ define(function(require, exports, module) {
 
   var PlacementFunctions = {};
 
-  PlacementFunctions.rings = function( objectList , size ){
+  PlacementFunctions.ring = function( length , size ){
 
-    for( var i = 0; i < objectList.length; i ++ ){
+    var positions = [];
+    var rotations = [];
+    
+    for( var i = 0; i < length; i ++ ){
 
-      var object = objectList[i];
-
-      var theta = 2 * Math.PI * i / objectList.length;
+      var theta = 2 * Math.PI * i / length;
       var phi   = 0;
 
-      object.position = Math.toCart( size , theta, phi );
+
+      rotations.push( new THREE.Euler( 0 , 0 , -Math.PI/2 - theta ) );
+
+      var pos = Math.toCart( size , theta, phi )
+
+      positions.push( new THREE.Vector3( pos.x, pos.z , pos.y ) );
 
     }
 
+    return { positions : positions , rotations : rotations }
   }
 
   PlacementFunctions.randomShell = function( objectList , size ){

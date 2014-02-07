@@ -33,8 +33,6 @@ define(function(require, exports, module) {
 
     this.measureLength = this.spb * this.beatsPerMeasure;
 
-    console.log( this.measureLength );
-
     this.measure            = 0;
     this.oMeasure           = 0;
 
@@ -71,7 +69,6 @@ define(function(require, exports, module) {
   Looper.prototype.updateTime = function(){
     
     this.newMeasure = false;
-
 
     this.oPercentOfMeasure = this.percentOfMeasure;
 
@@ -111,6 +108,26 @@ define(function(require, exports, module) {
 
   }
 
+  Looper.prototype.addSequence = function( callback , sequenceLength , hitArray , duration ){
+
+    for( var i = 0; i < hitArray.length; i++ ){
+
+      if( !duration ) duration = [0 , 10000000000 ];
+      this.addHit( callback , {
+
+        measureFrequency: sequenceLength,
+        measureOffset:    hitArray[i][0],
+        percents:         hitArray[i][1],
+        duration:         duration
+
+      });
+
+    }
+
+
+
+  }
+
   Looper.prototype.checkHits = function(){
 
     for( var i = 0; i < this.hits.length; i++ ){
@@ -129,12 +146,12 @@ define(function(require, exports, module) {
 
             var p = hit.percents[j];
 
-            //console.log( p );
             if( 
               this.percentOfMeasure  >= p && 
               this.oPercentOfMeasure < p 
             ){
 
+              
               hit.callback();
 
             // In this case the percentage is at 0

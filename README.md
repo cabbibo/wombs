@@ -26,6 +26,12 @@ Constant Work In Progress. Feel Free To Jump in and help out, or send me any sug
   - figure out physics simulation particles
   - Clean up code
   - Figure out make and make build!
+  
+  - Try to make more things into functions that return what you want!
+    - these components are healthier for modularity
+
+  - Try to set up some standards for vertex and fragment shaders,
+    - so it is easier to seperate the two!
 
 
   - Textures should be utils, not in Wombs!

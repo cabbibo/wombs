@@ -31,6 +31,7 @@ define(function(require, exports, module) {
 
   
   var LeapController    = require( 'Utils/LeapController'           );
+  var Defaults          = require( 'Utils/Defaults'                 );
 
 
   function Womb(params){
@@ -47,7 +48,12 @@ define(function(require, exports, module) {
       neededTech:       [ 'webGL' , 'audio' , 'mobile' ],
       failureTitleText: "This project requires the following:",
       failureVideoText: "But here's a video which is probably better anyway",
-      failureVideo:     69517912  // The Vimeo Video Number !
+      failureVideo:     69517912,  // The Vimeo Video Number !
+      defaults:{
+
+        material: new THREE.MeshNormalMaterial(),
+        geometry: new THREE.IcosahedronGeometry( 50 , 1 )
+      }
     });
 
     this.loaderParams = {};
@@ -59,6 +65,8 @@ define(function(require, exports, module) {
 
     this.animator         = new Animator(         this );
     this.audioController  = new AudioController(  this );
+
+    this.defaults = new Defaults( this.params.defaults );
 
     // Time uniform
     this.time = { type: "f", value: 0.0 } ;

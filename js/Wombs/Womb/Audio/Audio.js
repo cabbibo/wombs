@@ -192,9 +192,6 @@ define(function(require, exports, module) {
 		
   Audio.prototype.play = function(){
 	
-    console.log( 'Play Called' );
-    console.log( this.file );
-
     this.startTime = this.controller.womb.time.value;
 
     this.playing = true;

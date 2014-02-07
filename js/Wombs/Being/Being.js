@@ -3,7 +3,6 @@ define(function(require, exports, module) {
 
   var Tweener = require( 'Womb/Tweener' );
 
-
   function Being( womb , params ){
   
     this.womb = womb;
@@ -215,43 +214,18 @@ define(function(require, exports, module) {
 
   Being.prototype.addToUpdateArray =function( callback ){
 
-    console.log('Adding to update Array' );
-    console.log( callback );
     this.updateArray.push( callback );
 
   }
 
- 
-  Being.prototype.addMesh = function( geometry , material ){
-
-
-    if( geometry._update )
-      this.addToUpdateArray( geometry._update.bind( geometry ) );
-
-    if( material._update )
-      this.addToUpdateArray( material._update.bind( material ) );
-
-    var mesh = new THREE.Mesh( geometry , material );
-
-    mesh.body = this.body;
-    mesh.addToBody = function(){
-      console.log( 'mesh.addToBody' );
-      console.log( this );
-      this.body.add( this );
-    }
-
-    mesh.removeFromBody = function(){
-      console.log( 'mesh.removeFromBody' );
-      console.log( this );
-      this.body.remove( this );
-    }
-
-
-    this.meshes.push( mesh );
-
-    this.body.add( mesh );
-
+  Being.prototype.addToScene = function( object ){
+    this.body.add( object );
   }
+
+  Being.prototype.removeFromScene = function( object ){
+    this.body.remove( object );
+  }
+
 
   module.exports = Being;
 
