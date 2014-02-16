@@ -20,19 +20,26 @@ define(function(require, exports, module) {
   var Mesh                = require( 'Components/Mesh'       );
   var FBOParticles        = require( 'Species/FBOParticles'       );
   
-  var shaderCreator       = require( 'Shaders/ShaderCreator' );
+  //var shaderCreator       = require( 'Shaders/ShaderCreator' );
   /*
    
      Create our womb
 
   */
-  
+
+
   womb = new Womb({
     stats:            true,
   });
-/*  particles = new FBOParticles({
-    numberOfParticles: 1000000 
-  });*/
+
+   
+   var audio = womb.audioController.createStream( '/lib/audio/tracks/weddingBellsLoop.wav' );
+
+   console.log( audio );
+  particles = new FBOParticles({
+    numberOfParticles: 1000000,
+  });
+
 
   /*var uniforms = shaderCreator.parse( 'uniform', FBOShaders.fragment.displaceSphere );
   var varyings = shaderCreator.parse( 'varying', FBOShaders.fragment.displaceSphere );
@@ -41,19 +48,13 @@ define(function(require, exports, module) {
   console.log( varyings );*/
 
 
-  var fragChunk = [
-
-    
-
-
-  ].join("\n");
-
   womb.loader.loadBarAdd();
 
 
   womb.start = function(){
+    audio.play();
 
-    //particles.enter();
+    particles.enter();
 
   }
 

@@ -151,7 +151,8 @@ define(function(require, exports, module) {
           "#ifdef USE_SIZEATTENUATION",
             "gl_PointSize = size * ( scale / length( mvPosition.xyz ) ); ",
           "#else",
-            "gl_PointSize = size * texture2D( audioTexture , vec2( lookupuv.x , 0.0 ) ).a;",
+            "float aS = texture2D( audioTexture , vec2( lookupuv.x , 0.0 ) ).a;",
+            "gl_PointSize = 3.0 * size * aS*aS*aS;",
           "#endif",
 
           "gl_Position = projectionMatrix * mvPosition;",

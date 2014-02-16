@@ -10,8 +10,14 @@ define(function(require, exports, module) {
   var MeshEmitter         = require( 'Components/MeshEmitter'       );
   var Duplicator          = require( 'Components/Duplicator'        );
 
-  var vertexShaders       = require( 'Shaders/vertexShaders'        );
-  var fragmentShaders     = require( 'Shaders/fragmentShaders'      );
+  var fragmentShaders     = require( 'Shaders/fragmentShaders'    );
+  var vertexShaders       = require( 'Shaders/vertexShaders'      );
+  var physicsShaders      = require( 'Shaders/physicsShaders'     );
+  var shaderChunks        = require( 'Shaders/shaderChunks'       );
+
+  var PhysicsSimulator    = require( 'Species/PhysicsSimulator'   );
+  var physicsShaders      = require( 'Shaders/physicsShaders'     );
+  var physicsParticles    = require( 'Shaders/physicsParticles'   );
   
   /*
    
@@ -28,14 +34,30 @@ define(function(require, exports, module) {
     stats: true
   });
 
+  /*
+   
+     Variables:
+
+  */
+  var numOfClickables = 20;
+  var round           = 0;  // Which round of filled objects we have done
+  var emissionRandomness = .3; // How random the direction is
+
+  var hoverColor = new THREE.Vector3( 1.4 , .9 , .7 );
+  var neutralColor = new THREE.Vector3( 1.9 , .4 , .5 );
+  var selectedColor = new THREE.Vector3( .9 , 1.1 , .9 );
+  var selectedHoverColor = new THREE.Vector3( 1.9 , 1.6 , .9 );
 
   var file = '/lib/audio/tracks/mutualCore.mp3';
 
   womb.audio = womb.audioController.createStream( file  );
   //womb.audioController.gain.gain.value = 0;
 
-  console.log( womb.audio );
+  /*
+  
+    SETTING UP OBJECTS!
 
+  */
   womb.fractal1 = new FractalBeing( womb, {
 
     geometry: new THREE.CubeGeometry(
@@ -66,11 +88,25 @@ define(function(require, exports, module) {
 
   });
 
-  
+  womb.ps = new PhysicsSimulator( womb , {
 
+    textureWidth: 100,
+    debug: false,
+    velocityShader:           physicsShaders.velocity.curl,
+    positionShader:           physicsShaders.positionAudio_4,
+    
+    particlesUniforms:        physicsParticles.uniforms.audio,
+    particlesVertexShader:    physicsParticles.vertex.audio,
+    particlesFragmentShader:  physicsParticles.fragment.audio,
+    
+    bounds: 400,
+    speed: .1,
+   
+    audio: womb.audio
 
+  });
 
-  womb.fractal1.fractal.material.updateSeed();
+  womb.fractal1.fractal.material.updateSeed = true;
 
   var fractalClone = womb.fractal1.fractal.clone();
 
@@ -89,13 +125,6 @@ define(function(require, exports, module) {
   duplicator.loopThroughMeshes(function( mesh ){
     mesh.scale.multiplyScalar( .01 );
   });
-
-
-
-  var hoverColor = new THREE.Vector3( 1.4 , .9 , .7 );
-  var neutralColor = new THREE.Vector3( .3 , .4 , .5 );
-  var selectedColor = new THREE.Vector3( .9 , 1.1 , .9 );
-  var selectedHoverColor = new THREE.Vector3( 1.9 , .6 , .4 );
 
   womb.u = {
 
@@ -126,17 +155,24 @@ define(function(require, exports, module) {
     //side: THREE.BackSide,
   });
 
-  var size = womb.size / 50;
+  var size = womb.size / numOfClickables;
   var geo = new THREE.CubeGeometry( size , size , size );
   var mesh = new THREE.Mesh( geo , mat );
 
  // womb.scene.add( mesh );
 
-  womb.clickableBeing = womb.creator.createBeing();
+  womb.clickableBeing = womb.creator.createBeing({
+    transitionTime: 5
+  });
   womb.selectedMeshes = [];
   womb.meshes         = [];
  
-  for( var i = 0; i < 50; i++ ){
+  /*
+  
+     Creating Clickables
+
+  */
+  for( var i = 0; i < numOfClickables ; i++ ){
 
 
     var mesh = new Mesh( womb.clickableBeing , {
@@ -159,15 +195,18 @@ define(function(require, exports, module) {
         var direction = this.emitTowards.clone().normalize();
 
         // Randomizes for complexity
-        direction.x += Math.randomRange( -.1 , .1 );
-        direction.y += Math.randomRange( -.1 , .1 );
-        direction.z += Math.randomRange( -.1 , .1 );
+        var ER = emissionRandomness;
+        direction.x += Math.randomRange( -ER , ER );
+        direction.y += Math.randomRange( -ER , ER );
+        direction.z += Math.randomRange( -ER , ER );
         return direction;
 
       },
 
-      maxMeshes: 10,
-      decayRate: .998
+      maxMeshes: 1000 / numOfClickables,
+      decayRate: .97,
+      emissionRate: 100 / numOfClickables
+
       
     });
 
@@ -202,14 +241,11 @@ define(function(require, exports, module) {
           unselectMesh( this ); 
         }
 
-
-       // womb.fractal1.fractal.material.uniforms.texturePower.value = .3 + 1.7 * Math.random();
-        
         var l = womb.selectedMeshes.length;
 
         var uniforms = womb.fractal1.fractal.material.uniforms;
-        uniforms.texturePower.value = l / 5;
-        uniforms.color.value.x = l / 30;
+        uniforms.texturePower.value = l * 3 / numOfClickables;
+        uniforms.color.value.x = l * 2 / numOfClickables;
         
 
       }
@@ -224,6 +260,8 @@ define(function(require, exports, module) {
     mesh.position = Math.toCart( womb.size/2 , theta, phi  );
     Math.setRandomRotation( mesh.rotation );
 
+    womb.meshes.push( mesh );
+
   }
 
   
@@ -233,9 +271,6 @@ define(function(require, exports, module) {
 
 
    womb.loader.loadBarAdd();
-
-
-
 
   womb.update = function(){
 
@@ -261,7 +296,6 @@ define(function(require, exports, module) {
     for( var i = 0; i < womb.selectedMeshes.length; i++ ){
 
       if( womb.selectedMeshes[i] == mesh ){
-        console.log(womb.selectedMeshes[i] );
         womb.selectedMeshes.splice( i , 1 );
         i --;
         l --;
@@ -280,15 +314,14 @@ define(function(require, exports, module) {
     mesh.emitter.emitTowards = mesh.position.clone().multiplyScalar( -1 );
 
     var s = mesh.emitter.emitTowards.length() / mesh.emitter.lifetime;
-    mesh.emitter.startingSpeed = s ;
+    mesh.emitter.startingSpeed = s;
     mesh.emitter.friction = .99;
-    mesh.emitter.decayRate = .9;
-    mesh.emitter.emissionRate = 10;
 
+    mesh.emitter.burst( mesh.emitter.maxMeshes/2 );
 
     womb.selectedMeshes.push( mesh );
 
-    if( womb.selectedMeshes.length == 6  ){
+    if( womb.selectedMeshes.length > womb.meshes.length - 1 ){
 
       allMeshesSelected();
 
@@ -296,45 +329,107 @@ define(function(require, exports, module) {
 
 
   }
+
+  function unselectAllMeshes(){
+
+    var l = womb.selectedMeshes.length;
+          
+    for( var i = 0; i < womb.selectedMeshes.length;){
+
+      var mesh = womb.selectedMeshes[i]
+      unselectMesh( mesh );
+      mesh.material.uniforms.color.value = neutralColor;
+
+      l = womb.selectedMeshes.length;
+
+    }
+
+  }
+
   function allMeshesSelected(){
 
+ 
+    if( round == 0 ){
 
-    womb.clickableBeing.exit();
-    var t = womb.tweener.createTween({
-      object: womb.fractal1.body,
-      target: new THREE.Vector3( .005 , .005 , .005 ),
-      type: 'scale',
-      callback: function(){
-        womb.fractal1.fractal.material.uniforms.texturePower.value = 100;
-        womb.fractal1.fractal.material.uniforms.color.value = new THREE.Vector3();
-        womb.fractal1.fractal.material.uniforms.opacity.value = .2;
-        womb.fractal1.fractal.material.additive = THREE.NormalBlending;
-        womb.fractal1.fractal.material.updateSeed = true;
-        womb.fractal1.fractal.material.needsUpdate = true;
+      unselectAllMeshes();
+      
+      womb.ps.enter();
+      womb.ps.particleSystem.scale.multiplyScalar( .01 );
+     
+      
+      var t = womb.tweener.createTween({
+        object:   womb.fractal1.body,
+        target:   new THREE.Vector3( .005 , .005 , .005 ),
+        type:     'scale',
+        time:     5,
+        callback: function(){
+          
+          womb.fractal1.fractal.material.uniforms.texturePower.value = 100;
+          womb.fractal1.fractal.material.uniforms.color.value = new THREE.Vector3();
+          womb.fractal1.fractal.material.uniforms.opacity.value = .01;
+          womb.fractal1.fractal.material.additive = THREE.NormalBlending;
+          womb.fractal1.fractal.material.updateSeed = true;
+          womb.fractal1.fractal.material.needsUpdate = true;
 
-        var l = womb.selectedMeshes.length;
-        for( var i = 0; i < womb.selectedMeshes.length;){
 
-          unselectMesh( womb.selectedMeshes[i] );
-          l = womb.selectedMeshes.length;
-          console.log( l );
+          unselectAllMeshes();
 
+          womb.fractal1.exit();
 
         }
-        womb.clickableBeing.enter();
+      });
 
-      }
-    });
+      t.start();
 
-    womb.fractal2.enter();
+    }else if( round == 1 ){
+
+      womb.ps.exit();
+
+      unselectAllMeshes();
+      womb.fractal1.enter();
+      womb.fractal2.enter();
+
+    }else if( round == 2 ){
+
+      womb.fractal1.exit();
+      womb.ps.enter();
+      unselectAllMeshes();
+      var t = womb.tweener.createTween({
+
+        object: womb.ps.particleSystem,
+        target:new THREE.Vector3( .01 , .05 , .001 ),
+        type:'scale',
+        time: 10,
+
+      });
+
+      t.start();
+
+    }else if( round == 3 ){
+
+      womb.clickableBeing.exit();
+
+      var t = womb.tweener.createTween({
+
+        object: womb.ps.particleSystem,
+        target:new THREE.Vector3( .03 , .03 , .03 ),
+        type:'scale',
+        time: 10,
+        callback: function(){
+
+          womb.fractal2.exit();
+
+        }
+
+      });
+
+      t.start();
 
 
+    }
 
-
-
-
-    t.start();
-
+    round ++;   
+  
   }
 
 });

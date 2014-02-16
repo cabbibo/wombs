@@ -37,12 +37,13 @@ define(function(require, exports, module) {
     womb.loader.addToLoadBar();
 
      
-    params = _.defaults( parameters || {} , {
+    var params = _.defaults( parameters || {} , {
 
       numberOfParticles: 1000,  // Should be a square Number
       simulationShader:FBOShaders.fragment.dissipateFromOriginal,
 
-      geometry: womb.defaults.geometry
+      geometry: womb.defaults.geometry,
+      map:      womb.defaults.texture
 
     });
  
@@ -141,7 +142,7 @@ define(function(require, exports, module) {
     var particleMaterial = new THREE.ShaderMaterial( {
 
       uniforms:       physicsParticles.uniforms.audio,
-      vertexShader:   physicsParticles.vertex.lookup,
+      vertexShader:   physicsParticles.vertex.audio,
       fragmentShader: physicsParticles.fragment.audio,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
@@ -149,17 +150,26 @@ define(function(require, exports, module) {
 
     });
 
+
+
     particleMaterial.FBORenderer = FBORenderer;
     particleMaterial.simulationShader = simulationShader;
+    console.log( particleMaterial );
+    if( params.audioTexture ){
+      console.log('hello' );
+      console.log( params.audioTexture );
+      console.log( particleMaterial );
+      particleMaterial.uniforms.audioTexture.value = params.audioTexture;
+    }
 
     particleMaterial._update = update.bind( particleMaterial );
 
 
 
     var particles = new THREE.ParticleSystem( geometry , particleMaterial );
-    //var particles = new THREE.Mesh( geometry , particleMaterial );
 
-    console.log( particles.geometry._update );
+    particles.material.uniforms.map.value = params.map;
+    
     var being = womb.creator.createBeing();
  
     being.addMesh( particles ); 

@@ -116,7 +116,6 @@ define(function(require, exports, module) {
     // Notice that this is calling 'this' from the tween 
     // it is part of.
     this.onExit = function(){
-      console.log( this );
       this.active = false;                // No longer update after it has left
       this.params.exitFinish();           // Call the exit functino passed through
       this.parent.body.remove( this.body ); // Remove it from our world
