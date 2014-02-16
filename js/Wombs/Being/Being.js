@@ -2,7 +2,8 @@ define(function(require, exports, module) {
 
 
   var Tweener = require( 'Womb/Tweener' );
-
+  
+  
   function Being( womb , params ){
   
     this.womb = womb;
@@ -199,9 +200,10 @@ define(function(require, exports, module) {
 
     }
     // Dealing with forces
-    this.position += this.velocity;
-    this.velocity *= this.dampening;
-    this.velocity += this.totalForce / this.mass;
+    this.body.position.add( this.body.velocity );
+    this.body.velocity.multiplyScalar( this.body.dampening );
+    this.body.acceleration = this.totalForce.multiplyScalar( this.body.mass );
+    this.body.velocity.add( this.body.acceleration );
     
 
     this.update();
@@ -215,6 +217,40 @@ define(function(require, exports, module) {
   Being.prototype.addToUpdateArray =function( callback ){
 
     this.updateArray.push( callback );
+
+  }
+
+  Being.prototype.removeMesh = function( mesh ){
+
+    mesh.being = null;
+
+    this.removeFromScene( mesh );
+    for( var i = 0; i < this.meshes.length; i++ ){
+
+
+    }
+
+  }
+
+
+  Being.prototype.addMesh = function( mesh ){
+   
+    // Assign this to the meshes being 
+    // so we can easily keep track of it
+    mesh.being = this;
+
+    this.addToScene( mesh );
+    this.meshes.push( mesh );
+
+    if( mesh.geometry._update ){
+      this.addToUpdateArray( mesh.geometry._update );
+    }
+    
+    if( mesh.material._update ){
+      console.log('CORRECT' );
+      this.addToUpdateArray( mesh.material._update );
+    }
+
 
   }
 

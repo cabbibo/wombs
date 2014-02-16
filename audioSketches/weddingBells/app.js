@@ -36,6 +36,8 @@ define(function(require, exports, module) {
       var geo = object[0];
       geo.computeFaceNormals();
       geo.computeVertexNormals();
+      geo.computeBoundingSphere();
+      geo.computeBoundingBox();
       
       womb.modelLoader.assignUVs( geo );
      
@@ -49,25 +51,27 @@ define(function(require, exports, module) {
 
       womb.loader.loadBarAdd();
 
+      console.log( geo );
       womb.fractal1 = new FractalBeing( womb, {
 
-        //geo: womb.mugGeo,
-        geo: new THREE.IcosahedronGeometry( 100 , 5 ),
-        audio:    womb.audio,
-        //additive: true,
+        geometry: geo,
+        texture:    womb.audio.texture,
         opacity: .01,
-        size: .005,
-        audioPower:5,
+        texturePower:5,
         noisePower:3,
-       
+      
+        displacementPower: 0.3,
+        displacementOffset: 15.0,
+
         placementSize: womb.size/20,
-        numOf: 6,
+
+        numOf: 10,
         color: new THREE.Vector3( 0.5 , 0.0 , 1.5 ),
         influence: 1,
 
       });
 
-      womb.fractal1.mesh.updateSeed();
+      womb.fractal1.mesh.material.updateSeed();
       
       womb.looper = womb.audioController.createLooper( womb.audio , {
         beatsPerMinute: 150.1 

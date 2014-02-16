@@ -193,9 +193,10 @@ define(function(require, exports, module) {
 
     */
 
+    // Making sure that we use the audio texture if it is provided!
     var audio = null
     if( this.audio ){
-      audio = this.audio.texture.texture;
+      audio = this.audio.texture;
     }
 
 

@@ -48,7 +48,7 @@ define(function(require, exports, module) {
 
     color:      { type: "v3", value: new THREE.Vector3( .0 , .0 , .9 ) },
     seed:       { type: "v3", value: new THREE.Vector3( -0.1 , -0.1 ,  -0.9) },
-    texture:    { type: "t" , value: womb.stream.texture.texture },
+    texture:    { type: "t" , value: womb.stream.texture },
     time:       { type: "f" , value: 0 },
     noiseSize:  { type: "f" , value: 1 },
     noisePower: { type: "f" , value: .2 },
@@ -97,8 +97,8 @@ define(function(require, exports, module) {
 
       "vec3 audioPosition = absAudioPosition( texture , position );",
 
-      "float dAudio = snoise( audioPosition );",
-      "float dNoise = snoise( offset );",
+      "float dAudio = snoise3( audioPosition );",
+      "float dNoise = snoise3( offset );",
 
       "float aP = length( audioPosition );",
 

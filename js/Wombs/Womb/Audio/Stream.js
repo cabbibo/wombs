@@ -45,6 +45,7 @@ define(function(require, exports, module) {
     this.audio.src      = this.file;
     this.audio.loop     = this.params.loop;
 
+
   }
 
   Stream.prototype.play = function(){

@@ -10,7 +10,7 @@ define(function(require, exports, module) {
     var positions = [];
     var rotations = [];
     
-    for( var i = 0; i < length; i ++ ){
+    for( var i = 0; i < length; i++ ){
 
       var theta = 2 * Math.PI * i / length;
       var phi   = 0;
@@ -25,9 +25,13 @@ define(function(require, exports, module) {
     }
 
     return { positions : positions , rotations : rotations }
+
   }
 
-  PlacementFunctions.randomShell = function( objectList , size ){
+  PlacementFunctions.randomShell = function( length , size ){
+
+    var positions = [];
+    var rotations = [];
 
     for( var i = 0; i < objectList.length; i ++ ){
 
@@ -36,9 +40,22 @@ define(function(require, exports, module) {
       var theta = 2 * Math.PI * Math.random();
       var phi   = 2 * Math.PI * ( Math.random() - .5 );
 
-      object.position = M.toCart( size , theta, phi );
+      var position = M.toCart( size , theta, phi  );
+
+      positions.push( position );
+
+      var pNorm = positions.clone().normalize();
+
+      var rotation = new THREE.Euler();
+      rotation.x = pNorm.x * 2 * Math.PI;
+      rotation.y = pNorm.y * 2 * Math.PI;
+      rotation.z = pNorm.z * 2 * Math.PI;
+
+      rotations.push( rotation ); 
 
     }
+
+    return { positions : positions , rotations : rotations }
 
   }
 

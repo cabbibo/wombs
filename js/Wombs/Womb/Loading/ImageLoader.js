@@ -12,7 +12,7 @@ define(function(require, exports, module) {
   }
 
 
-  ImageLoader.prototype.load = function( file , callback , mwombsing ){
+  ImageLoader.prototype.load = function( file , callback , mapping ){
 
 
    
@@ -23,9 +23,10 @@ define(function(require, exports, module) {
     this.womb.loader.addToLoadBar();
     this.womb.loader.addToLoadBar();
 
-    if( !mwombsing ) mwombsing = THREE.UVMwombsing;
+    if( !mapping ) mapping = THREE.UVMapping;
+  
     var self = this;
-    texture = this.loader.loadTexture( file , mwombsing , function( texture ){
+    texture = this.loader.loadTexture( file , mapping , function( texture ){
 
       self.womb.loader.loadBarAdd();
       

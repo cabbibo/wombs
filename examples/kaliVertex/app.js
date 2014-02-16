@@ -17,13 +17,11 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    cameraController: 'LeapFlyControls',
     raycaster:        false,
     title:            'Kali Fractal Vertex and Fragment Shader',
     link:             link, 
     summary:          info,
     stats:            true,
-    color:            '#000000' 
   });
 
   womb.vertexShader = [
@@ -116,9 +114,9 @@ define(function(require, exports, module) {
    
 
       depthTest       : false,
-      blending        : THREE.AdditiveBlending,
+     blending        : THREE.AdditiveBlending,
       transparent     : true,
-      wireframe       : true
+     // wireframe       : true
     
     });
 

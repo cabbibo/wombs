@@ -1,6 +1,9 @@
 define(function(require, exports, module) {
 
   var Womb                = require( 'Womb/Womb' );
+  var Mesh                = require( 'Components/Mesh' );
+  
+  var SingleFractal       = require( 'Species/Materials/SingleFractal' );
   /*
    
      Create our womb
@@ -16,14 +19,31 @@ define(function(require, exports, module) {
 
 
   womb.audioController.gain.gain.value = 0;
-
-  womb.being = womb.creator.createBeing();
-
-  womb.audio = womb.audioController.createLoop( 
+    womb.audio = womb.audioController.createLoop( 
     '/lib/audio/loops/dontReallyCare/1.mp3' 
   );
 
-  womb.looper = womb.audioController.createLooper( womb.audio );
+
+
+  womb.being = womb.creator.createBeing();
+
+  fractal = new SingleFractal({
+    texture: womb.audio.texture 
+  });
+  mesh = new Mesh(womb.being , {
+    
+
+    material: fractal
+  });
+  womb.being.addMesh( mesh );
+
+
+  womb.looper = womb.audioController.createLooper( womb.audio , {
+    
+    
+  });
+
+
   womb.looper.addHit( function(){
 
   } );
@@ -37,6 +57,8 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
+    console.log( womb.being );
+    womb.being.enter();
     womb.audio.play();
 
   }

@@ -2,45 +2,54 @@ define(function(require, exports, module) {
 
   function AudioTexture( audio ){
 
-    this.audio = audio;
-    this.analyser = audio.analyser;
+    var analyser = audio.analyser;
 
-    this.fbc = this.analyser.frequencyBinCount;
+    var fbc = analyser.frequencyBinCount;
 
     // TODO: why 2 * 4 instead of 4 ?
     // fudge factor is to make sure texture reachs from 0 -> 1 in vUv coords
-    this.pixels = this.fbc / 8.2; 
+    var pixels = fbc / 8.2; 
 
     //creates a canvas element
-    this.canvas = document.createElement('canvas');
-    this.canvas.style.zIndex = 999;
-    this.canvas.style.position = 'absolute';
-    this.canvas.style.top       = '0px'
+    var canvas              = document.createElement('canvas');
+    canvas.style.zIndex     = 999;
+    canvas.style.position   = 'absolute';
+    canvas.style.top        = '0px';
 
+    // uncomment to see texture in upper left corner
     //document.body.appendChild( this.canvas );
     
-    this.canvas.width = this.pixels;
-    this.canvas.height = 1;
+    canvas.width = pixels;
+    canvas.height = 1;
     
-    this.c = this.canvas.getContext('2d');
+    var c = canvas.getContext('2d');
 
-    this.width = this.canvas.width;
-    this.height = this.canvas.height;
+    var width = canvas.width;
+    var height = canvas.height;
 
-    this.imageData = this.c.createImageData( this.width , this.height );
+    var imageData = c.createImageData( width , height );
 
-    this.c.putImageData( this.imageData , 0 , 0 );
+    c.putImageData( imageData , 0 , 0 );
 
-    this.texture = new THREE.Texture( this.canvas );
-    
+    texture = new THREE.Texture( canvas );
+    texture.update = textureUpdate.bind( texture )
+    texture.analyser = analyser;
+    texture.c = c;
+    texture.pixels = pixels;
+    texture.width = width;
+    texture.height = height;
+
+   // console.log( audio );
+
+    return texture ;
 
   }
 
-  AudioTexture.prototype.update = function(){
+  textureUpdate = function(){
 
     if( this.analyser){
-              
-      this.imageData = this.c.createImageData( this.width , this.height );
+
+      var imageData = this.c.createImageData( this.width , this.height );
 
       //transfers audio data to rgb values
       for (var i = 0; i < this.pixels ; i++) {
@@ -51,15 +60,16 @@ define(function(require, exports, module) {
         var g = this.analyser.array[i+1] | 0;       
         var b = this.analyser.array[i+2] | 0;
         var a = this.analyser.array[i+3] | 0;
-        this.setPixelData( this.imageData , x , y , r , g , b , a ); 
+        setPixelData( imageData , x , y , r , g , b , a ); 
       
       }
 
 
-      this.c.putImageData( this.imageData , 0 , 0 );
+      this.c.putImageData( imageData , 0 , 0 );
 
       //updates the texture
-      this.texture.needsUpdate =  true;
+      this.needsUpdate =  true;
+
     }
 
     //console.log('ss');
@@ -68,7 +78,7 @@ define(function(require, exports, module) {
 
   //TODO: Move this to canvasFunctions
 
-  AudioTexture.prototype.setPixelData = function (imageData, x, y, r, g, b, a) {
+  setPixelData = function ( imageData, x, y, r, g, b, a) {
 
       index = ( x + y * imageData.width ) * 4;
       imageData.data[index+0] = r;

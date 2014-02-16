@@ -49,11 +49,15 @@ define(function(require, exports, module) {
       failureTitleText: "This project requires the following:",
       failureVideoText: "But here's a video which is probably better anyway",
       failureVideo:     69517912,  // The Vimeo Video Number !
-      defaults:{
 
-        material: new THREE.MeshNormalMaterial(),
-        geometry: new THREE.IcosahedronGeometry( 50 , 1 )
+  
+      defaults:{
+        textureFile: '/lib/img/textures/ash_uvgrid01.jpg' ,
+        geometry: new THREE.IcosahedronGeometry( 10 , 4 ),
+        material: new THREE.MeshNormalMaterial()
       }
+
+
     });
 
     this.loaderParams = {};
@@ -66,7 +70,9 @@ define(function(require, exports, module) {
     this.animator         = new Animator(         this );
     this.audioController  = new AudioController(  this );
 
-    this.defaults = new Defaults( this.params.defaults );
+    this.leapController = LeapController;
+    this.leapController.size = this.size;
+
 
     // Time uniform
     this.time = { type: "f", value: 0.0 } ;
@@ -119,18 +125,6 @@ define(function(require, exports, module) {
     this.renderer.domElement.style.background = this.params.color;
     this.container.appendChild( this.renderer.domElement );
 
-    this.leapController = LeapController;
-    this.leapController.size = this.size;
-
-    this.cameraController = new CameraController( this , this.params.cameraController );
-    this.raycaster = new Raycaster( this );
-    this.imageLoader = new ImageLoader( this );
-    this.modelLoader = new ModelLoader( this );
-    //this.effectComposer  = new EffectComposer(  this );
-    this.textCreator = new TextCreator( this );
-
-    this.creator  = new Creator( this );
-
     window.addEventListener( 'resize', this.onWindowResize.bind( this ), false );
 
     var c = this.container;
@@ -143,11 +137,33 @@ define(function(require, exports, module) {
     this.mouseDownEvents    = [];
     this.mouseClickEvents   = [];
 
+    this.updateArray        = []; // Functions to be called every update
 
     this.clock            = new THREE.Clock();
 
-    //this.massController   = new MassController( this );
-    //this.springController = new SpringController( this , this.massController );
+    this.cameraController = new CameraController( this , this.params.cameraController );
+    this.raycaster        = new Raycaster( this );
+    this.imageLoader      = new ImageLoader( this );
+    this.modelLoader      = new ModelLoader( this );
+    this.textCreator      = new TextCreator( this );
+
+
+    this.creator  = new Creator( this );
+
+    // Making sure that we have some defaults to pass through the program,
+    // so we don't have to use as much memory creating a bunch of new materials etc
+    this.defaults = new Defaults( this.params.defaults );
+    this.defaults.texture = this.imageLoader.load( this.defaults.textureFile );
+
+
+    // Making sure a bunch of stuff gets updated 
+    this.addToUpdateArray( this.raycaster._update.bind( this.raycaster ) );
+    this.addToUpdateArray( this.audioController._update.bind( this.audioController )  );
+    this.addToUpdateArray( this.creator._update.bind( this.creator ) );
+   
+
+    // Giving us a global WOMB variable!
+    window.womb = this;
 
   }
 
@@ -254,18 +270,32 @@ define(function(require, exports, module) {
     //this.massController._update();
     //this.springController._update();
    
-    this.audioController._update();
+    /*this.audioController._update();
      
     this.creator._update();
     
-    this.raycaster._update();
+    this.raycaster._update();*/
     
     this.cameraController._update( this.delta );
+
+
+    for( var i = 0; i < this.updateArray.length; i++ ){
+
+      var f = this.updateArray[i];
+      f();
+
+    }
 
     this.update();
 
     this.render();
 
+
+  }
+
+  Womb.prototype.addToUpdateArray = function( callback ){
+
+    this.updateArray.push( callback )
 
   }
 

@@ -78,8 +78,8 @@ define(function(require, exports, module) {
     // SHARED UNIFORMS
     womb.u = {
 
-      texture:    { type: "t", value: womb.stream.texture.texture },
-      image:      { type: "t", value: womb.stream.texture.texture },
+      texture:    { type: "t", value: womb.stream.texture },
+      image:      { type: "t", value: womb.stream.texture },
       color:      { type: "v3", value: new THREE.Vector3( .2 , .5 , .4 ) },
       time:       womb.time,
       pow_noise:  { type: "f" , value: 0.5 },
@@ -114,13 +114,13 @@ define(function(require, exports, module) {
        etc...
 
     */
-    womb.uSoft.texture.value    = womb.stream.texture.texture;
+    womb.uSoft.texture.value    = womb.stream.texture;
     womb.uSoft.image.value      = womb.crewTexture;
     womb.uSoft.time             = womb.time;
     womb.uSoft.color.value      = new THREE.Vector3( .9 , .1 , .0 );
 
-    womb.uShiny.texture.value   = womb.stream.texture.texture;
-    womb.uShiny.image.value     = womb.stream.texture.texture;
+    womb.uShiny.texture.value   = womb.stream.texture;
+    womb.uShiny.image.value     = womb.stream.texture;
     womb.uShiny.time            = womb.time;
     womb.uShiny.color.value     = new THREE.Vector3( .9 , .1 , .0 );
 
@@ -220,8 +220,8 @@ define(function(require, exports, module) {
     for( var i = 0; i < numOf; i ++ ){
 
       var mesh = new THREE.Mesh( geo , womb.materialBox );
-      Math.THREE.setRandomVector( mesh.position , womb.size * 2 );
-      Math.THREE.setRandomVector( mesh.rotation , 2 * Math.PI );
+      Math.setRandomVector( mesh.position , womb.size * 2 );
+      Math.setRandomVector( mesh.rotation , 2 * Math.PI );
       womb.scene.add( mesh );
     
     }

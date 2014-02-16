@@ -64,9 +64,8 @@ define(function(require, exports, module) {
     return true;
   }
 
-  M.THREE = {};
 
-  M.THREE.randomPosition = function( size , low ){
+  M.randomPosition = function( size , low ){
 
     var x = M.randomRange( size );
     var y = M.randomRange( size );
@@ -78,7 +77,7 @@ define(function(require, exports, module) {
 
   // Gives random spherical position,  
   // can choose theta and phi distrubtions
-  M.THREE.randomSpherePosition = function( size , theta , phi ){
+  M.randomSpherePosition = function( size , theta , phi ){
 
     var r = M.randomRangePos( size );
     var t;
@@ -97,7 +96,7 @@ define(function(require, exports, module) {
 
 
   // Making a setter, to keep the same vector throughout
-  M.THREE.setRandomVector = function( vector , high , low ){
+  M.setRandomVector = function( vector , high , low ){
 
     if( low ){
 
@@ -113,9 +112,7 @@ define(function(require, exports, module) {
       vector.y = M.randomRange( h );
       vector.z = M.randomRange( h );
 
-
     }
-
 
     return vector;
 
@@ -123,7 +120,7 @@ define(function(require, exports, module) {
 
 
   // Making a setter, to keep the same vector throughout
-  M.THREE.setRandomPosition = function( position , size, low ){
+  M.setRandomPosition = function( position , size, low ){
 
     position.x = M.randomRange( size );
     position.y = M.randomRange( size );
@@ -135,7 +132,7 @@ define(function(require, exports, module) {
 
   // Gives random spherical position,  
   // can choose theta and phi distrubtions
-  M.THREE.randomSpherePosition = function( position ,  size , theta , phi ){
+  M.randomSpherePosition = function( position ,  size , theta , phi ){
 
       var r = M.randomRangePos( size );
       var t;
@@ -155,7 +152,7 @@ define(function(require, exports, module) {
 
 
   // Need to set because would have to be changing quaternion
-  M.THREE.setRandomRotation = function( rotation ){
+  M.setRandomRotation = function( rotation ){
 
     rotation.x = M.randomRangePos( 2 * Math.PI );
     rotation.y = M.randomRangePos( 2 * Math.PI );

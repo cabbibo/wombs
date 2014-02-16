@@ -17,17 +17,10 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    cameraController: 'TrackballControls',
-    modelLoader:      true,
-    textCreator:      true,
-    raycaster:        true,
     title:            'Simplex Noise',
     link:             link, 
     summary:          info,
-    //gui:              true,
-    imageLoader:      true,
     stats:            true,
-    color:            '#100e30' 
   });
 
 
@@ -35,13 +28,13 @@ define(function(require, exports, module) {
   // SHARED UNIFORMS
 
   var size = womb.size / 20;
-  womb.sphereGeo = new THREE.SphereGeometry( size , 500 , 500 );
+  womb.sphereGeo = new THREE.IcosahedronGeometry( size , 6 );
   womb.normalMaterial = new THREE.MeshNormalMaterial();
 
 
   womb.uniforms  = {
 
-    color:      { type: "v3", value: new THREE.Vector3( .9 , .5 , .4 ) },
+    color:      { type: "v3", value: new THREE.Vector3( 2.1 , .5 , .4 ) },
     time:       { type: "f" , value: 0 },
     noiseSize:  { type: "f" , value: 1 },
 
@@ -76,7 +69,7 @@ define(function(require, exports, module) {
       "offset.z = nPos.z;", //+ tan( time / 100.0 );",
       "offset *= noiseSize;",
 
-      "float d = snoise( offset );",
+      "float d = snoise3( offset );",
       "displacement = d + 1.0;",
 
       "pos *= displacement;",

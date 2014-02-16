@@ -1,19 +1,14 @@
 define(function(require, exports, module) {
 
-  function UserMediaTexture( world ){
+  function UserMediaTexture( womb ){
 
+    womb = womb;
+    womb.loader.addToLoadBar();
 
-    
-    this.world  = world;
-    this.womb   = world.womb;
-
-    this.womb.loader.numberToLoad ++;
-
-
-    this.video = document.createElement('video');
-    this.video.width    = 320;
-    this.video.height   = 240;
-    this.video.autoplay = true;
+    video = document.createElement('video');
+    video.width    = 320;
+    video.height   = 240;
+    video.autoplay = true;
 
     
     var hasUserMedia = navigator.webkitGetUserMedia ? true : false;
@@ -25,48 +20,57 @@ define(function(require, exports, module) {
       audio: false,
     };
 
+    var texture = new THREE.Texture();
+
+    texture.video = video;
+    texture.womb  = womb;
+
+
     navigator.getUserMedia( 
       constraints , 
-      this.successCallback.bind( this ) , 
-      this.errorCallback.bind( this ) 
+      successCallback.bind( texture ) , 
+      errorCallback.bind(   texture ) 
     );
+
+    return texture;
 
   }
 
 
-  UserMediaTexture.prototype.successCallback = function( stream ){
+ successCallback = function(  stream ){
 
     this.womb.loader.loadBarAdd();
     
     this.video.src = webkitURL.createObjectURL(stream);
-    this.videoTexture = new THREE.Texture( this.video );
+    this.image = this.video;
 
-    this.material   = new THREE.MeshLambertMaterial({
-      map : this.videoTexture
-    });
+    this.womb.addToUpdateArray( _update.bind( this ) );
 
-    this.onTextureCreated();
+    onTextureCreated.bind( this );
   }
 
-  UserMediaTexture.prototype.onTextureCreated = function(){}
+  onTextureCreated = function(){}
 
-  UserMediaTexture.prototype.errorCallback = function( error ){
+  errorCallback = function( error ){
 
-    console.log( 'It Faileeeed' );
-    console.log( error );
+    this.womb.loader.addFailure( 
+      'User Media Not Created' , 
+      'http://www.html5rocks.com/en/tutorials/getusermedia/intro/'
+    );
+   
 
   }
 
-  UserMediaTexture.prototype._update = function(){
+  _update = function(){
 
     if( this.video.readyState === this.video.HAVE_ENOUGH_DATA ){
-      this.videoTexture.needsUpdate = true;
+      this.needsUpdate = true;
     }
 
-    this.update();
+    update();
   }
 
-  UserMediaTexture.prototype.update = function(){};
+  update = function(){};
 
 
 

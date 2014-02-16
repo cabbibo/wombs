@@ -40,7 +40,7 @@ define(function(require, exports, module) {
 
     if( this.params.texture ){
 
-      this.texture = new AudioTexture( this );
+      this.texture = AudioTexture( this );
     
     }
 
@@ -187,6 +187,8 @@ define(function(require, exports, module) {
 
     this.playing = false;
     this.source.noteOff(0);
+
+    this.createSource();
 
   };
 		

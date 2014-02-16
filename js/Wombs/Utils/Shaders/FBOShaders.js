@@ -71,6 +71,49 @@ define(function(require, exports, module) {
         "}"
       ].join("\n"),
 
+
+      moveAlongLine:[
+
+        "uniform sampler2D tPositions;",
+        "uniform vec3 target;",
+
+        "uniform float speed;",
+
+        "varying vec2 vUv;",
+
+
+        "void main(){",
+
+          "float l = length(target);",
+
+          "vec4 pos = texture2D( tPositions, vUv );",
+
+          "vec3 pos3 = pos.xyz;",
+
+          "float lPos = length( pos3 );",
+          "float ratio = lPos / l;",
+          "if( ratio >= 1.0 ){",
+
+          "}",
+
+          "pos3 += normalize( dVec ) * speed;",
+
+          "float lPos = length( pos3 );",
+          "float ratio = lPos / l;",
+          "if( ratio >= 1.0 ){",
+            "pos3 = vec3( 0.0 , 0.0 , 0.0 );",
+          "}",
+
+          "gl_FragColor = vec4( pos3 , 1.0 );",
+
+        "}"
+
+
+
+
+      ].join("\n"),
+
+
     
       displaceSphere:[
         

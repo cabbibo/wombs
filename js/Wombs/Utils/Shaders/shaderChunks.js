@@ -48,7 +48,7 @@ define(function(require, exports, module) {
 
     "vec2 audioUV( sampler2D t , vec2 uv ){",
       "float x = length( texture2D( t , vec2( uv.x , 0.0 ) ) );",
-      "float y = length( texture2D( t , vec2( uv.x , 0.0 ) ) );",
+      "float y = length( texture2D( t , vec2( uv.y , 0.0 ) ) );",
       "return  vec2( x , y );",
     "}",
 
@@ -270,7 +270,7 @@ define(function(require, exports, module) {
           '\treturn 1.79284291400159 - 0.85373472095314 * r;',
       '}',
       '',
-      'float snoise(vec3 v)',
+      'float snoise3(vec3 v)',
       '{',
           '\tconst vec2  C = vec2(1.0/6.0, 1.0/3.0);',
           '\tconst vec4  D = vec4(0.0, 0.5, 1.0, 2.0);',
@@ -367,7 +367,7 @@ define(function(require, exports, module) {
       '',
       '#define F4 0.309016994374947451',
       '',
-      'float snoise(vec4 v) {',
+      'float snoise4(vec4 v) {',
           '\tconst vec4  C = vec4( 0.138196601125011, 0.276393202250021, 0.414589803375032, -0.447213595499958);',
           '',
           '\tvec4 i  = floor(v + dot(v, vec4(F4)) );',
@@ -440,11 +440,11 @@ define(function(require, exports, module) {
 
     ShaderChunks.noise3D, 
 
-    "vec3 snoise_3( vec3 x ){",
+    "vec3 snoiseVec3( vec3 x ){",
 
-      "float s  = snoise(vec3( x ));",
-      "float s1 = snoise(vec3( x.y - 19.1 , x.z + 33.4 , x.x + 47.2 ));",
-      "float s2 = snoise(vec3( x.z + 74.2 , x.x - 124.5 , x.y + 99.4 ));",
+      "float s  = snoise3(vec3( x ));",
+      "float s1 = snoise3(vec3( x.y - 19.1 , x.z + 33.4 , x.x + 47.2 ));",
+      "float s2 = snoise3(vec3( x.z + 74.2 , x.x - 124.5 , x.y + 99.4 ));",
       "vec3 c = vec3( s , s1 , s2 );",
       "return c;",
 
@@ -465,12 +465,12 @@ define(function(require, exports, module) {
 	    "vec3 dy = vec3( 0.0 , e   , 0.0 );",
 	    "vec3 dz = vec3( 0.0 , 0.0 , e   );",
 
-        "vec3 p_x0 = snoise_3( p - dx );",
-	    "vec3 p_x1 = snoise_3( p + dx );",
-	    "vec3 p_y0 = snoise_3( p - dy );",
-	    "vec3 p_y1 = snoise_3( p + dy );",
-	    "vec3 p_z0 = snoise_3( p - dz );",
-	    "vec3 p_z1 = snoise_3( p + dz );",
+        "vec3 p_x0 = snoiseVec3( p - dx );",
+	    "vec3 p_x1 = snoiseVec3( p + dx );",
+	    "vec3 p_y0 = snoiseVec3( p - dy );",
+	    "vec3 p_y1 = snoiseVec3( p + dy );",
+	    "vec3 p_z0 = snoiseVec3( p - dz );",
+	    "vec3 p_z1 = snoiseVec3( p + dz );",
     
         "float x = p_y1.z - p_y0.z - p_z1.y + p_z0.y;",
 	    "float y = p_z1.x - p_z0.x - p_x1.z + p_x0.z;",

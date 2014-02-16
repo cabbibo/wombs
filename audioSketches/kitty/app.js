@@ -75,8 +75,8 @@ define(function(require, exports, module) {
     // SHARED UNIFORMS
     womb.u = {
 
-      texture:    { type: "t", value: womb.stream.texture.texture },
-      image:      { type: "t", value: womb.stream.texture.texture },
+      texture:    { type: "t", value: womb.stream.texture },
+      image:      { type: "t", value: womb.stream.texture },
       color:      { type: "v3", value: new THREE.Vector3( .2 , .5 , .4 ) },
       time:       womb.time,
       pow_noise:  { type: "f" , value: 0.5 },

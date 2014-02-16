@@ -117,7 +117,7 @@ define(function(require, exports, module) {
 
 
   womb.stream.play();
-  womb.textureArray.push( womb.stream.texture.texture );
+  womb.textureArray.push( womb.stream.texture );
   womb.loader.loadBarAdd();
 
 
@@ -143,8 +143,8 @@ define(function(require, exports, module) {
     // SHARED UNIFORMS
     womb.u = {
 
-      texture:    { type: "t", value: womb.stream.texture.texture },
-      image:      { type: "t", value: womb.stream.texture.texture },
+      texture:    { type: "t", value: womb.stream.texture },
+      image:      { type: "t", value: womb.stream.texture },
       color:      { type: "v3", value: new THREE.Vector3( 1 , .5 , .4 ) },
       time:       womb.time,
       pow_noise:  { type: "f" , value: 0.2 },

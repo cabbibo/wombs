@@ -14,36 +14,13 @@ define(function(require, exports, module) {
   
   womb = new Womb({
     cameraController: 'TrackballControls',
-    modelLoader:      true,
-    textCreator:      true,
-    raycaster:        true,
-    //title:            'Philip Glass - Knee 1 ( Nosaj Thing Remix )',
-    //link:             link, 
-    //summary:          info,
-    //gui:              true,
-    imageLoader:      true,
     neededTech:       [ 'webGL' , 'audio' ],
-    //stats:            true,
     color:            '#000000',
-    size: 400
   });
 
 
   womb.stream = womb.audioController.createUserAudio();
   womb.audioController.gain.gain.value = 0;
-
-  /*womb.ps = new PhysicsSimulator( womb , {
-
-    textureWidth: 500,
-    debug: false,
-    velocityShader: physicsShaders.velocity.curl,
-    velocityStartingRange:.0000,
-    positionStartingRange:.000002,
-    positionShader: physicsShaders.positionAudio4,
-    bounds: 50,
-    speed: .1
-    
-  })*/
 
   womb.stream.onStreamCreated =  function(){
 
@@ -51,8 +28,8 @@ define(function(require, exports, module) {
 
     womb.u = {
 
-      texture:    { type: "t", value: womb.stream.texture.texture },
-      image:      { type: "t", value: womb.stream.texture.texture },
+      texture:    { type: "t", value: womb.stream.texture },
+      image:      { type: "t", value: womb.stream.texture },
       color:      { type: "v3", value: new THREE.Vector3( .5 , .9 , .7 ) },
       time:       womb.time,
       pow_noise:  { type: "f" , value: 0.2 },
@@ -65,7 +42,7 @@ define(function(require, exports, module) {
         womb.u,
     ]);
 
-    uniforms.texture.value = womb.stream.texture.texture;
+    uniforms.texture.value = womb.stream.texture;
     uniforms.time=  womb.time  ;
 
     var mat = new THREE.ShaderMaterial({
@@ -75,8 +52,9 @@ define(function(require, exports, module) {
       fragmentShader: fragmentShaders.audio.color.uv.absDiamond,
       blending: THREE.AdditiveBlending,
       transparent: true,
-      //side: THREE.BackSide,
+
     });
+
     var geo = new THREE.CubeGeometry( 100 , 100 , 100 );
     var mesh = new THREE.Mesh( geo , mat );
 
@@ -85,27 +63,6 @@ define(function(require, exports, module) {
   }
 
   womb.loader.loadBarAdd();
-  
-  womb.update = function(){
-
-    //womb.ps._update();
-
-    //render();
-    
-  }
-
-  womb.start = function(){
-
-   // womb.stream.play();
-  }
-
-  womb.raycaster.onMeshHoveredOver = function(){
-
-  }
-
-  womb.raycaster.onMeshHoveredOut = function(){
-
-  }
   
 
 });

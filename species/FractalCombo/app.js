@@ -1,7 +1,9 @@
 define(function(require, exports, module) {
 
-  var Womb                = require( 'Womb/Womb'             );
-  var FractalCombo        = require( 'Species/FractalCombo'  );
+  var Womb      = require( 'Womb/Womb'                      );
+ 
+  var Material  = require( 'Species/Materials/FractalCombo' );
+  var Mesh      = require( 'Components/Mesh'                );
 
   
   /*
@@ -14,17 +16,36 @@ define(function(require, exports, module) {
   
   womb = new Womb({
     cameraController: 'TrackballControls',
-    title:            'FractalCombo',
-    link:             link, 
-    summary:          info,
     stats:            true,
-    color:            '#000000',
-    failureVideo:     84019684,
-    size:             400,
   });
 
-  console.log( 'WHOA' );
-  womb.fractalCombo = new FractalCombo( womb );
+  being = womb.creator.createBeing();
+
+  var file = '/lib/audio/tracks/weddingBellsLoop.wav'
+  var audio = womb.audioController.createLoop( file );
+  material = new Material( womb , {
+  
+    //noisePower:0,
+    //texturePower:5
+    texture: audio.texture.texture
+    
+  });
+  
+  fractalCombo = new Mesh( being , {
+    geometry: new THREE.IcosahedronGeometry( womb.size / 10 , 7 ),
+    material: material,
+  });
+
+  fractalCombo.add();
+
+ /* womb.scene.add( new THREE.AmbientLight( 0xc0ffee ) );
+  var mesh = new THREE.Mesh( 
+      womb.defaults.geometry , 
+     material 
+  );
+
+ womb.scene.add( mesh )
+  console.log( fractalCombo );*/
 
   womb.loader.loadBarAdd();
 
@@ -34,9 +55,10 @@ define(function(require, exports, module) {
 
   womb.start = function(){
 
-    womb.fractalCombo.enter();
-    womb.fractalCombo.audio.play();
-    womb.fractalCombo.updateSeed = true;
+    audio.play();
+    being.enter();
+    console.log( fractalCombo );
+    fractalCombo.material.updateSeed = true;
 
   }
 

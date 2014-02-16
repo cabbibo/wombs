@@ -4,12 +4,20 @@ define(function(require, exports, module) {
 
   function remove(){
 
+    if( this.being ){
+
     this.being.removeFromScene( this );
     for( var i = 0; i < this.being.meshes.length; i++ ){
 
       if( this.being.meshes[i] == this ){
-        this.beiing.meshes.splice( i , 1 );
+        this.being.meshes.splice( i , 1 );
       }
+
+    }
+
+    }else{
+      console.log( 'The following mesh has no being:' );
+      console.log( this );
 
     }
 
@@ -17,8 +25,17 @@ define(function(require, exports, module) {
 
   function add(){
 
-    this.being.addToScene( this );
-    this.being.meshes.push( this );
+    if( this.being ){
+
+      this.being.addToScene( this );
+      this.being.meshes.push( this );
+
+    }else{
+
+      console.log( 'The following mesh has no being:' );
+      console.log( this );
+
+    }
 
   }
 
@@ -32,25 +49,13 @@ define(function(require, exports, module) {
     });
 
     var mesh = new THREE.Mesh( params.geometry , params.material );
-    
-    if( params.geometry._update ){
-      mesh.geometry._update = params.geometry._update.bind( mesh.geometry );
-      being.addToUpdateArray( mesh.geometry._update );
-    }
 
-    if( params.material._update ){
-      mesh.material._update = params.material._update.bind( mesh.material );
-      being.addToUpdateArray( mesh.material._update );
-    }
 
+    mesh.being  = being;
     mesh.params = params;
-    mesh.being = being;
 
+    mesh.add = add.bind( mesh );
     mesh.remove = remove.bind( mesh );
-    mesh.add    = add.bind( mesh );
-
-
-    being.meshes.push( mesh );
 
     return mesh
 

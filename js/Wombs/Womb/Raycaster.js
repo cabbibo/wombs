@@ -53,8 +53,18 @@ define(function(require, exports, module) {
     this.oIntersections = this.intersections;
     this.intersections  = this.r.intersectObjects( this.womb.scene.children , true );
 
-    //console.log( this.oIntersections );
-    //console.log( this.intersections );
+    // Gets rid of any meshes that we are ignoring
+    var length = this.intersections.length;
+    for( var i = 0 ; i < this.intersections.length; i++ ){
+
+      if( this.intersections[i].object.ignoreRaycast ){
+        this.intersections.splice( i , 1 );
+        i --;
+        length = this.intersections.length;
+      }
+
+    }
+
 
     if( this.intersections.length !== this.oIntersections.length ){
 

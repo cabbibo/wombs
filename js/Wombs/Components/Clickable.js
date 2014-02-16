@@ -6,32 +6,34 @@ define(function(require, exports, module) {
   function onHoverOver(){
 
     this.hovered = true;
-    this.clickableParams.onHoverOver();
-
+    var f = this.clickableParams.onHoverOver.bind( this );
+    f();
   }
 
   function onHoverOut(){
 
     this.hovered = false;
-    this.clickableParams.onHoverOut();
-
+    var f = this.clickableParams.onHoverOut.bind( this );
+    f();
+  
   }
 
   function onClick(){
 
     if( this.hovered == true ){
-      this.clickableParams.onClick();
+      var f = this.clickableParams.onClick.bind( this );
+      f();
     }
 
   }
 
-  function Clickable( mesh , womb ,  parameters ){
+  function Clickable( mesh , parameters ){
 
     params = _.defaults( parameters || {} , {
 
-      onClick:      function(){ console.log( 'clicked'      ) },
-      onHoverOver:  function(){ console.log( 'hovered over' ) },
-      onHoverOut:   function(){ console.log( 'hovered out'  ) },
+      onClick:      function(){},
+      onHoverOver:  function(){},
+      onHoverOut:   function(){},
 
     });
 

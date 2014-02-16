@@ -8,18 +8,9 @@
 Constant Work In Progress. Feel Free To Jump in and help out, or send me any suggestions!
 @cabbibo
 
-
-//SHADER NOTES:
-
-  - If using THREE.js shaders, need to reassign the values assigned in the original shader
-  - using SC.modelView, because we want to do all teh 'pos' stuff BEFORE we define
-  - Flip flop is to change from one mat to another
-
-
-// TODO NOTES:
-
-
-
+  Good Articles to keep in mind:
+  http://substack.net/many_things
+specifically: "If your framework melts away into an informal collection of modules that happen to work well together but can be easily repurposed by people who don't use the framework, then you have built something very sublime."
 
   PRE ALPHA:
 
@@ -33,8 +24,19 @@ Constant Work In Progress. Feel Free To Jump in and help out, or send me any sug
   - Try to set up some standards for vertex and fragment shaders,
     - so it is easier to seperate the two!
 
+  - Soundcloud Grabber
+  - More Vertex shaders!
+  - More Fragment Shaders!
 
-  - Textures should be utils, not in Wombs!
+  - Cross hatch shader and some of jaume's tools  
+  - create 'transition shader'
+
+  - FBO GPU Particle Shader!
+
+  - Projects: 
+    -Meta Balls!
+
+  - loader conditions!
 
 
   Organization:
@@ -136,106 +138,12 @@ Constant Work In Progress. Feel Free To Jump in and help out, or send me any sug
   - loader.failureDOM to be called whenever a application doesn't work.
 
 
-  /Time
-      - including on specific beats, at certain times, 
-
-
-
-
-
-
-  /*
-
-     SHADERS
-
-  */
-
-  // Update ShaderLib
-    - Grab some new shaders for shaderLib:
-    - Cross hatch shader and some of jaume's tools
-      
-  // Data to JSON GPU SHADER
-  
-    - create 'transition shader'
-
-
-
-  // Create Meta Balls
-
-
-
-
-
-  /*
-
-     ORGANIZATION
-
-  */
-
-
-  /*
-
-    STORY IDEA:
-
-    Holy other Album Music Video
-    Music game mixtape
-    Universe Of Sound remix
-    ASMR Kids book
-
-    
-
-  */
-
-
-  /*
-
-    Holy Other Almbum Music 
-
-  */
-
-  // Chapter 1: ( W )here
-
-    0:00
-    - Rocket ship blasting off into space ( entering the unknown ), 
-    - begin seeing new things,
-        - Possibly a ring sort of like omsi
-        - physchedlic 
-        -similar to 'I nevernt Learned to Share' Animation
-        -On 
-
-
-  // Chapter 1: Loss
-  // Entropy and disappation. 
-  users can follow whatever path they want, and by the end get to 'earth'
-
-
-
-  // WE OVER:
-
-  Lead users along path by showing them orbs that they can follow if they wish to.
-  - Create 'possible points' array of next 'guide orb', one orb per 'section'
-  - Each 'section' test for closest 'guide orb',
-  - some sort of sub-particle system spawns for each guide orb to give the users comfort,
-    and reward them for following path. 
-
-
-  - end of Path is Earth which leads to :
-
-
- 
-  // NEXT SONG
-
-  - The path of lonliness ( aka not hitting any guides has its own reward if user makes it to the end ( 
-        easter egg )
-  
-  
-  // THANK YOU NOTES:
-
   http://threejs.org
 
   Reza Ali
   Robbie
-  http://jabtunes.com/labs/3d/gpuflocking/webgl_gpgpu_flocking3.html
+  Tim Chin
+  ZZ85
   Theo Armor
 
   West Langley

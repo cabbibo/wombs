@@ -31,57 +31,41 @@
 
 define(function(require, exports, module) {
  
-  var placementFunctions  = require( 'Utils/PlacementFunctions'   );
-  var Duplicator          = require( 'Components/Duplicator'      );
-  var FractalCombo        = require( 'Species/Meshes/FractalCombo');
+  var placementFunctions  = require( 'Utils/PlacementFunctions'       );
+  var Mesh                = require( 'Components/Mesh'                );
+  var Duplicator          = require( 'Components/Duplicator'          );
+  var FractalCombo        = require( 'Species/Materials/FractalCombo' );
   
   function FractalBeing( womb , parameters ){
 
     womb.loader.addToLoadBar();
 
     var params = _.defaults( parameters || {} , {
-
-      
-      spin:       .001,
-      
-      color:      new THREE.Vector3( 0.5 , 0.0 , 1.5 ),
-      
-      seed:       new THREE.Vector3( -0.7 , -0.8 ,  -0.9),
-      seed1:      new THREE.Vector3( -0.7 , -0.6 ,  -0.5),
-      seed2:      new THREE.Vector3( -0.6 , -0.6 ,  -0.6),
-      seed3:      new THREE.Vector3( -0.9 , -0.6 ,  -0.8),
-      seed4:      new THREE.Vector3( -0.6 , -0.8 ,  -0.7),
-      
-      speed:       10,
-      lightness:   .9,
-      radius:      10,
-
-      audioPower: 0.8,
-      noisePower: 0.4,
-      opacity:      1,
-      complexity:   5,
-      variance:    .5,
-      influence:    3,
-
-      size: .1,
-
-      numOf:                                   5,
-      placementFunction: placementFunctions.ring,
-      placementSize:               womb.size / 4,
-
-      audio:      womb.audioController.createLoop( '/lib/audio/loops/dontReallyCare/1.mp3' ),
-      additive:   false, 
  
-      geo:        new THREE.IcosahedronGeometry( 50 , 5 ),
+      geometry:        new THREE.IcosahedronGeometry( 50 , 5 ),
+      size:             1, 
  
+      numOf:            10,
+      placementFunction:        placementFunctions.ring,
+      placementSize:             womb.size / 4
+
     });
    
     var being = womb.creator.createBeing();
 
-    console.log( being );
-    var fractalMesh = new FractalCombo( being , params ); 
 
-    var duplicator = new Duplicator( fractalMesh , {
+    // THIS! is where the sexiness comes from!
+    // making sure to pass through parameters
+    var fractalMaterial = new FractalCombo( womb , params ); 
+
+    var fractalMesh = new Mesh( being , {
+      geometry: params.geometry,
+      material: fractalMaterial
+    });
+
+    fractalMesh.scale.multiplyScalar( params.size );
+    
+    var duplicator = new Duplicator(  fractalMesh , being , {
      
       numOf:              params.numOf,
       placementFunction:  params.placementFunction,
@@ -92,7 +76,7 @@ define(function(require, exports, module) {
     duplicator.addAll();
     duplicator.placeAll();
 
-    being.mesh = fractalMesh;
+    being.fractal = fractalMesh;
     being.duplicator = duplicator;
 
     womb.loader.loadBarAdd();

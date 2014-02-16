@@ -1,7 +1,23 @@
+/*
+
+   DUPLICATOR:
+
+   A duplicator will take a mesh and create multiople copies of it,
+   however, its main mesh will be the only one doing the updating,
+   so that we don't have excess updates.
+
+   Additionally, it will only add the main mesh to the meshes
+   of the being, because we will only do things to the main mesh,
+   all the other meshes will reflect these changes, but we only need
+   to be altering a single mesh!
+
+
+*/
+
 define(function(require, exports, module) {
 
-                           require( 'lib/three.min' );
-  var placementFunctions = require( 'Utils/PlacementFunctions' );
+                           require( 'lib/three.min'             );
+  var placementFunctions = require( 'Utils/PlacementFunctions'  );
 
 
   // Adds All of the Meshes to the being
@@ -43,21 +59,40 @@ define(function(require, exports, module) {
 
   function tweenAll(){
 
+    for( var i = 0; i < this.meshes.length; i++ ){
+  
+      var t = womb.tweener.createTween({
+        object: this.meshes[i],
+        target: this.placements[i].position,
+        type: 'position'
+      });
+
+      t.start();
+
+    }
 
   }
 
+  function loopThroughMeshes( callback ){
+
+    for( var i = 0; i < this.meshes.length; i++ ){
+      callback( this.meshes[i] );
+    }
+
+  }
   function returnAll(){
 
 
+
   }
 
-  function Duplicator( mesh , parameters ){
+  function Duplicator( mesh , being ,  parameters ){
 
     params = _.defaults( parameters || {} , {
 
       numOf: 10,
       placementFunction: placementFunctions.ring,
-      size: mesh.being.womb.size / 4
+      size: being.womb.size / 4
 
     });
 
@@ -65,16 +100,19 @@ define(function(require, exports, module) {
     
     // Make sure we add the original to the 
     // duplicator, for the sake of removal
-    meshes.push( mesh );
+    for( i = 0; i < params.numOf; i++ ){ 
+
+      if( i == 0 )
+        meshes.push( mesh );
+      else
+        meshes.push( new THREE.Mesh(  mesh.geometry , mesh.material ));
     
-    for( i = 1; i< params.numOf; i++ ){  
-      meshes.push( mesh.clone() );
     }
 
     var duplicator = {};
 
     duplicator.mainMesh           = mesh;
-    duplicator.being              = mesh.being;
+    duplicator.being              = being;
     duplicator.meshes             = meshes;
     duplicator.placementFunction  = params.placementFunction;
     duplicator.size               = params.size;
@@ -85,8 +123,10 @@ define(function(require, exports, module) {
     duplicator.tweenAll   = tweenAll.bind(  duplicator );
     duplicator.returnAll  = returnAll.bind( duplicator );
 
-    duplicator.placements = duplicator.placementFunction( params.numOf , params.size 
-  );   
+    duplicator.loopThroughMeshes = loopThroughMeshes.bind( duplicator);
+
+    duplicator.placements = duplicator.placementFunction( params.numOf , params.size );  
+    console.log( duplicator.placements );
  
     return duplicator;
 
