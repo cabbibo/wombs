@@ -157,6 +157,9 @@ define(function(require, exports, module) {
     emitter.being.addToScene( emitter );
 
     emitter.timer     = 0;
+    
+    // Gives an offset so all emitters start at different times!
+    emitter.timer += Math.random() * params.emissionRate;
 
 
     // Reassigning ever

@@ -98,8 +98,10 @@ define(function(require, exports, module) {
   // Making a setter, to keep the same vector throughout
   M.setRandomVector = function( vector , high , low ){
 
-    if( low ){
+    console.log('sh' );
+    if( typeof low !== undefined ){
 
+      console.log(high , low );
       vector.x = M.randomRangePos( high , low );
       vector.y = M.randomRangePos( high , low );
       vector.z = M.randomRangePos( high , low );

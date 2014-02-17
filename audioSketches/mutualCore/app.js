@@ -19,7 +19,8 @@ define(function(require, exports, module) {
   var FBOParticles        = require( 'Species/FBOParticles'       );
   var physicsShaders      = require( 'Shaders/physicsShaders'     );
   var physicsParticles    = require( 'Shaders/physicsParticles'   );
-  
+ 
+
   /*
    
      Create our womb
@@ -29,10 +30,7 @@ define(function(require, exports, module) {
   var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   womb = new Womb({
-    title:            'Wedding Bells - Cashmere Cat',
-    link:             link, 
-    summary:          info,
-    stats: true
+    //stats: true
   });
 
   /*
@@ -52,7 +50,7 @@ define(function(require, exports, module) {
   var file = '/lib/audio/tracks/mutualCore.mp3';
 
   womb.audio = womb.audioController.createStream( file  );
-  womb.audioController.gain.gain.value = 0;
+  //womb.audioController.gain.gain.value = 0;
 
   /*
   
@@ -64,6 +62,7 @@ define(function(require, exports, module) {
   womb.modelLoader.loadFile( 
     'OBJ' , 
     '/lib/models/leeperrysmith/LeePerrySmith.obj' , 
+    //'/lib/models/skull_superlow.obj' , 
 
     function( object ){
 
@@ -74,11 +73,29 @@ define(function(require, exports, module) {
         var geo = object[0];
         geo.computeFaceNormals();
         geo.computeVertexNormals();
+        //geo.computeBoundingSphere();
+        //geo.computeBoundingBox();
+
+        /*for(var i = 0; i < geo.vertices.length; i++ ){
+  
+          geo.vertices[i].y -= .01;
+
+        }*/
+ 
+        geo.verticesNeedUpdate = true;
+        //THREE.GeometryUtils.center(geo);
+
         
         womb.modelLoader.assignUVs( geo );
-        var m = new THREE.Mesh( geo , womb.defaults.material );
+        var m = new THREE.Mesh( geo , new THREE.MeshBasicMaterial({
+            color:0x000000,
+            //wireframe:true
+          })
+        );
         m.scale.multiplyScalar( 1000 );
+        //THREE.GeometryUtils.center( m );
 
+        //womb.scene.add( m );
         var newGeo = new THREE.Geometry();
        
         THREE.GeometryUtils.merge( newGeo , m );
@@ -89,7 +106,11 @@ define(function(require, exports, module) {
           geometry: newGeo
         });
 
-        
+        womb.fboParticles.particles.scale.multiplyScalar( .05 );
+        m.scale.multiplyScalar( .05 );
+
+        womb.fboParticles.body.add( m );
+              
       }
     }
   
@@ -242,7 +263,7 @@ define(function(require, exports, module) {
 
       maxMeshes: 1000 / numOfClickables,
       decayRate: .97,
-      emissionRate: 100 / numOfClickables
+      emissionRate: Math.random() * 500 / numOfClickables
 
       
     });
@@ -323,6 +344,16 @@ define(function(require, exports, module) {
 
   }
 
+  function randomizeMaterialColors(){
+
+
+    Math.setRandomVector( hoverColor , 2 , 0 );
+    Math.setRandomVector( neutralColor , 2 , 0  );
+    Math.setRandomVector( selectedColor , 2 , 0 );
+    Math.setRandomVector( selectedHoverColor, 2 , 0  );
+
+  }
+
   function unselectMesh( mesh ){
 
     mesh.selected = false;
@@ -385,6 +416,7 @@ define(function(require, exports, module) {
 
   function allMeshesSelected(){
 
+    randomizeMaterialColors();
  
     if( round == 0 ){
 
@@ -444,7 +476,7 @@ define(function(require, exports, module) {
 
     }else if( round == 3 ){
 
-      womb.clickableBeing.exit();
+      unselectAllMeshes();
 
       var t = womb.tweener.createTween({
 
@@ -461,6 +493,22 @@ define(function(require, exports, module) {
       });
 
       t.start();
+
+
+    }else if( round == 4 ){
+
+
+      womb.clickableBeing.exit();
+      womb.fboParticles.enter();
+
+     /* var t = womb.tweener.createTween({
+
+   
+      });
+
+      t.start();*/
+
+
 
 
     }

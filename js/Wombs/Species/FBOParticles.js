@@ -173,6 +173,7 @@ define(function(require, exports, module) {
     var being = womb.creator.createBeing();
  
     being.addMesh( particles ); 
+    being.particles = particles;
 
     womb.loader.loadBarAdd();
 
