@@ -16,6 +16,7 @@ define(function(require, exports, module) {
   var shaderChunks        = require( 'Shaders/shaderChunks'       );
 
   var PhysicsSimulator    = require( 'Species/PhysicsSimulator'   );
+  var FBOParticles        = require( 'Species/FBOParticles'       );
   var physicsShaders      = require( 'Shaders/physicsShaders'     );
   var physicsParticles    = require( 'Shaders/physicsParticles'   );
   
@@ -51,13 +52,49 @@ define(function(require, exports, module) {
   var file = '/lib/audio/tracks/mutualCore.mp3';
 
   womb.audio = womb.audioController.createStream( file  );
-  //womb.audioController.gain.gain.value = 0;
+  womb.audioController.gain.gain.value = 0;
 
   /*
   
     SETTING UP OBJECTS!
 
   */
+
+ 
+  womb.modelLoader.loadFile( 
+    'OBJ' , 
+    '/lib/models/leeperrysmith/LeePerrySmith.obj' , 
+
+    function( object ){
+
+      if( object[0] instanceof THREE.Mesh ){
+      }
+
+      if( object[0] instanceof THREE.Geometry ){
+        var geo = object[0];
+        geo.computeFaceNormals();
+        geo.computeVertexNormals();
+        
+        womb.modelLoader.assignUVs( geo );
+        var m = new THREE.Mesh( geo , womb.defaults.material );
+        m.scale.multiplyScalar( 1000 );
+
+        var newGeo = new THREE.Geometry();
+       
+        THREE.GeometryUtils.merge( newGeo , m );
+
+        womb.fboParticles = new FBOParticles({
+          audioTexture: womb.audio.texture,
+          numberOfParticles:1000000,
+          geometry: newGeo
+        });
+
+        
+      }
+    }
+  
+  );
+
   womb.fractal1 = new FractalBeing( womb, {
 
     geometry: new THREE.CubeGeometry(
