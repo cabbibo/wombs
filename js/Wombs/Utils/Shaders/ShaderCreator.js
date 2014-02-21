@@ -366,10 +366,10 @@ define(function(require, exports, module) {
 
         }
 
+    // Creating 
     }else if( uOrV == 'varying' ){
 
       array[name] = type;
-
 
     }else{
   
