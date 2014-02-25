@@ -1,80 +1,55 @@
 define(function(require, exports, module) {
 
-  var Womb                = require( 'Womb/Womb'                          );
-  
-  var UserMediaTexture    = require( 'Womb/Textures/UserMediaTexture'     );
-  var physicsParticles    = require( 'Shaders/PhysicsParticles'           );
-  var TextureParticles    = require( 'Species/Materials/TextureParticles' );
-  var shaderChunks    = require( 'Shaders/ShaderChunks'               );
+  var Womb                = require( 'Womb/Womb'              );
+  var ShaderCreator       = require( 'Shaders/ShaderCreator'  );
 
-  var MeshEmitter     = require( 'Components/MeshEmitter' );
-  var Mesh            = require( 'Components/Mesh' );
- 
-  var ShaderCreator       = require( 'Shaders/ShaderCreator' );
-
-  /*
-   Create our womb
-
-  */
-  
   var womb = new Womb({
     stats: true,
   });
 
+  var file  = '/lib/audio/tracks/weddingBellsLoop.wav' ;
+  var audio = womb.audioController.createLoop( file );
+
+  console.log( audio );
   vertexChunk = [
-
+    "nPos = normalize(pos);",
     "vec3 offset;",
-    "offset.x = nPos.x + cos( Time / 100.0 );",
-    "offset.y = nPos.y + sin( Time / 100.0 );",
-    "offset.z = nPos.z;", //+ tan( time / 100.0 );",
-    "offset *= .01;",
-    "float dNoise = snoise3( offset );",
-    "pos += vec3( uv.x , uv.y , 0.0 );" 
+    "offset.x = nPos.x + Time * .3;",
+    "offset.y = nPos.y + Time * .2;",
+    "offset.z = nPos.z + Time * .24;",
+    "vec2 a = vec2( abs( nPos.x ) , 0.0 );",
+    "float audio = texture2D( AudioTexture , a).r;",
+    "vDisplacement = .5 * snoise3( offset ) * audio * audio;",
+    "pos *= abs( vDisplacement + 3.0 );",
 
-  ]
+  ];
 
   fragmentChunk = [
-    "color = abs( nPos );"
+    "color = abs( nPos + vDisplacement);" 
   ];
 
   womb.shader = new ShaderCreator({
-
     vertexChunk:   vertexChunk,
     fragmentChunk: fragmentChunk,
-    uniforms:{
-      Time: womb.time
+    uniforms:{ 
+      Time:         womb.time,
+      AudioTexture: {type:"t" , value:audio.texture}
+    
     },
-
-    transparent:  true,
-    blending:     THREE.AdditiveBlending
-
   });
 
-  womb.shader.material.blending = THREE.AdditiveBlending;
-  womb.shader.material.transparent = true;
-
-  console.log( THREE.AdditiveBlending );
-  console.log('sd');
-
   var mesh = new THREE.Mesh(
-    womb.defaults.geometry,
+    new THREE.IcosahedronGeometry( womb.size / 4  , 5 ),
     womb.shader.material
   );
 
   womb.scene.add( mesh );
   womb.loader.loadBarAdd();
-  
-  console.log( womb.shader );
-
-
-
-  womb.update = function(){
-  
-  }
 
   womb.start = function(){
-  
-  }
 
+    audio.play();
+
+  }
 
 });

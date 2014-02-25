@@ -87,8 +87,6 @@ define(function(require, exports, module) {
       imageData.data[index+3] = a;
 
   }
-
-
   
   module.exports = AudioTexture;
 

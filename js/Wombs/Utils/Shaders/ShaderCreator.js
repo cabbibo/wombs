@@ -8,7 +8,7 @@
   - create a 'debug' bool which will tell you about all the different parts of the shader ( simple console log is good enough for now )
   - Make it so that somehow, and thing defined in fragment shader that has a 
     camel case vLetter will be created as a varying
-
+  - make fog a parameter
   
 
   Parts of a Vert Shader:
@@ -164,6 +164,7 @@ define(function(require, exports, module) {
     [ "DisplacementPower"     , "float"     ],
     [ "DisplacementOffset"    , "float"     ],
     [ "Time"                  , "float"     ],
+    [ "NoiseSize"             , "float"     ],
     [ "Color"                 , "vec3"      ],
 
   ];
@@ -198,7 +199,7 @@ define(function(require, exports, module) {
       // Properties of the actual material
       blending:     THREE.AdditiveBlending,
       transparent:  false,
-      depthWrite:   false,
+      depthWrite:   true,
 
       fractalPrecision: 15,
 
@@ -278,12 +279,14 @@ define(function(require, exports, module) {
       manipulation:     this.params.fragmentChunk
     });
 
+    console.log( 'defe' );
+    console.log( this.vertexDefineChunk );
 
     this.vertexShader = this.createShaderString({
 
       uniformChunk: this.vertexUniformChunk,
       varyingChunk: this.varyingChunk,
-      definesChunk: this.vertexDefineChunk,
+      defineChunk: this.vertexDefineChunk,
       mainChunk:    this.vertexMainChunk
 
     });
@@ -292,7 +295,7 @@ define(function(require, exports, module) {
 
       uniformChunk: this.fragmentUniformChunk,
       varyingChunk: this.varyingChunk,
-      definesChunk: this.fragmentDefineChunk,
+      defineChunk: this.fragmentDefineChunk,
       mainChunk:    this.fragmentMainChunk
 
     });
@@ -304,9 +307,9 @@ define(function(require, exports, module) {
       vertexShader:   this.vertexShader,
       fragmentShader: this.fragmentShader,
 
-      //blending:       this.params.blending,
-      //transparent:    this.params.transparent,
-      //depthWrite:     this.params.depthWrite,
+      blending:       this.params.blending,
+      transparent:    this.params.transparent,
+      depthWrite:     this.params.depthWrite,
 
     });
   
@@ -468,6 +471,8 @@ define(function(require, exports, module) {
             type:   threeU[1],
             value:  threeU[2]
           }
+
+          console.log( uniforms[u[0]] );
 
         }
 
