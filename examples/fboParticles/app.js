@@ -17,7 +17,7 @@ define(function(require, exports, module) {
   var helperFunctions     = require( 'Utils/helperFunctions'      );
   var m                   = require( 'Utils/Math'                 );
 
-  var Mesh                = require( 'Components/Mesh'       );
+  var Mesh                = require( 'Components/Mesh'            );
   var FBOParticles        = require( 'Species/FBOParticles'       );
   
   //var shaderCreator       = require( 'Shaders/ShaderCreator' );

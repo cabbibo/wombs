@@ -8,8 +8,9 @@ define(function(require, exports, module) {
 
       width: 640,
       height: 480,
-      file: '/lib/videos/sintel.mp4',
+      file: '/lib/video/sintel.mp4',
 
+      showOriginalVideo: false,
 
     });
 
@@ -21,21 +22,20 @@ define(function(require, exports, module) {
 
     this.video.width          = this.width;
     this.video.height         = this.height;
-    this.video.style.zIndex   = '999';
-    this.video.style.position = 'absolute';
-    this.video.style.right    = '-400px';
-
-    console.log( this.video );
 
     this.video.src = this.params.file;
-
-    console.log( this.video );
 
     this.video.type = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
 
     this.video.load(); // must call after setting/changing source
-	this.video.play();
-    document.body.appendChild( this.video );
+	//this.video.play();
+
+
+    if( params.showOriginalVideo ){
+      document.body.appendChild( this.video );
+      this.video.style.zIndex   = '999';
+      this.video.style.position = 'absolute';
+    }
 
 
 
@@ -45,7 +45,7 @@ define(function(require, exports, module) {
 
 	this.videoImageContext = this.videoImage.getContext( '2d' );
 	// background color if no video present
-	this.videoImageContext.fillStyle = '#000000';
+	this.videoImageContext.fillStyle = '#ff0000';
 	this.videoImageContext.fillRect( 0 , 0 , this.width , this.height );
 
     this.videoTexture = new THREE.Texture( this.videoImage );
@@ -64,9 +64,14 @@ define(function(require, exports, module) {
 
   }
 
+  VideoTexture.prototype.play = function(){
+    this.video.play();
+  }
+
 
   VideoTexture.prototype._update = function(){
 
+    //console.log( 'HELLO' );
       if ( this.video.readyState === this.video.HAVE_ENOUGH_DATA ) {
 
         if ( this.texture ) this.texture.needsUpdate = true;

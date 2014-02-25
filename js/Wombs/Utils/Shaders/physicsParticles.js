@@ -82,6 +82,51 @@ define(function(require, exports, module) {
 
       ].join("\n"),
 
+      lookupPrecision: [
+
+        "uniform sampler2D lookup;",
+        "uniform sampler2D lookupP;",
+
+        "uniform float size;",
+        "uniform float scale;",
+
+        "varying vec2 lookupuv;",
+
+        "varying vec4  pos;",
+
+        THREE.ShaderChunk[ "color_pars_vertex" ],
+        THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
+
+        "void main() {",
+
+          THREE.ShaderChunk[ "color_vertex" ],
+
+
+          "lookupuv = position.xy + vec2( 0.5 / 32.0 , 0.5 / 32.0 );",
+         // "lookupuv = uv;",
+
+          //"pos  = texture2D( lookup, lookupuv );",
+          "pos   = texture2D( lookup, lookupuv );",
+          "pos  += texture2D( lookupP , lookupuv )/64.0;",
+
+          // position
+          "vec4 mvPosition = modelViewMatrix * vec4( pos.xyz , 1.0 );",
+
+          "#ifdef USE_SIZEATTENUATION",
+            "gl_PointSize = size * ( scale / length( mvPosition.xyz ) );",
+          "#else",
+            "gl_PointSize = size ;",
+          "#endif",
+
+          "gl_Position = projectionMatrix * mvPosition;",
+
+          THREE.ShaderChunk[ "worldpos_vertex" ],
+          THREE.ShaderChunk[ "shadowmap_vertex" ],
+
+        "}"
+
+      ].join("\n"),
+
 
       velocityLookup: [
 
@@ -143,6 +188,8 @@ define(function(require, exports, module) {
 
           
           "lookupuv = position.xy + vec2( 0.5 / 32.0 , 0.5 / 32.0 );",
+          
+          
           "pos = texture2D( lookup, lookupuv );",
 
           // position
@@ -189,11 +236,11 @@ define(function(require, exports, module) {
 
           "gl_FragColor = vec4( psColor, opacity );",
 
-          "gl_FragColor = gl_FragColor * texture2D( map, vec2( gl_PointCoord.x, 1.0 - gl_PointCoord.y ) );",
-          "if ( gl_FragColor.a < .01) discard;",
+          //"gl_FragColor = gl_FragColor * texture2D( map, vec2( gl_PointCoord.x, 1.0 - gl_PointCoord.y ) );",
+          //"if ( gl_FragColor.a < .01) discard;",
         
           THREE.ShaderChunk[ "shadowmap_fragment" ],
-          THREE.ShaderChunk[ "fog_fragment" ],
+          //THREE.ShaderChunk[ "fog_fragment" ],
 
         "}"
 

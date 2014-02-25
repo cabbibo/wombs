@@ -9,7 +9,9 @@ define(function(require, exports, module) {
 
   var MeshEmitter     = require( 'Components/MeshEmitter' );
   var Mesh            = require( 'Components/Mesh' );
-  
+ 
+  var ShaderCreator       = require( 'Shaders/ShaderCreator' );
+
   /*
    Create our womb
 
@@ -19,32 +21,59 @@ define(function(require, exports, module) {
     stats: true,
   });
 
-  var being = womb.creator.createBeing();
+  vertexChunk = [
 
- 
-  var mesh = new Mesh( being , {
-    geometry: new THREE.CubeGeometry( womb.size / 20 , womb.size/20 , womb.size/20 ) 
-    
+    "vec3 offset;",
+    "offset.x = nPos.x + cos( Time / 100.0 );",
+    "offset.y = nPos.y + sin( Time / 100.0 );",
+    "offset.z = nPos.z;", //+ tan( time / 100.0 );",
+    "offset *= .01;",
+    "float dNoise = snoise3( offset );",
+    "pos += vec3( uv.x , uv.y , 0.0 );" 
+
+  ]
+
+  fragmentChunk = [
+    "color = abs( nPos );"
+  ];
+
+  womb.shader = new ShaderCreator({
+
+    vertexChunk:   vertexChunk,
+    fragmentChunk: fragmentChunk,
+    uniforms:{
+      Time: womb.time
+    },
+
+    transparent:  true,
+    blending:     THREE.AdditiveBlending
+
   });
 
-  mesh.add();
+  womb.shader.material.blending = THREE.AdditiveBlending;
+  womb.shader.material.transparent = true;
 
-  var emitter = new MeshEmitter( mesh );
+  console.log( THREE.AdditiveBlending );
+  console.log('sd');
 
-  womb.emitter = emitter;
+  var mesh = new THREE.Mesh(
+    womb.defaults.geometry,
+    womb.shader.material
+  );
+
   womb.scene.add( mesh );
-  
   womb.loader.loadBarAdd();
+  
+  console.log( womb.shader );
+
+
 
   womb.update = function(){
-
-    emitter.update();    
   
   }
 
   womb.start = function(){
-    being.enter();
-    emitter.begin();
+  
   }
 
 
