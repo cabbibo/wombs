@@ -312,12 +312,6 @@ define(function(require, exports, module) {
       depthWrite:     this.params.depthWrite,
 
     });
-  
-
-    console.log( this.vertexShader );
-    console.log( this.fragmentShader );
-
-    console.log( this.material );
 
   }
   
@@ -364,7 +358,6 @@ define(function(require, exports, module) {
             var duplicated = false;
             for( var k = 0; k < returnArray.length; k++ ){
               if( returnArray[k] == searchItem ){
-                console.log( 'DUPLICATE' );
                 duplicated = true;
               }
             }
@@ -372,9 +365,7 @@ define(function(require, exports, module) {
             if( !duplicated )
               returnArray.push( searchItem );
 
-
           }
-
 
         }
 
@@ -521,7 +512,6 @@ define(function(require, exports, module) {
       for( var i = 0; i < undefinedVaryings.length; i++ ){
 
         var v = undefinedVaryings[i];
-        console.log( v );
 
         var vString = v[0] + " = " + v[2] + ";";
 
