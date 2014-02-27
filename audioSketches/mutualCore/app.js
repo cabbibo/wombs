@@ -1,5 +1,6 @@
 define(function(require, exports, module) {
 
+  console.log('Hello');
   var Womb                = require( 'Womb/Womb'                    );
   
   var FractalBeing        = require( 'Species/Beings/FractalBeing'  );
