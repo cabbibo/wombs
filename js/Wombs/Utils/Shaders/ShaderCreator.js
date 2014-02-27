@@ -174,8 +174,10 @@ define(function(require, exports, module) {
 
   var defineArray = [
     
-    [ "snoise3" , SC.noise3D ],
-    [ "kali"   , SC.createKali( 5 )  ], // TODO: Figure out how to pass this via Fractal  
+    [ "snoise3" , SC.noise3D            ],
+    [ "kali"    , SC.createKali( 10 )   ], // TODO: Figure out how to pass this via Fractal  
+    [ "kali2"   , SC.createKali2( 10 )  ], // TODO: Figure out how to pass this via Fractal  
+    [ "kali3"   , SC.createKali3( 10 )  ], // TODO: Figure out how to pass this via Fractal  
 
   ]
 
@@ -203,6 +205,8 @@ define(function(require, exports, module) {
       blending:     THREE.AdditiveBlending,
       transparent:  false,
       depthWrite:   true,
+
+      wireframe:    false,
 
       fractalPrecision: 15,
 
@@ -308,6 +312,7 @@ define(function(require, exports, module) {
       blending:       this.params.blending,
       transparent:    this.params.transparent,
       depthWrite:     this.params.depthWrite,
+      wireframe:      this.params.wireframe
 
     });
 

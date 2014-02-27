@@ -174,6 +174,54 @@ define(function(require, exports, module) {
   
   }
 
+  ShaderChunks.createKali3 = function(precision){
+
+    var shader = [
+
+      "vec3 kali3( vec3 v , vec3 s ){",
+        "float m = 0.0;",
+        "for( int i = 0; i < " + precision + "; i ++){",
+          "v.x = abs(v.x);",
+          "v.y = abs(v.y);", 
+          "v.z = abs(v.z);",
+          "m = v.x * v.x + v.y * v.y + v.z * v.z;",
+          "v.x = v.x / m + s.x;",
+          "v.y = v.y / m + s.y;",
+          "v.z = v.z / m + s.z;",
+        "}",
+        "return v;",
+      "}",
+    
+    ].join("\n");
+
+    return shader;
+  
+  }
+
+
+
+  ShaderChunks.createKali2 = function(precision){
+
+    var shader = [
+
+      "vec3 kali2( vec2 v , vec2 s ){",
+        "float m = 0.0;",
+        "for( int i = 0; i < " + precision + "; i ++){",
+          "v.x = abs(v.x);",
+          "v.y = abs(v.y);", 
+          "m = v.x * v.x + v.y * v.y;",
+          "v.x = v.x / m + s.x;",
+          "v.y = v.y / m + s.y;",
+        "}",
+        "return v;",
+      "}",
+    
+    ].join("\n");
+
+    return shader;
+  
+  }
+
 
  
 
