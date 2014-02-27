@@ -26,11 +26,14 @@ define(function(require, exports, module) {
      Create our womb
 
   */
-  var link = 'https://soundcloud.com/cashmerecat/';
-  var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
+  var link = 'http://www.youtube.com/watch?v=ZM80F_J-QHE&feature=kp';
+  var info =  "Drag to spin, scroll to zoom, click cubes to create. <br/> press 'x' to hide interface";
   
   womb = new Womb({
-    //stats: true
+    title:            'Bjork - Mutual Core',
+    link:             link, 
+    summary:          info,
+    stats: true
   });
 
   /*

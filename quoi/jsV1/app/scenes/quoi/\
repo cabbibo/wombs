@@ -1,0 +1,68 @@
+define(function(require, exports, module) {
+
+  var m                   = require('app/utils/Math'              );
+  var AudioGeometry       = require('app/three/AudioGeometry'     );
+  var AnalyzingFunctions  = require('app/utils/AnalyzingFunctions');
+
+
+  var Womb                = require( 'app/Womb'                       );
+
+  var recursiveFunctions  = require( 'app/utils/RecursiveFunctions'   );
+  
+  var fragmentShaders     = require( 'app/shaders/fragmentShaders'    );
+  var vertexShaders       = require( 'app/shaders/vertexShaders'      );
+  var physicsShaders      = require( 'app/shaders/physicsShaders'     );
+  var shaderChunks        = require( 'app/shaders/shaderChunks'       );
+
+  var PhysicsSimulator    = require( 'app/shaders/PhysicsSimulator'   );
+  var physicsShaders      = require( 'app/shaders/physicsShaders'     );
+
+
+  function PhysicsSimulatorScene( womb ){
+
+
+    this.womb = womb;
+
+    this.womb.loader.addToLoadBar();
+
+    console.log( womb );
+    this.world = this.womb.sceneController.createScene();
+
+    this.scene = this.world.scene;
+
+    this.physicsSimulation = new PhysicsSimulator( womb , {
+
+      bounds: womb.size,
+      textureWidth:70,
+      velocityShader: physicsShaders.velocity.gravity,
+      positionShader: physicsShaders.positionAudio_4,
+      startingVelocityRange: [ 80 , 0 , 0 ],
+      debug: false
+      
+    });
+
+    womb.scene.remove( this.physicsSimulation.particleSystem );
+    this.scene.add( this.physicsSimulation.particleSystem );
+
+
+    var physSim = this.physicsSimulation;
+    this.world.update = function(){
+      console.log( this );
+      physSim.update();
+    }
+
+    womb.loader.loadBarAdd();
+
+  }
+
+  PhysicsSimulatorScene.prototype.enter = function(){
+    this.world.enter();
+  }
+
+  PhysicsSimulatorScene.prototype.exit = function(){
+    this.world.exit();
+  }
+
+  module.exports = PhysicsSimulatorScene;
+
+});

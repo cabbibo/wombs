@@ -29,11 +29,17 @@ define(function(require, exports, module) {
   */
 
 
+  var link = 'https://soundcloud.com/cashmerecat/';
+  var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   womb = new Womb({
+    title: 'Lookup Particles -  Video',
+    summary: info,
+    link:     link,
     stats:            true,
   });
 
   womb.texture = new VideoTexture( womb , {
+
 
     file:'/lib/video/weddingBells.mp4'
 
@@ -82,7 +88,7 @@ define(function(require, exports, module) {
     womb.particleMaterial
   );
 
-  womb.particleSystem.scale.multiplyScalar( 100 );
+  womb.particleSystem.scale.multiplyScalar( 20 );
   console.log( womb.particleSystem );
 
   womb.scene.add( womb.particleSystem );
@@ -92,7 +98,7 @@ define(function(require, exports, module) {
   });
 
   //var material = new THREE.MeshNormalMaterial();
-  womb.geo = new THREE.CubeGeometry( 20 , 20 , 20 , 10 , 10 , 10 );
+  womb.geo = new THREE.CubeGeometry( .1 , .1 , .1 , 10 , 10 , 10 );
 
   womb.mesh = new THREE.Mesh( womb.geo , womb.material );
 

@@ -62,7 +62,7 @@ define(function(require, exports, module) {
 
               "vec3 offset = nPos * 2.0 * l +time/100.0;",
 
-              "float d = snoise( offset );",
+              "float d = snoise3( offset );",
 
               "float a = ( l + 1.0 ) * pow_audio;",
               "float n = ( d + 1.0 ) * pow_noise;",
@@ -102,7 +102,7 @@ define(function(require, exports, module) {
 
               "vec3 offset = nPos * 2.0 * l +time/100.0;",
 
-              "float d = snoise( offset );",
+              "float d = snoise3( offset );",
 
               "float a = ( l + 2.0 ) * pow_audio;",
               "float n = ( d + 2.0 ) * pow_noise;",

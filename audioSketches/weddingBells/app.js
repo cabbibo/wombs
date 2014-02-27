@@ -71,7 +71,8 @@ define(function(require, exports, module) {
 
       });
 
-      womb.fractal1.mesh.material.updateSeed();
+      console.log( womb.fractal1 );
+      womb.fractal1.fractal.material.updateSeed();
       
       womb.looper = womb.audioController.createLooper( womb.audio , {
         beatsPerMinute: 150.1 
@@ -79,16 +80,18 @@ define(function(require, exports, module) {
 
       
 
+      console.log('HELLO');
       // Flute:
       womb.looper.addSequence( 
       
       function( hitInfo ){
+        console.log('HELLO');
         womb.fractal1.body.rotation.z += .5;
         var x = Math.random();
         var y = Math.random();
         var z = Math.random();
-        womb.fractal1.mesh.material.uniforms.color.value.set( x * 2 , y / 2 , z ); 
-        womb.fractal1.mesh.material.uniforms.opacity.value = Math.random() * .3;
+        womb.fractal1.fractal.material.uniforms.color.value.set( x * 2 , y / 2 , z ); 
+        womb.fractal1.fractal.material.uniforms.opacity.value = Math.random() * .3;
       } , 
       16 , 
       [
@@ -111,6 +114,7 @@ define(function(require, exports, module) {
       ]);
 
 
+      console.log( womb.looper );
 
   }
 
