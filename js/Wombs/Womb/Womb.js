@@ -15,18 +15,18 @@ define(function(require, exports, module) {
   var Raycaster         = require( 'Womb/Raycaster'                 );
   var EffectComposer    = require( 'Womb/EffectComposer'            );
 
-  var AudioController   = require( 'Womb/audio/AudioController'     );
+  var AudioController   = require( 'Womb/Audio/AudioController'     );
 
   var CameraController  = require( 'Womb/Camera/CameraController'   );
 
-  var UserMediaTexture  = require( 'Womb/textures/UserMediaTexture' );
-  var TextCreator       = require( 'Womb/textures/TextTexture'      );
+  var UserMediaTexture  = require( 'Womb/Textures/UserMediaTexture' );
+  var TextCreator       = require( 'Womb/Textures/TextTexture'      );
   
   var Loader            = require( 'Womb/Loading/Loader'            );
 
   var ImageLoader       = require( 'Womb/Loading/ImageLoader'       );
   var ModelLoader       = require( 'Womb/Loading/ModelLoader'       );
-  var ObjLoader         = require( 'Womb/Loading/ObjLoader'         );
+  var ObjLoader         = require( 'Womb/Loading/OBJLoader'         );
   var JSONLoader        = require( 'Womb/Loading/JSONLoader'        );
 
   
