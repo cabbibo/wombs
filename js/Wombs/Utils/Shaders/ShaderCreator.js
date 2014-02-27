@@ -146,7 +146,7 @@ define(function(require, exports, module) {
     [ "vDisplacement" , "float" , "length(pos) - length(position)"  , "post"  ],
 
     // Creating this should take place AFTER the model view transformation
-    [ "vPos_MV"       , "vec3"  , "gl_Position"                     , "mv"    ],
+    [ "vPos_MV"       , "vec3"  , "gl_Position.xyz"                     , "mv"    ],
   
   ];
 
@@ -165,8 +165,11 @@ define(function(require, exports, module) {
     [ "DisplacementOffset"    , "float"     ],
     [ "Time"                  , "float"     ],
     [ "NoiseSize"             , "float"     ],
+    [ "NoisePower"            , "float"     ],
+    [ "AudioPower"            , "float"     ],
     [ "Color"                 , "vec3"      ],
 
+    
   ];
 
   var defineArray = [
@@ -217,7 +220,6 @@ define(function(require, exports, module) {
     this.vertexUniforms   = this.findFromArray( this.vertexChunk   , uniformArray );
     this.fragmentUniforms = this.findFromArray( this.fragmentChunk , uniformArray );
 
-    console.log( this.vertexUniforms );
 
     // Creates the uniforms chunk of the shader programs
     this.vertexUniformChunk   = this.createUniformChunk( this.vertexUniforms );
@@ -232,7 +234,6 @@ define(function(require, exports, module) {
       this.fragmentUniforms 
     );
 
-    console.log( this.uniforms );
 
     // Lets us pass in any uniforms that we want to define
     helperFunctions.setParameters( this.uniforms , this.params.uniforms );
@@ -273,14 +274,11 @@ define(function(require, exports, module) {
 
     });
 
-    console.log( this.vertexMainChunk );
 
     this.fragmentMainChunk = this.createFragmentMainChunk({
       manipulation:     this.params.fragmentChunk
     });
 
-    console.log( 'defe' );
-    console.log( this.vertexDefineChunk );
 
     this.vertexShader = this.createShaderString({
 
@@ -463,7 +461,7 @@ define(function(require, exports, module) {
             value:  threeU[2]
           }
 
-          console.log( uniforms[u[0]] );
+          //console.log( uniforms[u[0]] );
 
         }
 
