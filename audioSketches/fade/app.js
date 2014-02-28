@@ -34,7 +34,6 @@ define(function(require, exports, module) {
    
     "pos *= .1 * abs( vDisplacement + 3.0 );",
 
-    //"pos = normalize( pos );",
   ];
 
   fragmentChunk = [
@@ -58,16 +57,11 @@ define(function(require, exports, module) {
       AudioPower:   { type:"f"  , value: 1.4 }
     
     },
-   // wireframe:true,
-   // transparent:true,
-   // blending: THREE.AdditiveBlending,
-    //depthWrite: false
+
   });
 
   var mesh = new THREE.Mesh(
-    //new THREE.CubeGeometry( 100 ,100 , 1, 100 , 100 , 100 ),
     new THREE.SphereGeometry( womb.size / 4 , 3 , 1000 ),
-
     womb.shader.material
   );
 
