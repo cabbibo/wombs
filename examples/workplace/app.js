@@ -18,7 +18,7 @@ define(function(require, exports, module) {
   });
 
   var file  = '/lib/audio/tracks/tenderly.mp3' ;
-  var audio = womb.audioController.createLoop( file );
+  var audio = womb.audioController.createStream( file );
 
   console.log( audio );
   vertexChunk = [

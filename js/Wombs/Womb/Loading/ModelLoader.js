@@ -7,8 +7,6 @@ define(function(require, exports, module) {
 
     this.womb   = womb;
 
-    console.log( THREE );
-    console.log( OBJLoad );
     this.OBJLoader  = new OBJLoad();
     this.JSONLoader = new THREE.JSONLoader();
 

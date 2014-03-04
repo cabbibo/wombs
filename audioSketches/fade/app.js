@@ -14,7 +14,7 @@ define(function(require, exports, module) {
   });
 
   var file  = '/lib/audio/tracks/fade.mp3' ;
-  var audio = womb.audioController.createLoop( file );
+  var audio = womb.audioController.createStream( file );
 
   console.log( audio );
   vertexChunk = [
