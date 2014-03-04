@@ -1,7 +1,7 @@
 define(function(require, exports, module) {
 
   var three = require( 'lib/three.min' );
-  var l     = require( 'Womb/Loading/OBJLoader' );
+  require( 'Womb/Loading/OBJLoader' );
 
   function ObjectLoader( womb , params ){
 

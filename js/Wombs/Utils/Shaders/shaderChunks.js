@@ -34,6 +34,16 @@ define(function(require, exports, module) {
         
   ].join( "\n" );
 
+  ShaderChunks.cart = [
+
+    "vec3 cart( vec3 v ){",
+      "float x = v.x * sin( v.y  ) * cos( v.z );",
+      "float y = v.x * sin( v.y  ) * sin( v.z );",
+      "float z = v.x * cos( v.y  );",
+      "return vec3( x , y , z);",
+    "}",
+        
+  ].join( "\n" );
 
   ShaderChunks.sampleTexture = [
 
@@ -154,6 +164,7 @@ define(function(require, exports, module) {
 
     var shader = [
 
+      //"#CONST int fractalPrecision" + precision,
       "vec3 kali( vec3 v , vec3 s ){",
         "float m = 0.0;",
         "for( int i = 0; i < " + precision + "; i ++){",

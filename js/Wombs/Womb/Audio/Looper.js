@@ -100,7 +100,6 @@ define(function(require, exports, module) {
       measureOffset:      0,
       duration:           [ 0 , 1000000000 ],
       
-      
     });
 
 

@@ -3,7 +3,7 @@
  */
 define(function(require, exports, module) {
 
-  var t = require('lib/three.min');
+  require('lib/three.min');
 
   THREE.OBJLoader = function ( manager ) {
 

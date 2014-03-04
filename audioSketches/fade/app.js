@@ -18,6 +18,7 @@ define(function(require, exports, module) {
 
   console.log( audio );
   vertexChunk = [
+    
     "nPos = normalize(pos);",
     
     "vec3 offset;",

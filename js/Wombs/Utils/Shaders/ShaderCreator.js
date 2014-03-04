@@ -146,7 +146,7 @@ define(function(require, exports, module) {
     [ "vDisplacement" , "float" , "length(pos) - length(position)"  , "post"  ],
 
     // Creating this should take place AFTER the model view transformation
-    [ "vPos_MV"       , "vec3"  , "gl_Position.xyz"                     , "mv"    ],
+    [ "vPos_MV"       , "vec3"  , "gl_Position.xyz"                 , "mv"    ],
   
   ];
 
@@ -175,9 +175,11 @@ define(function(require, exports, module) {
   var defineArray = [
     
     [ "snoise3" , SC.noise3D            ],
-    [ "kali"    , SC.createKali( 10 )   ], // TODO: Figure out how to pass this via Fractal  
-    [ "kali2"   , SC.createKali2( 10 )  ], // TODO: Figure out how to pass this via Fractal  
-    [ "kali3"   , SC.createKali3( 10 )  ], // TODO: Figure out how to pass this via Fractal  
+    [ "kali"    , SC.createKali( 15 )   ], // TODO: Figure out how to pass this via Fractal  
+    [ "kali2"   , SC.createKali2( 15 )  ], // TODO: Figure out how to pass this via Fractal  
+    [ "kali3"   , SC.createKali3( 15 )  ], // TODO: Figure out how to pass this via Fractal  
+    [ "polar"   , SC.polar              ], 
+    [ "cart"    , SC.cart               ], 
 
   ]
 
@@ -205,8 +207,6 @@ define(function(require, exports, module) {
       blending:     THREE.AdditiveBlending,
       transparent:  false,
       depthWrite:   true,
-
-      wireframe:    false,
 
       fractalPrecision: 15,
 
@@ -312,7 +312,6 @@ define(function(require, exports, module) {
       blending:       this.params.blending,
       transparent:    this.params.transparent,
       depthWrite:     this.params.depthWrite,
-      wireframe:      this.params.wireframe
 
     });
 
