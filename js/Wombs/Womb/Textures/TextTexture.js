@@ -2,17 +2,16 @@ define(function(require, exports, module) {
 
   require( 'lib/three.min' );
 
-  function TextCreator( world , params ){
+  function TextCreator( womb ,  params ){
 
-    this.world  = world;
-
+    this.womb = womb;
     this.params = _.defaults( params || {}, {
    
-      size:                 this.world.size / 10,
-      type:                    "20pt GeoSans", 
+      size:                 this.womb.size / 10,
+      type:                    "GeoSans 20pt", 
       color:    "rgba( 255 , 255 , 255 , 0.95 )",
       crispness:                              2,
-      margin:               this.world.size / 20,  
+      margin:               this.womb.size / 20,  
       square:                               false
 
 

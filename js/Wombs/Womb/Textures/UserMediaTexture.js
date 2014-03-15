@@ -2,7 +2,7 @@ define(function(require, exports, module) {
 
   function UserMediaTexture( womb ){
 
-    womb = womb;
+    this.womb = womb;
     womb.loader.addToLoadBar();
 
     video = document.createElement('video');

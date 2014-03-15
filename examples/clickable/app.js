@@ -69,7 +69,7 @@ define(function(require, exports, module) {
   });
 
   var duplicator = Duplicator( mesh , being );
-
+  duplicator.placeAll();
   duplicator.addAll();
 
 

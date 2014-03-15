@@ -13,7 +13,7 @@ define(function(require, exports, module) {
 
   Creator.prototype.createBeing = function( params ){
     
-    var being = new Being( this.womb , params );
+    var being = new Being( params );
     this.beings.push( being );
 
     return being; 

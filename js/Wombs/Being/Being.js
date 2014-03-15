@@ -4,7 +4,7 @@ define(function(require, exports, module) {
   var Tweener = require( 'Womb/Tweener' );
   
   
-  function Being( womb , params ){
+  function Being( params ){
   
     this.womb = womb;
 

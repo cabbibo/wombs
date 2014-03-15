@@ -44,7 +44,6 @@ define(function(require, exports, module) {
     
     }
 
-
     this.loadFile();
 
   }

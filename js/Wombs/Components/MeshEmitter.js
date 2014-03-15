@@ -16,9 +16,9 @@
 
 define(function(require, exports, module) {
 
-                           require( 'lib/three.min'             );
-  var M = require( 'Utils/Math'  );
-  var placementFunctions = require( 'Utils/PlacementFunctions'  );
+                            require( 'lib/three.min'             );
+  var M                   = require( 'Utils/Math'  );
+  var placementFunctions  = require( 'Utils/PlacementFunctions'  );
   
   function update(){
 

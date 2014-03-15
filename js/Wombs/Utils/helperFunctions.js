@@ -12,7 +12,6 @@ define(function(require, exports, module) {
         if( object[propt] ){
           object[ propt ] = parameters[ propt ];
         }else{
-       //   console.log( 'No propt for this object' );
         }
   
       }

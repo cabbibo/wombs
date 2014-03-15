@@ -9,7 +9,8 @@
   - Make it so that somehow, and thing defined in fragment shader that has a 
     camel case vLetter will be created as a varying
   - make fog a parameter
-  
+  - if I use a define to pass in something with the name, it will not parse the define ie:
+      cartPos = cart( pos ); will see only the first cart...
 
   Parts of a Vert Shader:
 
@@ -169,8 +170,14 @@ define(function(require, exports, module) {
     [ "AudioPower"            , "float"     ],
     [ "Color"                 , "vec3"      ],
 
-    
   ];
+
+  var attributeArray = [
+
+    [ "aColor" , "vec3" ],
+    [ "aSize" , "float" ],
+    
+  ]
 
   var defineArray = [
     
@@ -202,6 +209,8 @@ define(function(require, exports, module) {
         blaue: { type: "f" , value: "basdddd" },
         blaue: { type: "f" , value: "basdddd" },
       },
+    
+     // attributes:
 
       // Properties of the actual material
       blending:     THREE.AdditiveBlending,
@@ -242,6 +251,10 @@ define(function(require, exports, module) {
     // Lets us pass in any uniforms that we want to define
     helperFunctions.setParameters( this.uniforms , this.params.uniforms );
 
+    
+    /*this.attributeArray = this.findFromArray( this.vertexChunk , attributeArray );
+    console.log( this.attributeArray );
+    this.attributes = this.createAttributes( this.attributeArray );*/
 
     // Finds all of the usualVaryings
     this.varyings = this.findFromArray( this.fragmentChunk , varyingArray );
@@ -286,10 +299,11 @@ define(function(require, exports, module) {
 
     this.vertexShader = this.createShaderString({
 
-      uniformChunk: this.vertexUniformChunk,
-      varyingChunk: this.varyingChunk,
-      defineChunk: this.vertexDefineChunk,
-      mainChunk:    this.vertexMainChunk
+      uniformChunk:   this.vertexUniformChunk,
+     // attributeChunk: this.attributeChunk,
+      varyingChunk:   this.varyingChunk,
+      defineChunk:    this.vertexDefineChunk,
+      mainChunk:      this.vertexMainChunk
 
     });
 
@@ -297,7 +311,7 @@ define(function(require, exports, module) {
 
       uniformChunk: this.fragmentUniformChunk,
       varyingChunk: this.varyingChunk,
-      defineChunk: this.fragmentDefineChunk,
+      defineChunk:  this.fragmentDefineChunk,
       mainChunk:    this.fragmentMainChunk
 
     });
@@ -306,6 +320,8 @@ define(function(require, exports, module) {
     this.material = new THREE.ShaderMaterial({
 
       uniforms:       this.uniforms,
+      //attributes:     this.attributes,
+
       vertexShader:   this.vertexShader,
       fragmentShader: this.fragmentShader,
 
@@ -477,6 +493,51 @@ define(function(require, exports, module) {
 
   }
 
+  ShaderCreator.prototype.createAttributes = function(){
+
+    var uniforms = {}
+
+    for( var i = 0; i< arguments.length; i ++ ){
+
+      var uniformArray = arguments[i];
+
+      for( var j = 0; j < uniformArray.length; j++ ){
+
+        var u = uniformArray[j];
+
+        if( !uniforms[u[0]] ){
+          
+          // Gets the proper type for three.js uniforms
+          var threeU;
+          for( var k = 0; k < threeUniformTypes.length; k++ ){
+            if( u[1] == threeUniformTypes[k][0] ){
+              threeU = threeUniformTypes[k];
+            }
+          }
+
+          // Using our precreated uniform tpyes to instantiate
+          // a uniform. what will always give us something
+          uniforms[u[0]] ={
+            type:   threeU[1],
+            value:  threeU[2]
+          }
+
+          //console.log( uniforms[u[0]] );
+
+        }
+
+      }
+
+    }
+
+    return uniforms
+
+  }
+
+
+
+
+
   // Pulls everything together!
   ShaderCreator.prototype.createVertexMainChunk = function( p ){
 
@@ -570,6 +631,7 @@ define(function(require, exports, module) {
     mainArray.push( p.uniformChunk );
     mainArray.push("");
     mainArray.push( p.varyingChunk );
+    //mainArray.push( p.attributeChunk );
     mainArray.push("");
     mainArray.push( p.defineChunk );
     mainArray.push("");

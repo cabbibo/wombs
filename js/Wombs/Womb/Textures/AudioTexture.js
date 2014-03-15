@@ -68,7 +68,7 @@ define(function(require, exports, module) {
       this.c.putImageData( imageData , 0 , 0 );
 
       //updates the texture
-      this.needsUpdate =  true;
+      this._needsUpdate =  true;
 
     }
 

@@ -27,9 +27,7 @@ define(function(require, exports, module) {
 
     this.video.type = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
 
-    this.video.load(); // must call after setting/changing source
-	//this.video.play();
-
+    this.video.load();
 
     if( params.showOriginalVideo ){
       document.body.appendChild( this.video );
@@ -65,6 +63,7 @@ define(function(require, exports, module) {
   }
 
   VideoTexture.prototype.play = function(){
+    this.video.load();
     this.video.play();
   }
 

@@ -4,18 +4,22 @@
 define(function(require, exports, module) {
 
 
-  var Audio     = require( 'Womb/Audio/Audio'      );
-  var UserAudio = require( 'Womb/Audio/UserAudio'  );
-  var Stream    = require( 'Womb/Audio/Stream'     );
-  var Looper    = require( 'Womb/Audio/Looper'     );
-  
+  var Audio         = require( 'Womb/Audio/Audio'      );
+  var UserAudio     = require( 'Womb/Audio/UserAudio'  );
+  var Stream        = require( 'Womb/Audio/Stream'     );
+  var Looper        = require( 'Womb/Audio/Looper'     );
+ 
+  var AudioTexture  = require( 'Womb/Textures/AudioTexture' );
+
+
   function AudioController( womb , params ){
   
     this.params = _.defaults( params || {}, {
         
       fbc:       1024,        // frequency bin count for all analysers
       bpm:        100,        // You gotta know how fast your track is!
-      
+      texture:   true
+
     });
 
 
@@ -37,7 +41,12 @@ define(function(require, exports, module) {
 
     this.analyser.frequencyBinCount = this.params.fbc;
     this.analyser.array = new Uint8Array( this.params.fbc );
-    
+   
+
+    if( this.params.texture )
+      this.texture = AudioTexture( this );
+
+
     this.loops = {
 
       array:        [],
@@ -207,6 +216,9 @@ define(function(require, exports, module) {
 
     this.analyser.getByteFrequencyData( this.analyser.array );
     this.update();
+
+    if( this.texture )
+      this.texture.update();
 
     for( var i = 0; i < this.updateArray.length; i++ ){
 

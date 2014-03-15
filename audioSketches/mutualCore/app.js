@@ -331,7 +331,7 @@ define(function(require, exports, module) {
   });
 
 
-   womb.loader.loadBarAdd();
+  womb.loader.loadBarAdd();
 
   womb.update = function(){
 

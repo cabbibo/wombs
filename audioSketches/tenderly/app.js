@@ -58,7 +58,7 @@ define(function(require, exports, module) {
   var being = womb.creator.createBeing();
 
   var mesh = new Mesh( being , {
-      geometry: new THREE.IcosahedronGeometry( womb.size/20.0 , 4 ),
+      geometry: new THREE.IcosahedronGeometry( womb.size/20.0 , 6 ),
       material: womb.shader.material
   });
 
@@ -70,13 +70,12 @@ define(function(require, exports, module) {
       numOf:              10,
       placementFunction:  placementFunctions.ring,
       size:               womb.size / 10
-    });
-  duplicator.addAll();
-  duplicator.placeAll();
-
-
   
-  console.log( womb.shader );
+  });
+
+  duplicator.addAll();
+  //duplicator.placeAll();
+
   womb.loader.loadBarAdd();
 
   womb.start = function(){
