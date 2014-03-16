@@ -4,7 +4,6 @@ define(function(require, exports, module) {
   /*       ARE        */  require( 'lib/underscore'                 );
   /*      WOMBS       */  require( 'lib/stats.min'                  );
  
-
   var Creator           = require( 'Womb/Creator'                   );
 
   var Interface         = require( 'Womb/Interface'                 );

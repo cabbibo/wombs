@@ -2,7 +2,9 @@ define(function(require, exports, module) {
 
 
   var Tweener = require( 'Womb/Tweener' );
-  
+  var Component = require( 'Components/Component' );
+ 
+  Being.prototype = new Component();
   
   function Being( params ){
   
@@ -28,7 +30,6 @@ define(function(require, exports, module) {
       exitFinish:       function(){},
      
     });
-
 
     this.parent = this.params.parent;
 
@@ -181,7 +182,7 @@ define(function(require, exports, module) {
   Being.prototype.die   = Being.prototype.exit;
 
 
-  Being.prototype._update = function(){
+  /*Being.prototype._update = function(){
 
     //console.log( this.updateArray.length );
     for( var i = 0; i < this.updateArray.length; i++ ){
@@ -207,7 +208,7 @@ define(function(require, exports, module) {
 
     this.update();
 
-  }
+  }*/
 
   Being.prototype.update = function(){
 

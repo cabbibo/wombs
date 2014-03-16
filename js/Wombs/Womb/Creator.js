@@ -1,6 +1,6 @@
 define(function(require, exports, module) {
 
-  var Being = require( 'Being/Being' );
+  var Being = require( 'Components/Being' );
 
 
   function Creator( womb , params ){
@@ -12,8 +12,9 @@ define(function(require, exports, module) {
   }
 
   Creator.prototype.createBeing = function( params ){
-    
+
     var being = new Being( params );
+
     this.beings.push( being );
 
     return being; 
