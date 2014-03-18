@@ -29,6 +29,7 @@ define(function(require, exports, module) {
 
   Mesh.prototype.add = function(){
 
+    console.log( 
     if( this.parent ){
       this.parent.addToBody( this.body );
     }else{

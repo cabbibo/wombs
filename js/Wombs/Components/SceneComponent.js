@@ -27,7 +27,6 @@ define(function(require, exports, module) {
 
     this.body.add( what );
 
-
   }
 
   SceneComponent.prototype.removeFromBody = function( what ){
