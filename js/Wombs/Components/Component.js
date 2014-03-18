@@ -17,6 +17,18 @@ define(function(require, exports, module) {
 
   function Component(){
 
+  }
+
+ /* Component.prototype.manifest = function( parent ){
+
+    this.parent = parent;
+
+    this.parent.addTo
+
+  }*/
+
+  Component.prototype._init = function(){
+
     this.active = false;
 
     this.startArray   = [];
@@ -27,22 +39,19 @@ define(function(require, exports, module) {
 
   }
 
- /* Component.prototype.manifest = function( parent ){
+  Component.prototype.init = function(){}
 
-    this.parent = parent;
-
-    this.parent.addTo
-
-  }*/
+  Component.prototype.onAdd = function(){}
  
   Component.prototype.addComponent = function( component ){
 
-    /*this.addToStartArray( component._start.bind( component ) );
-    this.addToEndArray( component._end.bind( component ) );
-    this.addToUpdateArray( component._update.bind( component ) );*/
     component.parent = this;
-    component.siblings = this.siblings;
+    component.siblings = this.components;
 
+    console.log( component );
+    component.onAdd();
+
+    console.log( component );
     this.components.push( component );
 
   }
@@ -57,7 +66,6 @@ define(function(require, exports, module) {
         i --;
 
       }
-
 
     }
 
@@ -114,6 +122,26 @@ define(function(require, exports, module) {
   }
 
   Component.prototype.end = function(){};
+
+  Component.prototype.createUUID = function(){
+
+
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+                 .toString(16)
+                 .substring(1);
+    };
+
+    function guid() {
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+             s4() + '-' + s4() + s4() + s4();
+    }
+
+    this.uuid = guid();
+
+  }
+
+
 
   module.exports = Component;
 

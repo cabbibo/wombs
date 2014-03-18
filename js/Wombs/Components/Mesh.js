@@ -1,41 +1,40 @@
 define(function(require, exports, module) {
 
   require( 'lib/three.min' );
-  var Component = require( 'Components/Component' );
+  var SceneComponent = require( 'Components/SceneComponent' );
 
-  function Mesh( being , parameters ){
+  Mesh.prototype = new SceneComponent();
+  
+  function Mesh( geometry , material ){
 
-    params = _.defaults( parameters || {} , {
+    this.geometry = geometry;
+    this.material = material;
+    this.body = new THREE.Mesh( geometry , material );
+    this.position = this.body.position;
 
-      geometry: being.womb.defaults.geometry,
-      material: being.womb.defaults.material
 
-    });
-
-    THREE.Mesh.call( params.geometry , params.material );
-    this.params = params;
-
-    this.add = add.bind( mesh );
-    this.remove = remove.bind( mesh );
-
+    // Initializing neccesary prototype objects 
+    this._init();
+    console.log( this );
+    
+    
   }
 
-  Mesh.prototype = new Component();
+
+  Mesh.prototype.onAdd = function(){
+
+    this.add();
+
+  }
 
   Mesh.prototype.add = function(){
 
     if( this.parent ){
-
-      this.parent.addToScene( this );
-      this.parent.meshes.push( this );
-
+      this.parent.addToBody( this.body );
     }else{
-
       console.log( 'The following mesh has no being:' );
       console.log( this );
-
     }
-
 
 
   }
@@ -44,23 +43,21 @@ define(function(require, exports, module) {
 
     if( this.parent ){
 
-      this.parent.removeFromScene( this );
-      for( var i = 0; i < this.being.meshes.length; i++ ){
-
-        if( this.parent.meshes[i] == this ){
-          this.parent.meshes.splice( i , 1 );
-        }
-
-      }
+      this.parent.removeFromBody( this.body );
+      
 
     }else{
       console.log( 'The following mesh has no being:' );
       console.log( this );
     }
 
-
   }
 
+  Mesh.prototype.translate = function(x,y,z){
+
+      this.position.add( new THREE.Vector3( x , y , z ) );
+
+  }
 
   
   module.exports = Mesh;

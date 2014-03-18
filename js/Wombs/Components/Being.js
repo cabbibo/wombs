@@ -2,9 +2,10 @@ define(function(require, exports, module) {
 
 
   var Tweener = require( 'Womb/Tweener' );
-  var Component = require( 'Components/Component' );
+  var SceneComponent = require( 'Components/SceneComponent' );
+
  
-  Being.prototype = new Component();
+  Being.prototype = new SceneComponent();
   
   function Being( params ){
   
@@ -34,6 +35,7 @@ define(function(require, exports, module) {
     this.parent = this.params.parent;
 
 
+    this._init();
 
     this.updateArray = [];
 
@@ -43,18 +45,9 @@ define(function(require, exports, module) {
     
     this.body           = new THREE.Object3D();
 
-       
-    // Physics
-    this.body.position  = this.params.position;
-    this.body.velocity  = this.params.velocity;
-
-    this.body.mass      = this.params.mass;
-    this.body.dampening = this.params.dampening;
-
-    this.forces         = [];
-    this.totalForce     = new THREE.Vector3();
-
-
+    this.position       = this.body.position;
+    this.rotation       = this.body.rotation;
+  
 
     /* Assigning in and out target based on the transition type */
     
@@ -180,45 +173,6 @@ define(function(require, exports, module) {
   // Just incase you wanna feel more god like
   Being.prototype.live  = Being.prototype.enter;
   Being.prototype.die   = Being.prototype.exit;
-
-
-  /*Being.prototype._update = function(){
-
-    //console.log( this.updateArray.length );
-    for( var i = 0; i < this.updateArray.length; i++ ){
-
-      //console.log( 'WHO' );
-      this.updateArray[i]();
-
-    }
-
-    this.totalForce.set( 0 , 0 , 0 );
-
-    for( var i = 0; i < this.forces.length; i++ ){
-
-      this.totalForce.add( this.forces[i] );
-
-    }
-    // Dealing with forces
-    this.body.position.add( this.body.velocity );
-    this.body.velocity.multiplyScalar( this.body.dampening );
-    this.body.acceleration = this.totalForce.multiplyScalar( this.body.mass );
-    this.body.velocity.add( this.body.acceleration );
-    
-
-    this.update();
-
-  }*/
-
-  Being.prototype.update = function(){
-
-  }
-
-  Being.prototype.addToUpdateArray =function( callback ){
-
-    this.updateArray.push( callback );
-
-  }
 
   Being.prototype.removeMesh = function( mesh ){
 

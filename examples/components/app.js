@@ -17,31 +17,48 @@ define(function(require, exports, module) {
      Create our womb
 
   */
-  var link = 'https://github.com/cabbibo/wombs/';
-  var info =  "The Clickable Component provides a mesh with 3 functions:<br/><br/>-onClick<br/>-onHoverOver<br/>-onHoverOut<br/><br/>Click Link for source.<br/> press 'x' to hide interface";
-
   
   var womb = new Womb({
-    title:            'Clickable',
-    link:             link, 
-    summary:          info,
     stats: true,
-    raycaster: true,
   });
 
   var geo     = new THREE.IcosahedronGeometry( womb.size/ 10 , 3  );
 
   var being = new Being();
+  var being1 = new Being();
 
   var mesh = new Mesh( womb.defaults.geometry , womb.defaults.material );
-  console.log( being._update );
+  var mesh1 = new Mesh( womb.defaults.geometry , womb.defaults.material );
+  var mesh2 = new Mesh( womb.defaults.geometry , womb.defaults.material );
+  var mesh3 = new Mesh( womb.defaults.geometry , womb.defaults.material );
 
+  var mat = new THREE.MeshBasicMaterial({color:0xff0000});
+  var subMesh = new Mesh( womb.defaults.geometry , mat );
+
+ 
+  being.addComponent( mesh );
+  being.addComponent( mesh1 );
+  being.addComponent( mesh2 );
+
+
+  being1.addComponent( mesh3 );
+  mesh3.addComponent( subMesh );
+
+  console.log( 'BEINGS' );
+  console.log( being );
+  console.log( being1 );
+
+  mesh.translate( 50 , 0 , 0 );
+  mesh3.translate( 50 , 50 , 0 );
+
+  womb.being = being;
 
   womb.loader.loadBarAdd();
 
   womb.start = function(){
 
     being.enter();
+    being1.enter();
    
   }
 
