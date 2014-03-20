@@ -41,6 +41,12 @@ define(function(require, exports, module) {
 
   }
 
+  SceneComponent.prototype.rotate = function( quarternion ){
+
+
+  }
+
+
   module.exports = SceneComponent;
 
 });

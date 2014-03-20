@@ -29,7 +29,7 @@ define(function(require, exports, module) {
 
   Component.prototype._init = function(){
 
-    this.active = false;
+    this.active       = false;
 
     this.startArray   = [];
     this.endArray     = [];
@@ -58,6 +58,7 @@ define(function(require, exports, module) {
 
   Component.prototype.removeComponent = function( component ){
 
+    component.onRemove();
     for( var i = 0; i < this.components.length; i++ ){
 
       if( this.components[i] === component ){
@@ -70,6 +71,8 @@ define(function(require, exports, module) {
     }
 
   }
+
+  Component.prototype.onRemove = function(){}
 
 
   /*
