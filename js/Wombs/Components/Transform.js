@@ -9,13 +9,9 @@ define(function(require, exports, module) {
 
     this.geometry = geometry;
     this.material = material;
-
     this.body = new THREE.Mesh( geometry , material );
+    this.position = this.body.position;
 
-    console.log( 'THIS' );
-    console.log( this );
-
-    //THREE.Mesh.apply( this ,  [ geometry , material ] );
 
 
     // Initializing neccesary prototype objects 
@@ -24,9 +20,6 @@ define(function(require, exports, module) {
     
     
   }
-
-  //Mesh.prototype = new SceneComponent();
-
 
 
   Mesh.prototype.onAdd = function(){
@@ -37,6 +30,7 @@ define(function(require, exports, module) {
 
   Mesh.prototype.add = function(){
 
+    console.log( 
     if( this.parent ){
       this.parent.addToBody( this.body );
     }else{

@@ -177,7 +177,6 @@ define(function(require, exports, module) {
   Being.prototype.removeMesh = function( mesh ){
 
     mesh.being = null;
-
     this.removeFromScene( mesh );
     for( var i = 0; i < this.meshes.length; i++ ){
 
