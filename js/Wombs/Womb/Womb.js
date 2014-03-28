@@ -88,6 +88,7 @@ define(function(require, exports, module) {
     this.scene = new THREE.Scene();
     this.body  = this.scene;
 
+    this.dpr = window.devicePixelRatio ? window.devicePixelRatio : 1;
 
     // CAMERA
     this.width = window.innerWidth;
@@ -145,6 +146,8 @@ define(function(require, exports, module) {
     this.imageLoader      = new ImageLoader( this );
     this.modelLoader      = new ModelLoader( this );
     this.textCreator      = new TextCreator( this );
+
+    this.effectComposer  = new EffectComposer( this );
 
 
     this.creator  = new Creator( this );
@@ -287,6 +290,7 @@ define(function(require, exports, module) {
 
     this.update();
 
+    //this.effectsComposer.render();
     this.render();
 
 

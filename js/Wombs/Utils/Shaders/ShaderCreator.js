@@ -516,7 +516,6 @@ define(function(require, exports, module) {
   // Lets you assign attributes
   ShaderCreator.prototype.assignAttributes = function( attribute , geo , callback ){
 
-    console.log('ssas');
     if( this.attributes[attribute] ){
 
       for( var i = 0; i < geo.vertices.length; i ++ ){
@@ -525,8 +524,6 @@ define(function(require, exports, module) {
 
       this.attributes[attribute].needsUpdate = true;
 
-      console.log( 'ADSWs');
-      console.log( this.attributes[attribute] );
     }else{
       console.log( 'Assigning to none existant attribute!' );
     }

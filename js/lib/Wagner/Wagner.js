@@ -4,9 +4,9 @@
 
 var WAGNER = WAGNER || {};
 
-WAGNER.vertexShadersPath = './vertex-shaders';
-WAGNER.fragmentShadersPath = './fragment-shaders';
-WAGNER.assetsPath = './assets';
+WAGNER.vertexShadersPath = '../../js/lib/Wagner/vertex-shaders';
+WAGNER.fragmentShadersPath = '../../js/lib/Wagner/fragment-shaders';
+WAGNER.assetsPath = '../../js/lib/Wagner/assets';
 
 WAGNER.log = function( msg ) {
 	console.log( msg );

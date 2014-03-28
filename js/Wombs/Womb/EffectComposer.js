@@ -1,16 +1,10 @@
 define( function( require , exports , module ){
 
-  require( 'lib/shaders/ConvolutionShader'      );
-  require( 'lib/shaders/CopyShader'             );
-  require( 'lib/shaders/DotScreenShader'        );
-  require( 'lib/postprocessing/ShaderPass'      );
-  require( 'lib/postprocessing/TexturePass'     );
-  require( 'lib/postprocessing/EffectComposer'  );
-  require( 'lib/postprocessing/RenderPass'      );
-  require( 'lib/postprocessing/MaskPass'        );
-  require( 'lib/postprocessing/BloomPass'       );
 
-  function EffectComposer( world , params ){
+  require( 'Wagner/Wagner' );
+  
+  
+  function EffectComposer( womb , params ){
     
     this.params = _.defaults( params || {} , {
 
@@ -18,53 +12,55 @@ define( function( require , exports , module ){
 
     });
 
-    this.world  = world;
-    this.womb   = world.womb;
 
-    console.log('s');
-    console.log( );
-    console.log( world.renderer );
-    console.log( world.scene , world.camera );
+    this.womb = womb;
 
+    var composer = new WAGNER.Composer( womb.renderer );
+    composer.setSize( window.innerWidth * womb.dpr , window.innerHeight*womb.dpr ); // or whatever resolution
 
-    this.composer = new THREE.EffectComposer( world.renderer );
+        this.multiPassBloomPass = new WAGNER.MultiPassBloomPass();
+    this.invertPass=new WAGNER.InvertPass();
+    this.boxBlurPass=new WAGNER.BoxBlurPass();
+    this.fullBoxBlurPass=new WAGNER.FullBoxBlurPass();
+    this.zoomBlurPass=new WAGNER.ZoomBlurPass();
+    this.multiPassBloomPass=new WAGNER.MultiPassBloomPass();
+    this.denoisePass=new WAGNER.DenoisePass();
+    this.sepiaPass=new WAGNER.SepiaPass();
+    this.noisePass=new WAGNER.NoisePass();
+    this.vignettePass=new WAGNER.VignettePass();
+    this.vignette2Pass=new WAGNER.Vignette2Pass();
+    this.CGAPass=new WAGNER.CGAPass();
+    //edgeDetectionPass=new WAGNER.EdgeDetectionPass();
+    this.dirtPass=new WAGNER.DirtPass();
+    this.blendPass=new WAGNER.BlendPass();
+    this.guidedFullBoxBlurPass=new WAGNER.GuidedFullBoxBlurPass();
+    //SSAOPass=new WAGNER.SSAOPass();
 
-    var effect2 = new THREE.RenderPass( world.scene , world.camera );
-    //effect.renderToScreen = true;
-    this.composer.addPass( effect2 );
-
-
-    //var effect = new THREE.TexturePass( this.composer.renderTarget );
-    //this.composer.addPass( effect );
-
-    /*var effect = new THREE.ShaderPass( THREE.DotScreenShader );
-    effect.uniforms[ 'scale' ].value = 4;
-    effect.renderToScreen = true;
-    this.composer.addPass( effect );*/
-
-    for( var i = 0; i < this.params.effectArray.length; i ++ ){
-
-      var e = this.params.effectArray[i];
-      var effect1;
-      if( e[0] == 'bloomPass' ){
-
-        console.log('ssss');
-        //console.log( THREE );
-        //console.log( THREE.BloomPass );
-        effect1 = new THREE.BloomPass(.5);
-        //effect = new THREE.ShaderPass( THREE.ConvolutionShader ); 
-      }
+    this.womb.renderer.autoClearColor = true;
 
 
-      //this.composer.addPass( effect1 );
-
-    }
+    this.composer = composer;
 
   }
 
   EffectComposer.prototype.render = function(){
 
-    this.composer.render();
+
+    this.composer.reset();
+
+    this.composer.render( this.womb.scene , this.womb.camera );
+
+    this.composer.pass( this.noisePass );
+
+    //this.composer.pass( this.CGAPass );
+    //this.composer.pass( this. );
+    this.composer.pass( this.zoomBlurPass );
+    //this.composer.pass( this.fullBoxBlurPass );
+    this.composer.pass( this.multiPassBloomPass );
+    //this.composer.pass( this.multiPassBloomPass );
+   // this.composer.pass( this.invertPass );
+
+    this.composer.toScreen();
 
   }
 

@@ -4,19 +4,20 @@ define(function(require, exports, module) {
   var ShaderCreator       = require( 'Shaders/ShaderCreator'  );
   var womb = new Womb();
 
-   womb.audio = womb.audioController.createNote( '/lib/audio/tracks/secondChance.mp3' );
+   womb.audio = womb.audioController.createNote( '/lib/audio/tracks/wanted.mp3' );
 
   
   vertexChunk = [ 
-    "pos += aColor;",
+    "pos *= aColor;",
     "vec2 u = vec2( uv.x , 0 );",
     "vec4 a = texture2D( AudioTexture , u );",
+    //"vPos = aColor * a.rgb;",
     "vPos = aColor * a.rgb;",
-    "pos += vPos;"
+    "pos *= vPos;"
   ];
 
   fragmentChunk = [
-    "color = Color + reflect( nPos , vPos);",
+    "color =  .6 * normalize( Color + normalize(reflect( nPos , vPos )) );",
   ];
 
   var shader = new ShaderCreator({
@@ -28,26 +29,60 @@ define(function(require, exports, module) {
       AudioTexture: { type:"t"  , value: womb.audio.texture },
     },
   });
- 
-  //var geo = new THREE.CubeGeometry( 10 , 10 , 1 , 100 , 2 , 100 );
-  var geo = new THREE.SphereGeometry( 10 , 20 ,1000);
-  //var geo = new THREE.IcosahedronGeometry( 10 , 6 );
-  shader.assignAttributes('aColor' , geo , function(i , vert , geo){
-    var x = Math.sin( i / geo.vertices.length  * Math.PI );
-    var y = Math.sin( i );
-    var z = Math.cos(i );
-    return new THREE.Vector3( 
-      x,
-      y,
-      z 
-    );
-  });
 
-  var material = shader.material;
-  var mesh = new THREE.Mesh( geo , material  );
-  womb.scene.add( mesh );
- 
+  console.log( 'LOADED' );
+
+  womb.modelLoader.loadFile( 'OBJ' , '/lib/models/leeperrysmith/leeperrysmith.obj', function( geo ){ 
+  
+    console.log( geo );
+    var g = geo[0];
+
+    womb.g = g;
+    g.computeFaceNormals();
+    g.computeVertexNormals();
+    
+    g.verticesNeedUpdate = true;
+
+    womb.modelLoader.assignUVs( g );
+   
+    shader.assignAttributes('aColor' , g , function(i , vert , geo){
+      var x = Math.abs( Math.sin( i / geo.vertices.length  * Math.PI ) );
+      var y = .1 * Math.sin( i );
+      var z = Math.cos(i );
+      return new THREE.Vector3( 
+        x,
+        y,
+
+        1.0 
+      );
+    });
+
+    var material = shader.material;
+    var mesh = new THREE.Mesh( g , material  );
+    mesh.scale.multiplyScalar( 50 );
+    womb.scene.add( mesh );
+
+  });
   womb.loader.loadBarAdd();
+  womb.update = function(){
+
+    var t = womb.time.value;
+
+    var t1 = Math.sin( t * .5 );
+    var t2 = Math.cos( t );
+    shader.assignAttributes('aColor' , womb.g , function(i , vert , geo){
+      var x = Math.abs( Math.sin( i / geo.vertices.length  * Math.PI ) );
+      var y = .1 * Math.sin( i );
+      return new THREE.Vector3( 
+        1.0 + .1 * t1 * x,
+        1.0 + .1 * t2 * y,
+
+        1.0
+      );
+    });
+
+
+  }
   womb.start = function(){
 
 
