@@ -7,12 +7,16 @@ define(function(require, exports, module) {
    womb.audio = womb.audioController.createNote( '/lib/audio/tracks/secondChance.mp3' );
 
   
-  vertexChunk = [  
-    "vPos = aColor;",
+  vertexChunk = [ 
+    "pos += aColor;",
+    "vec2 u = vec2( uv.x , 0 );",
+    "vec4 a = texture2D( AudioTexture , u );",
+    "vPos = aColor * a.rgb;",
+    "pos += vPos;"
   ];
 
   fragmentChunk = [
-    "color = vPos;",
+    "color = Color + reflect( nPos , vPos);",
   ];
 
   var shader = new ShaderCreator({
@@ -25,16 +29,22 @@ define(function(require, exports, module) {
     },
   });
  
-  womb.audioController.gain.gain.value = 0;
-  var geo = new THREE.CubeGeometry( 10 , 10 , 10 , 20 , 20 , 20 );
-
-  shader.assignAttributes( 'aColor' , geo , function(i , vert){
-    return vert.clone().normalize();
+  //var geo = new THREE.CubeGeometry( 10 , 10 , 1 , 100 , 2 , 100 );
+  var geo = new THREE.SphereGeometry( 10 , 20 ,1000);
+  //var geo = new THREE.IcosahedronGeometry( 10 , 6 );
+  shader.assignAttributes('aColor' , geo , function(i , vert , geo){
+    var x = Math.sin( i / geo.vertices.length  * Math.PI );
+    var y = Math.sin( i );
+    var z = Math.cos(i );
+    return new THREE.Vector3( 
+      x,
+      y,
+      z 
+    );
   });
 
   var material = shader.material;
   var mesh = new THREE.Mesh( geo , material  );
-
   womb.scene.add( mesh );
  
   womb.loader.loadBarAdd();
