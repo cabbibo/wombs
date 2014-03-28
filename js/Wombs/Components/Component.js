@@ -48,10 +48,8 @@ define(function(require, exports, module) {
     component.parent = this;
     component.siblings = this.components;
 
-    console.log( component );
     component.onAdd();
 
-    console.log( component );
     this.components.push( component );
 
   }
@@ -72,7 +70,24 @@ define(function(require, exports, module) {
 
   }
 
+  Component.prototype.combine = function( object , unOverrideable ){
+
+    for( propt in object ){
+
+      if( !this[propt] ){
+        this[propt] = object[propt];
+      }else{
+        console.log( 'WARNING: propt: ' + propt +' overridden;' )
+        console.log( 'Overriden: ' + this[propt] );
+        console.log( 'Overrider: ' + object[propt] );
+      }
+
+    }
+
+
+  }
   Component.prototype.onRemove = function(){}
+
 
 
   /*

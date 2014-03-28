@@ -125,7 +125,7 @@ define(function(require, exports, module) {
 
   shaderCreator = {}
 
-  var threeUniformTypes = [
+  var threeDataTypes = [
     [ "vec3"      , "v3" , new THREE.Vector3()    ],
     [ "vec2"      , "v2" , new THREE.Vector2()    ],
     [ "float"     , "f"  , 0.0                    ],
@@ -144,7 +144,7 @@ define(function(require, exports, module) {
     // Creating these should take place after shader chunk
     [ "vPos"          , "vec3"  , "pos"                             , "post"  ],
     [ "nPos"          , "vec3"  , "normalize( pos )"                , "post"  ],
-    [ "vDisplacement" , "float" , "length(pos) - length(position)"  , "post"  ],
+    [ "vDisplacement" , "float" , "length(pos)"                     , "post"  ],
 
     // Creating this should take place AFTER the model view transformation
     [ "vPos_MV"       , "vec3"  , "gl_Position.xyz"                 , "mv"    ],
@@ -176,6 +176,7 @@ define(function(require, exports, module) {
 
     [ "aColor" , "vec3" ],
     [ "aSize" , "float" ],
+    [ "aID" , "float" ],
     
   ]
 
@@ -235,8 +236,8 @@ define(function(require, exports, module) {
 
 
     // Creates the uniforms chunk of the shader programs
-    this.vertexUniformChunk   = this.createUniformChunk( this.vertexUniforms );
-    this.fragmentUniformChunk = this.createUniformChunk( this.fragmentUniforms );
+    this.vertexUniformChunk   = this.createHeadChunk( 'uniform' , this.vertexUniforms );
+    this.fragmentUniformChunk = this.createHeadChunk( 'uniform' , this.fragmentUniforms );
 
     /* console.log( this.vertexUniformChunk );
     console.log( this.fragmentUniformChunk ); */
@@ -252,14 +253,18 @@ define(function(require, exports, module) {
     helperFunctions.setParameters( this.uniforms , this.params.uniforms );
 
     
-    /*this.attributeArray = this.findFromArray( this.vertexChunk , attributeArray );
-    console.log( this.attributeArray );
-    this.attributes = this.createAttributes( this.attributeArray );*/
+    this.attributeArray = this.findFromArray( this.vertexChunk , attributeArray );
+    this.attributes = this.createAttributes( this.attributeArray );
+    
+    console.log( 'ATS CHUSN' );
+    console.log( this.attributes );
+    this.attributeChunk = this.createHeadChunk( 'attribute' , this.attributeArray );
 
+    console.log( this.attributeChunk );
     // Finds all of the usualVaryings
     this.varyings = this.findFromArray( this.fragmentChunk , varyingArray );
 
-    this.varyingChunk = this.createVaryingChunk( this.varyings );
+    this.varyingChunk = this.createHeadChunk( 'varying' , this.varyings );
 
     /*console.log( this.varyings );
     console.log( 'VARYING CHUNK' );
@@ -300,7 +305,7 @@ define(function(require, exports, module) {
     this.vertexShader = this.createShaderString({
 
       uniformChunk:   this.vertexUniformChunk,
-     // attributeChunk: this.attributeChunk,
+      attributeChunk: this.attributeChunk,
       varyingChunk:   this.varyingChunk,
       defineChunk:    this.vertexDefineChunk,
       mainChunk:      this.vertexMainChunk
@@ -320,7 +325,7 @@ define(function(require, exports, module) {
     this.material = new THREE.ShaderMaterial({
 
       uniforms:       this.uniforms,
-      //attributes:     this.attributes,
+      attributes:     this.attributes,
 
       vertexShader:   this.vertexShader,
       fragmentShader: this.fragmentShader,
@@ -395,40 +400,24 @@ define(function(require, exports, module) {
 
   }
 
-  // Creates a uniformChunk string out of an array
-  ShaderCreator.prototype.createUniformChunk = function( uniformArray ){
 
-    var uniformString = [];
 
-    for( var i = 0; i < uniformArray.length; i++ ){
+  // used for Attributes, uniforms, and varyings
+  ShaderCreator.prototype.createHeadChunk = function( string , array ){
 
-      var u = uniformArray[i];
+    var fullString = [];
 
-      var uString = "uniform " + u[1] + " " + u[0] + ";"
-      uniformString.push( uString );
-
+    for( var i = 0; i < array.length; i++ ){
+      var a = array[i];
+      var aString = string+" " + a[1] + " " + a[0] +";";
+      fullString.push( aString );
     }
 
-    return uniformString.join("\n");
+    console.log( fullString );
+    return fullString.join("\n");
 
   }
 
-  ShaderCreator.prototype.createVaryingChunk = function( varyingArray ){
-
-    var varyingString = [];
-
-    for( var i = 0; i < varyingArray.length; i ++ ){
-
-      var v = varyingArray[i];
-      var vString = "varying " + v[1] + " " + v[0] + ";"
-
-      varyingString.push( vString );
-
-    }
-
-    return varyingString.join("\n");
-
-  }
 
   // creates a defineChunk 
   ShaderCreator.prototype.createDefineChunk = function( defineArray ){
@@ -456,21 +445,24 @@ define(function(require, exports, module) {
 
     var uniforms = {}
 
+    console.log( arguments );
     for( var i = 0; i< arguments.length; i ++ ){
 
+      console.log('YPS');
       var uniformArray = arguments[i];
 
       for( var j = 0; j < uniformArray.length; j++ ){
 
         var u = uniformArray[j];
 
+        // Checks to make sure we haven't already created this uniform
         if( !uniforms[u[0]] ){
           
           // Gets the proper type for three.js uniforms
           var threeU;
-          for( var k = 0; k < threeUniformTypes.length; k++ ){
-            if( u[1] == threeUniformTypes[k][0] ){
-              threeU = threeUniformTypes[k];
+          for( var k = 0; k < threeDataTypes.length; k++ ){
+            if( u[1] == threeDataTypes[k][0] ){
+              threeU = threeDataTypes[k];
             }
           }
 
@@ -495,48 +487,53 @@ define(function(require, exports, module) {
 
   ShaderCreator.prototype.createAttributes = function(){
 
-    var uniforms = {}
+    var attributes = {};
 
-    for( var i = 0; i< arguments.length; i ++ ){
+    for( var i = 0; i< arguments[0].length; i ++ ){
 
-      var uniformArray = arguments[i];
+      console.log('eye');
 
-      for( var j = 0; j < uniformArray.length; j++ ){
-
-        var u = uniformArray[j];
-
-        if( !uniforms[u[0]] ){
-          
-          // Gets the proper type for three.js uniforms
-          var threeU;
-          for( var k = 0; k < threeUniformTypes.length; k++ ){
-            if( u[1] == threeUniformTypes[k][0] ){
-              threeU = threeUniformTypes[k];
-            }
-          }
-
-          // Using our precreated uniform tpyes to instantiate
-          // a uniform. what will always give us something
-          uniforms[u[0]] ={
-            type:   threeU[1],
-            value:  threeU[2]
-          }
-
-          //console.log( uniforms[u[0]] );
-
+      var a = arguments[0][i]
+      var threeU;
+      for( var j = 0; j < threeDataTypes.length; j++ ){
+        if( a[1] == threeDataTypes[j][0] ){
+          threeU = threeDataTypes[j];
         }
+      }
 
+      attributes[a[0]] ={
+        type:   threeU[1],
+        value:  []
       }
 
     }
 
-    return uniforms
+    return attributes 
 
   }
 
 
+  // Lets you assign attributes
+  ShaderCreator.prototype.assignAttributes = function( attribute , geo , callback ){
+
+    console.log('ssas');
+    if( this.attributes[attribute] ){
+
+      for( var i = 0; i < geo.vertices.length; i ++ ){
+        this.attributes[attribute].value[i] = callback( i , geo.vertices[i] , geo );
+      }
+
+      this.attributes[attribute].needsUpdate = true;
+
+      console.log( 'ADSWs');
+      console.log( this.attributes[attribute] );
+    }else{
+      console.log( 'Assigning to none existant attribute!' );
+    }
+    
 
 
+  }
 
   // Pulls everything together!
   ShaderCreator.prototype.createVertexMainChunk = function( p ){
@@ -631,7 +628,7 @@ define(function(require, exports, module) {
     mainArray.push( p.uniformChunk );
     mainArray.push("");
     mainArray.push( p.varyingChunk );
-    //mainArray.push( p.attributeChunk );
+    mainArray.push( p.attributeChunk );
     mainArray.push("");
     mainArray.push( p.defineChunk );
     mainArray.push("");
@@ -704,9 +701,7 @@ define(function(require, exports, module) {
   
     }
 
-
   }
-
 
   module.exports = ShaderCreator;
 

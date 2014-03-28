@@ -7,11 +7,9 @@ define(function(require, exports, module) {
   
   function Mesh( geometry , material ){
 
-    this.geometry = geometry;
-    this.material = material;
-
     this.body = new THREE.Mesh( geometry , material );
 
+    this.combine( this.body );
     console.log( 'THIS' );
     console.log( this );
 
@@ -31,11 +29,11 @@ define(function(require, exports, module) {
 
   Mesh.prototype.onAdd = function(){
 
-    this.add();
+    this.addToBody();
 
   }
 
-  Mesh.prototype.add = function(){
+  Mesh.prototype.addToBody = function(){
 
     if( this.parent ){
       this.parent.addToBody( this.body );
@@ -47,7 +45,7 @@ define(function(require, exports, module) {
 
   }
 
-  Mesh.prototype.remove = function(){
+  Mesh.prototype.removeFromBody = function(){
 
     if( this.parent ){
 
@@ -61,11 +59,11 @@ define(function(require, exports, module) {
 
   }
 
-  Mesh.prototype.translate = function(x,y,z){
+  /*Mesh.prototype.translate = function(x,y,z){
 
-      this.position.add( new THREE.Vector3( x , y , z ) );
+      this.body.position.add( new THREE.Vector3( x , y , z ) );
 
-  }
+  }*/
 
   
   module.exports = Mesh;

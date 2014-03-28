@@ -115,6 +115,9 @@ define(function(require, exports, module) {
 
     },
 
+    beginLoading: function(){this.addToLoadBar();},
+    finishLoading: function(){this.loadBarAdd();},
+
 
   
     // This will run through all of our saved conditions
