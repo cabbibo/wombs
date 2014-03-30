@@ -4,14 +4,14 @@ define(function(require, exports, module) {
   var ShaderCreator       = require( 'Shaders/ShaderCreator'  );
   var womb = new Womb();
 
-   womb.audio = womb.audioController.createNote( '/lib/audio/tracks/wanted.mp3' );
+   //womb.audio = womb.audioController.createNote( '/lib/audio/tracks/wanted.mp3' );
 
-  
+   womb.audio = womb.audioController.createUserAudio();
+  womb.audioController.gain.gain.value = 0;
   vertexChunk = [ 
     "pos *= aColor;",
     "vec2 u = vec2( uv.x , 0 );",
     "vec4 a = texture2D( AudioTexture , u );",
-    //"vPos = aColor * a.rgb;",
     "vPos = aColor * a.rgb;",
     "pos *= vPos;"
   ];
@@ -87,7 +87,7 @@ define(function(require, exports, module) {
   womb.start = function(){
 
 
-    womb.audio.play();
+   // womb.audio.play();
   
   }
 
