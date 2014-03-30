@@ -36,7 +36,8 @@ define(function(require, exports, module) {
   
     console.log( geo );
     var g = geo[0];
-
+  
+    var g = new THREE.IcosahedronGeometry( 10 , 5 );
     womb.g = g;
     g.computeFaceNormals();
     g.computeVertexNormals();
