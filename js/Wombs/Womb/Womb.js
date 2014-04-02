@@ -48,8 +48,7 @@ define(function(require, exports, module) {
       failureTitleText: "This project requires the following:",
       failureVideoText: "But here's a video which is probably better anyway",
       failureVideo:     69517912,  // The Vimeo Video Number !
-
-  
+      postprocessing:  [],
       defaults:{
         textureFile: '/lib/img/textures/ash_uvgrid01.jpg' ,
         geometry: new THREE.IcosahedronGeometry( 10 , 4 ),
@@ -147,7 +146,8 @@ define(function(require, exports, module) {
     this.modelLoader      = new ModelLoader( this );
     this.textCreator      = new TextCreator( this );
 
-    this.effectComposer  = new EffectComposer( this );
+    if( this.params.postprocessing.length > 0 ) 
+     this.effectComposer  = new EffectComposer( this );
 
 
     this.creator  = new Creator( this );

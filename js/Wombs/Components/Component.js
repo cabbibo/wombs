@@ -17,18 +17,6 @@ define(function(require, exports, module) {
 
   function Component(){
 
-  }
-
- /* Component.prototype.manifest = function( parent ){
-
-    this.parent = parent;
-
-    this.parent.addTo
-
-  }*/
-
-  Component.prototype._init = function(){
-
     this.active       = false;
 
     this.startArray   = [];
@@ -36,6 +24,8 @@ define(function(require, exports, module) {
     this.updateArray  = [];
 
     this.components   = [];
+
+    this.init();
 
   }
 
@@ -47,6 +37,8 @@ define(function(require, exports, module) {
 
     component.parent = this;
     component.siblings = this.components;
+
+    //TODO: Update all siblinings every time a component is added
 
     component.onAdd();
 
@@ -70,29 +62,17 @@ define(function(require, exports, module) {
 
   }
 
-  Component.prototype.combine = function( object , unOverrideable ){
-
-    for( propt in object ){
-
-      if( !this[propt] ){
-        this[propt] = object[propt];
-      }else{
-        console.log( 'WARNING: propt: ' + propt +' overridden;' )
-        console.log( 'Overriden: ' + this[propt] );
-        console.log( 'Overrider: ' + object[propt] );
-      }
-
-    }
-
-
-  }
   Component.prototype.onRemove = function(){}
 
 
 
   /*
     
-     START
+     START:
+
+     Sets to active, 
+     Calls start on all components,
+     And calls all functions in start array
      
   */
   Component.prototype._start = function(){
@@ -102,15 +82,32 @@ define(function(require, exports, module) {
     for( var i = 0;  i < this.components.length; i++ ){
       this.components[i]._start();
     }
+
+    for( var i = 0; i < this._startArray.length; i++ ){
+      this._startArray[i]();
+    }
     
-    this.start();
-  
   }
 
   Component.prototype.start = function(){};
 
+  Component.prototype.addToStartArray = function( callback ){
+    this._startArray.push( callback.bind( this ) );
+  }
+
+  Component.prototype.removeStartArray = function( callback ){
+    this._startArray.push( callback.bind( this ) );
+  }
   
-  
+ 
+   /*
+
+    Update
+
+     Calls start on all components,
+     And calls all functions in start array
+     
+  */
   Component.prototype._update = function(){
     
     if( this.active ){
@@ -119,14 +116,26 @@ define(function(require, exports, module) {
         this.components[i]._update();
       }
       
-      this.update();
-    
+      for( var i = 0; i < this._updateArray.length; i++ ){
+        this._updateArray[i]();
+      }
+
     }
   
   }
 
-  Component.prototype.update = function(){};
+  Component.prototype.addToUpdateArray = function( callback ){
+    this._updateArray.push( callback.bind( this ) );
+  }
+ 
+
+  /*
   
+     End
+     Set active to false, 
+     and percolate down the false array
+
+  */
   Component.prototype._end = function(){
     
     this.active = false;
@@ -134,32 +143,19 @@ define(function(require, exports, module) {
     for( var i = 0;  i < this.endArray.length; i++ ){
       this.endArray[i]();
     }
-    
-    this.end();
+
+    for( var i = 0; i < this._endArray.length; i++ ){
+      this._endArray[i]();
+    }
   
   }
 
   Component.prototype.end = function(){};
 
-  Component.prototype.createUUID = function(){
-
-
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-                 .toString(16)
-                 .substring(1);
-    };
-
-    function guid() {
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-             s4() + '-' + s4() + s4() + s4();
-    }
-
-    this.uuid = guid();
-
+  Component.prototype.addToEndArray = function( callback ){
+    this._endArray.push( callback.bind( this ) );
   }
-
-
+  
 
   module.exports = Component;
 

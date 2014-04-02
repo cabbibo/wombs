@@ -256,11 +256,8 @@ define(function(require, exports, module) {
     this.attributeArray = this.findFromArray( this.vertexChunk , attributeArray );
     this.attributes = this.createAttributes( this.attributeArray );
     
-    console.log( 'ATS CHUSN' );
-    console.log( this.attributes );
     this.attributeChunk = this.createHeadChunk( 'attribute' , this.attributeArray );
 
-    console.log( this.attributeChunk );
     // Finds all of the usualVaryings
     this.varyings = this.findFromArray( this.fragmentChunk , varyingArray );
 
@@ -413,7 +410,6 @@ define(function(require, exports, module) {
       fullString.push( aString );
     }
 
-    console.log( fullString );
     return fullString.join("\n");
 
   }
@@ -445,10 +441,8 @@ define(function(require, exports, module) {
 
     var uniforms = {}
 
-    console.log( arguments );
     for( var i = 0; i< arguments.length; i ++ ){
 
-      console.log('YPS');
       var uniformArray = arguments[i];
 
       for( var j = 0; j < uniformArray.length; j++ ){
@@ -490,8 +484,6 @@ define(function(require, exports, module) {
     var attributes = {};
 
     for( var i = 0; i< arguments[0].length; i ++ ){
-
-      console.log('eye');
 
       var a = arguments[0][i]
       var threeU;
