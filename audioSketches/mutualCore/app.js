@@ -52,8 +52,9 @@ define(function(require, exports, module) {
 
   var file = '/lib/audio/tracks/mutualCore.mp3';
 
-  womb.audio = womb.audioController.createStream( file  );
-  //womb.audioController.gain.gain.value = 0;
+  //womb.audio = womb.audioController.createStream( file  );
+  womb.audio = womb.audioController.createUserAudio();
+  womb.audioController.gain.gain.value = 0;
 
   /*
   
@@ -343,7 +344,7 @@ define(function(require, exports, module) {
 
     womb.clickableBeing.enter();
 
-    womb.audio.play();
+    //womb.audio.play();
 
   }
 

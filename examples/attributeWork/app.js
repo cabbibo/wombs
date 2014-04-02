@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 
    //womb.audio = womb.audioController.createNote( '/lib/audio/tracks/wanted.mp3' );
 
-   womb.audio = womb.audioController.createUserAudio();
+  womb.audio = womb.audioController.createUserAudio();
   womb.audioController.gain.gain.value = 0;
   vertexChunk = [ 
     "pos *= aColor;",
