@@ -114,9 +114,6 @@
 
 */
 
-
-
-
 define(function(require, exports, module) {
 
                     require( 'lib/three.min'          );
@@ -174,9 +171,9 @@ define(function(require, exports, module) {
 
   var attributeArray = [
 
-    [ "aColor" , "vec3" ],
-    [ "aSize" , "float" ],
-    [ "aID" , "float" ],
+    [ "aColor"  , "vec3" ],
+    [ "aSize"   , "float" ],
+    [ "aID"     , "float" ],
     
   ]
 
