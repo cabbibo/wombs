@@ -1,3 +1,8 @@
+
+//TODO:
+//Parse out mouse controls
+//into an event handler
+
 define(function(require, exports, module) {
 
   /*       YOU        */  require( 'lib/three'                      );
@@ -32,9 +37,17 @@ define(function(require, exports, module) {
   var LeapController    = require( 'Utils/LeapController'           );
   var Defaults          = require( 'Utils/Defaults'                 );
 
+  var Component         = require( 'Components/Component'           );
+
+  Womb.prototype        = new Component();
 
   function Womb(params){
 
+    this._init();
+
+    console.log( 'THIS' );
+    console.log( this );
+    
     this.params = _.defaults( params || {} , {
       raycaster:        false,
       cameraController: 'TrackballControls',
@@ -54,8 +67,6 @@ define(function(require, exports, module) {
         geometry: new THREE.IcosahedronGeometry( 10 , 4 ),
         material: new THREE.MeshNormalMaterial()
       }
-
-
     });
 
     this.loaderParams = {};
@@ -86,6 +97,7 @@ define(function(require, exports, module) {
 
     this.scene = new THREE.Scene();
     this.body  = this.scene;
+    this._three = this.scene;
 
     this.dpr = window.devicePixelRatio ? window.devicePixelRatio : 1;
 
@@ -162,30 +174,40 @@ define(function(require, exports, module) {
     this.addToUpdateArray( this.raycaster._update.bind( this.raycaster ) );
     this.addToUpdateArray( this.audioController._update.bind( this.audioController )  );
     this.addToUpdateArray( this.creator._update.bind( this.creator ) );
-   
+  
+    this.addToUpdateArray( function(){
+      var d = this.delta
+      this.cameraController._update( this.delta )
+    });
+
+    this.addToUpdateArray( function(){
+      this.delta = this.clock.getDelta();
+      this.time.value += this.delta;
+      TWEEN.update();
+    });
+
+    this.addToUpdateArray( function(){
+      this.render();
+    });
+
+
+    
+    this.addToStartArray( function(){
+      if( this.leapController ){
+        this.leapController.connect();
+      }
+    });
+
+    this.addToStartArray( function(){
+      console.log( this );
+      this.animator.start();
+    });
 
     // Giving us a global WOMB variable!
     window.womb = this;
 
   }
-
-  // This is what will be called in our loaded
-  Womb.prototype._start = function(){
-   
-    if( this.leapController ){
-      this.leapController.connect();
-    }
-    
-    this.start();
-
-    this.animator.start();
-
-  }
-
-   Womb.prototype.start = function(){
-
-  }
-
+ 
 
   Womb.prototype._onMouseMove = function( e ){
   
@@ -253,54 +275,10 @@ define(function(require, exports, module) {
   }
 
 
-
-
   Womb.prototype.console = function(){ 
     console.log( this ); 
   }
 
-  Womb.prototype._update = function(){
-
-    this.delta = this.clock.getDelta();
-
-    //console.log( this.delta );
-    //console.log( this.time );
-    this.time.value += this.delta;
-
-    TWEEN.update();
-
-    //this.massController._update();
-    //this.springController._update();
-   
-    /*this.audioController._update();
-     
-    this.creator._update();
-    
-    this.raycaster._update();*/
-    
-    this.cameraController._update( this.delta );
-
-
-    for( var i = 0; i < this.updateArray.length; i++ ){
-
-      var f = this.updateArray[i];
-      f();
-
-    }
-
-    this.update();
-
-    //this.effectsComposer.render();
-    this.render();
-
-
-  }
-
-  Womb.prototype.addToUpdateArray = function( callback ){
-
-    this.updateArray.push( callback )
-
-  }
 
   Womb.prototype.render = function(){
 
@@ -323,11 +301,6 @@ define(function(require, exports, module) {
 
   }
 
-
-
-  Womb.prototype.update = function(){
-
-  }
 
   module.exports = Womb;
 

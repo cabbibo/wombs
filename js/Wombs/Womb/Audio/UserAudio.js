@@ -1,4 +1,4 @@
-define(function(require, exports, module) {
+define(function(rquire, exports, module) {
 
   var AudioTexture = require( 'Womb/Textures/AudioTexture' );
 
@@ -10,8 +10,8 @@ define(function(require, exports, module) {
     this.womb       = this.controller.womb;
     this.params = _.defaults( params || {}, {
         
-      fbc:            128,
-      texture:       true,
+      fbc:            2048,
+      texture:        true,
 
     });
 
@@ -35,7 +35,7 @@ define(function(require, exports, module) {
     };
 
     if( this.params.texture ){
-      this.texture  = new AudioTexture( this ); 
+      this.texture  = new AudioTexture( this.analyser ); 
     }
 
 

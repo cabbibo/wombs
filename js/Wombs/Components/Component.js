@@ -15,17 +15,20 @@
 
 define(function(require, exports, module) {
 
-  function Component(){
+  function Component(){}
+
+  Component.prototype._init = function(){
 
     this.active       = false;
 
-    this.startArray   = [];
-    this.endArray     = [];
-    this.updateArray  = [];
+    this._startArray   = [];
+    this._endArray     = [];
+    this._updateArray  = [];
 
     this.components   = [];
 
     this.init();
+
 
   }
 
@@ -37,6 +40,10 @@ define(function(require, exports, module) {
 
     component.parent = this;
     component.siblings = this.components;
+    
+    // Makes sure everyone knows about the newborn
+    this.updateSiblings();
+    
 
     //TODO: Update all siblinings every time a component is added
 
@@ -45,6 +52,8 @@ define(function(require, exports, module) {
     this.components.push( component );
 
   }
+
+
 
   Component.prototype.removeComponent = function( component ){
 
@@ -76,7 +85,7 @@ define(function(require, exports, module) {
      
   */
   Component.prototype._start = function(){
-    
+   
     this.active = true;
     
     for( var i = 0;  i < this.components.length; i++ ){
@@ -86,7 +95,8 @@ define(function(require, exports, module) {
     for( var i = 0; i < this._startArray.length; i++ ){
       this._startArray[i]();
     }
-    
+   
+    this.start();
   }
 
   Component.prototype.start = function(){};
@@ -156,6 +166,24 @@ define(function(require, exports, module) {
     this._endArray.push( callback.bind( this ) );
   }
   
+
+
+  /*
+   
+     Extra Functions
+
+  */
+
+  Component.prototype.updateSiblings = function(){
+
+    for(var i = 0; i < this.components.length; i++ ){
+
+      this.components[i].siblings = this.components[i];
+
+    }
+
+  }
+
 
   module.exports = Component;
 

@@ -194,14 +194,14 @@ define(function(require, exports, module) {
 
         SC.assignUV,
 
-          "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
-          "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
+        "vec3 selfPosition  = texture2D( texturePosition , uv ).xyz;",
+        "vec3 selfVelocity  = texture2D( textureVelocity , uv ).xyz;",
 
-          "vec3 potential = curlNoise( selfPosition * noiseSize );",
+        "vec3 potential = curlNoise( selfPosition * noiseSize );",
 
-          //"vec
+        //"vec
 
-          "gl_FragColor=vec4( selfVelocity + potential * potentialPower , 1.0  );",
+        "gl_FragColor=vec4( selfVelocity + potential * potentialPower , 1.0  );",
 
 
 

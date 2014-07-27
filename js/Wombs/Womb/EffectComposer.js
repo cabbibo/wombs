@@ -18,7 +18,7 @@ define( function( require , exports , module ){
     var composer = new WAGNER.Composer( womb.renderer );
     composer.setSize( window.innerWidth * womb.dpr , window.innerHeight*womb.dpr ); // or whatever resolution
 
-        this.multiPassBloomPass = new WAGNER.MultiPassBloomPass();
+    this.multiPassBloomPass = new WAGNER.MultiPassBloomPass();
     this.invertPass=new WAGNER.InvertPass();
     this.boxBlurPass=new WAGNER.BoxBlurPass();
     this.fullBoxBlurPass=new WAGNER.FullBoxBlurPass();
