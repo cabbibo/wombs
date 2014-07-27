@@ -106,6 +106,7 @@ define(function(require, exports, module) {
 
       this.numberLoaded ++;
 
+      console.log( this.numberLoaded , this.numberToLoad );
       this.checkConditions();
 
       if( this.numberLoaded == this.numberToLoad ){
@@ -239,8 +240,11 @@ define(function(require, exports, module) {
     },
 
     onStart: function(){
-    
+  
+      if( !this.womb.started){
+      console.log('START');
       this.womb._start();
+      }
       
     },
 
@@ -276,7 +280,7 @@ define(function(require, exports, module) {
     detectWebAudioAPI: function(){
 
       try {
-        window.AudioContext = window.AudioContext||window.webkitAudioContext;
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
       }catch(e) {
         this.addFailure( 'Web Audio API' ,'http://caniuse.com/audio-api' ); 
       }

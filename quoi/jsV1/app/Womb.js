@@ -60,6 +60,7 @@ define(function(require, exports, module) {
     // Time uniform
     this.time = { type: "f", value: 1.0 } ;
 
+    this.started = false;
     /*
      *
      * SETTING UP THE SCENE
@@ -161,7 +162,8 @@ define(function(require, exports, module) {
 
   // This is what will be called in our loaded
   Womb.prototype._start = function(){
-   
+  
+    this.started = true;
     if( this.leapController ){
       this.leapController.connect();
     }

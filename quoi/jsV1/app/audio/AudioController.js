@@ -22,7 +22,7 @@ define(function(require, exports, module) {
     this.womb = womb;
 
     this.womb.loader.detectWebAudioAPI();
- 
+
     this.ctx      = new AudioContext();
 
     // Start with the filter off

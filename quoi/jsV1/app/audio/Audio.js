@@ -185,17 +185,38 @@ define(function(require, exports, module) {
     this.playing = false;
     this.source.noteOff(0);
 
+    if( this.source.noteOff ){
+      this.source.noteOff(0);
+    }else{
+     // this.source.stop();
+    }
+
+
   };
 		
   Audio.prototype.play = function(){
 		
-    this.playing = true;
-    this.source.noteOn(0);
+    //this.playing = true;
+
+    //console.log( 'play called');
+    //console.log( this.trackID );
+    if( !this.playing ){
+
+      this.playing = true;
+
+      if( this.source.noteOn ){
+        this.source.noteOn(0);
+      }else{
+
+        this.source.start();
+      }
    
     // Creates a new source for the audio right away
     // so we can play the next one with no delay
     if(this.source.loop == false){
       this.createSource();	
+    }
+
     }
 
   };
